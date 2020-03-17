@@ -1,0 +1,26 @@
+USE [Tarea Programada 1]
+GO
+
+/****** Object:  Table [dbo].[Int_Mor]    Script Date: 14/3/2020 04:47:21 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Int_Mor](
+	[ID] [int] NOT NULL,
+ CONSTRAINT [PK_Int_Mor] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Int_Mor]  WITH CHECK ADD  CONSTRAINT [FK_Int_Mor_Concepto Cobro] FOREIGN KEY([ID])
+REFERENCES [dbo].[Concepto Cobro] ([ID])
+GO
+
+ALTER TABLE [dbo].[Int_Mor] CHECK CONSTRAINT [FK_Int_Mor_Concepto Cobro]
+GO
+
