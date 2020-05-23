@@ -133,32 +133,6 @@ GO
 ALTER TABLE [dbo].[CCobro_PNP] CHECK CONSTRAINT [FK_CCobro_PNP_Propiedad]
 GO
 
-/****** Object:  Table [dbo].[ComprobantePago]    Script Date: 22/5/2020 00:46:45 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[ComprobantePago](
-	[ID] [int] NOT NULL,
-	[IdPropiedad] [int] NOT NULL,
-	[Fecha] [date] NOT NULL,
-	[Total] [money] NOT NULL,
- CONSTRAINT [PK_ComprobantePago] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[ComprobantePago]  WITH CHECK ADD  CONSTRAINT [FK_ComprobantePago_Propiedad] FOREIGN KEY([IdPropiedad])
-REFERENCES [dbo].[Propiedad] ([ID])
-GO
-
-ALTER TABLE [dbo].[ComprobantePago] CHECK CONSTRAINT [FK_ComprobantePago_Propiedad]
-GO
-
 /****** Object:  Table [dbo].[Prop_Prop]    Script Date: 22/5/2020 00:47:33 ******/
 SET ANSI_NULLS ON
 GO
@@ -269,49 +243,6 @@ GO
 ALTER TABLE [dbo].[PropietarioJuridico] CHECK CONSTRAINT [FK_PropietarioJuridico_TipoDocumentoId]
 GO
 
-/****** Object:  Table [dbo].[Recibos]    Script Date: 22/5/2020 00:51:00 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Recibos](
-	[ID] [int] NOT NULL,
-	[IdCCobro] [int] NOT NULL,
-	[IdPropiedad] [int] NOT NULL,
-	[IdComprPago] [int] NOT NULL,
-	[Fecha] [date] NOT NULL,
-	[FechaVencimiento] [date] NOT NULL,
-	[Monto] [money] NOT NULL,
-	[EsPendiente] [bit] NOT NULL,
- CONSTRAINT [PK_Recibos] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[Recibos]  WITH CHECK ADD  CONSTRAINT [FK_Recibos_CCobro] FOREIGN KEY([IdCCobro])
-REFERENCES [dbo].[CCobro] ([ID])
-GO
-
-ALTER TABLE [dbo].[Recibos] CHECK CONSTRAINT [FK_Recibos_CCobro]
-GO
-
-ALTER TABLE [dbo].[Recibos]  WITH CHECK ADD  CONSTRAINT [FK_Recibos_ComprobantePago] FOREIGN KEY([IdComprPago])
-REFERENCES [dbo].[ComprobantePago] ([ID])
-GO
-
-ALTER TABLE [dbo].[Recibos] CHECK CONSTRAINT [FK_Recibos_ComprobantePago]
-GO
-
-ALTER TABLE [dbo].[Recibos]  WITH CHECK ADD  CONSTRAINT [FK_Recibos_Propiedad] FOREIGN KEY([IdPropiedad])
-REFERENCES [dbo].[Propiedad] ([ID])
-GO
-
-ALTER TABLE [dbo].[Recibos] CHECK CONSTRAINT [FK_Recibos_Propiedad]
-GO
 
 /****** Object:  Table [dbo].[TipoDocumentoId]    Script Date: 22/5/2020 00:52:02 ******/
 SET ANSI_NULLS ON
