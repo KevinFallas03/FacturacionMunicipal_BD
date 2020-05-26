@@ -1,0 +1,26 @@
+﻿
+@model List<model.entity.Propietario>
+@{
+    ViewBag.Title = "Inicio";
+}
+
+<h2>Propietario</h2>
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-primary">
+            <th>Nombre</th>
+            <th>Tipo de documento</th>
+            <th>Valor documento</th>
+        </tr>
+        @foreach (var objetoPropietario in Model)
+        {
+            <tr>
+                <td>@objetoPropietario.Nombre</td>
+                <td>@objetoPropietario.TipoDocumento</td>
+                <td>@objetoPropietario.ValorDocumentoId</td>
+            </tr>
+
+        }
+    </table>
+</div>
+
