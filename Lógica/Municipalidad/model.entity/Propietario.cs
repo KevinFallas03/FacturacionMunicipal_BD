@@ -9,7 +9,7 @@ namespace model.entity
     public class Propietario
     {
         //Atributos de la clase
-        private int idPropietario;
+        private int idPropietario; //pk
         private string nombre;
         private int tipoDocumento;
         private string valorDocumentoId;
