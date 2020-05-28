@@ -15,14 +15,20 @@ namespace MunicipalidadWebMVC5
 
             routes.MapRoute(
                 name: "Usuario",
-                url: "usuario/listado",
+                url: "usuario",
                 defaults: new { controller = "Usuario", action = "Inicio", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "Propiedad",
+                url: "propiedad",
+                defaults: new { controller = "Propiedad", action = "Inicio", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Propietario", action = "Inicio", id = UrlParameter.Optional }
+                defaults: new { controller = "Propiedad", action = "Inicio", id = UrlParameter.Optional }
             );
 
             
