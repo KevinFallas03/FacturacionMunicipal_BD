@@ -8,6 +8,6 @@ namespace model.entity
 {
     class CCobro_MontoFijo : CCobro
     {
-        private 
+       // private 
     }
 }

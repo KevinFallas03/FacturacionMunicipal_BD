@@ -12,12 +12,12 @@ namespace model.entity
         private string nombreUsuario;
         private string password;
         private string tipoUsuario;
-        private Usuario() {}
-        private Usuario(int pID) 
+        public Usuario() {}
+        public Usuario(int pID) 
         {
             this.ID = pID;
         }
-        private Usuario(string pNombreUsuario, string pPassword, string pTipoUsuario)
+        public Usuario(string pNombreUsuario, string pPassword, string pTipoUsuario)
         {
             this.NombreUsuario = pNombreUsuario;
             this.Password = pPassword;

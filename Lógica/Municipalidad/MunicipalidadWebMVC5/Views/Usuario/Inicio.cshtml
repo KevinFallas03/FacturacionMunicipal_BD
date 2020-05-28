@@ -1,0 +1,32 @@
+﻿
+@model List<model.entity.Usuario>
+@{
+    ViewBag.Title = "Inicio";
+}
+
+<h2>Usuario</h2>
+<div class="container-fluid">
+    <div>
+        <a class="btn btn-primary" href="/Usuario/Create">Nuevo</a>
+    </div>
+    <table class="table">
+        <tr class="btn-primary">
+            <th>Nombre</th>
+            <th>Contraseña</th>
+            <th>Tipo usuario</th>
+            <th colspan="3"> Operaciones</th>
+        </tr>
+        @foreach (var objetoUsuario in Model)
+        {
+            <tr>
+                <td>@objetoUsuario.NombreUsuario</td>
+                <td>@objetoUsuario.Password</td>
+                <td>@objetoUsuario.TipoUsuario</td>
+                <td><a class="btn btn-success" href="">Ver</a></td>
+                <td><a class="btn btn-warning" href="">Editar</a></td>
+                <td><a class="btn btn-danger" href="">Borrar</a></td>
+            </tr>
+        }
+    </table>
+</div>
+
