@@ -27,7 +27,7 @@ namespace model.dao
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@Nombre", objetoPropietario.Nombre);
                 comando.Parameters.AddWithValue("@IdTipoDocumento", objetoPropietario.TipoDocumento);
-                comando.Parameters.AddWithValue("@ValorDocuemento", objetoPropietario.ValorDocumentoId);
+                comando.Parameters.AddWithValue("@ValorDocumento", objetoPropietario.ValorDocumentoId);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
@@ -93,22 +93,20 @@ namespace model.dao
 
             try
             {
-                using (SqlConnection con = new SqlConnection("Data Source=DESKTOP-T525H9P;Initial Catalog=FacturacionMunicipal;Integrated Security=True"))
+                comando = new SqlCommand("spObtenerPropietarios", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
                 {
-                    SqlCommand cmd = new SqlCommand("spObtenerPropietarios", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    con.Open();
-                    SqlDataReader read = cmd.ExecuteReader();
-                    while (read.Read())
-                    {
-                        Propietario objetoPropietario = new Propietario();
-                        objetoPropietario.Nombre = read[0].ToString();
-                        objetoPropietario.TipoDocumento = Convert.ToInt32(read[1].ToString());
-                        objetoPropietario.ValorDocumentoId = read[2].ToString();
-                        listaPropietarios.Add(objetoPropietario);
-                    }
+                    Propietario objetoPropietario = new Propietario();
+                    objetoPropietario.Nombre = read[0].ToString();
+                    objetoPropietario.TipoDocumento = Convert.ToInt32(read[1].ToString());
+                    objetoPropietario.ValorDocumentoId = read[2].ToString();
+                    listaPropietarios.Add(objetoPropietario);
                 }
             }
+
             catch (Exception)
             {
                 throw;
