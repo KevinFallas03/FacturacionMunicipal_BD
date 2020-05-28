@@ -57,7 +57,7 @@ namespace model.dao
             bool existenRegistros;
             try
             {
-                comando = new SqlCommand("[dbo].[ObtenerPropietariosSP]", objConexion.getConexion());
+                comando = new SqlCommand("spObtenerPropietarios", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
                 objConexion.getConexion().Open();
                 SqlDataReader read = comando.ExecuteReader();
