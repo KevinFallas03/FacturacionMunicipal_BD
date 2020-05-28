@@ -47,7 +47,7 @@ namespace model.dao
                 {
                     Usuario objetoUsuario = new Usuario();
                     objetoUsuario.NombreUsuario = read[0].ToString();
-                    objetoUsuario.NombreUsuario = read[1].ToString();
+                    objetoUsuario.Password = read[1].ToString();
                     objetoUsuario.TipoUsuario = read[2].ToString();
                     listaUsuarios.Add(objetoUsuario);
                 }
