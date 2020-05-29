@@ -39,16 +39,20 @@ namespace model.dao
 
             try
             {
-                comando = new SqlCommand("spObtenerUsuarios", objConexion.getConexion());
-                comando.CommandType = CommandType.StoredProcedure;
+                comando = new SqlCommand("spObtenerUsuarios", objConexion.getConexion())
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 objConexion.getConexion().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    Usuario objetoUsuario = new Usuario();
-                    objetoUsuario.NombreUsuario = read[0].ToString();
-                    objetoUsuario.Password = read[1].ToString();
-                    objetoUsuario.TipoUsuario = read[2].ToString();
+                    Usuario objetoUsuario = new Usuario
+                    {
+                        NombreUsuario = read[0].ToString(),
+                        Password = read[1].ToString(),
+                        TipoUsuario = read[2].ToString()
+                    };
                     listaUsuarios.Add(objetoUsuario);
                 }
             }

@@ -40,16 +40,20 @@ namespace model.dao
 
             try
             {
-                comando = new SqlCommand("spObtenerPropiedades", objConexion.getConexion());
-                comando.CommandType = CommandType.StoredProcedure;
+                comando = new SqlCommand("spObtenerPropiedades", objConexion.getConexion())
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
                 objConexion.getConexion().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    Propiedad objetoPropiedad = new Propiedad();
-                    objetoPropiedad.NumeroPropiedad = Convert.ToInt32(read[0].ToString());
-                    objetoPropiedad.ValorPropiedad = Convert.ToDecimal(read[1].ToString());
-                    objetoPropiedad.DireccionPropiedad = read[2].ToString();
+                    Propiedad objetoPropiedad = new Propiedad
+                    {
+                        NumeroPropiedad = Convert.ToInt32(read[0].ToString()),
+                        ValorPropiedad = Convert.ToDecimal(read[1].ToString()),
+                        DireccionPropiedad = read[2].ToString()
+                    };
                     listaPropiedades.Add(objetoPropiedad);
                 }
             }

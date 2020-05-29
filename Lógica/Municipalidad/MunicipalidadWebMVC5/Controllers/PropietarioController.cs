@@ -47,6 +47,30 @@ namespace MunicipalidadWebMVC5.Controllers
                     break;
             }
         }
+
+        public ActionResult Find(int ID)
+        {
+            Propietario objpropietario = new Propietario(Convert.ToInt32(ID));
+            objetoPropietario.find(objpropietario);
+            return View(objpropietario);
+        }
+
+        [HttpGet]
+        public ActionResult Update(int ID)
+        {
+            Propietario objpropietario = new Propietario(ID);
+            objetoPropietario.find(objpropietario);
+            return View(objpropietario);
+        }
+
+        [HttpPost]
+        public ActionResult Update(Propietario objpropietario)
+        {
+            objetoPropietario.update(objpropietario);
+            //return Content(obj.propietario.Nombre);
+            //return View(objpropietario);
+            return RedirectToAction("Inicio");
+        }
     }
 }
 
