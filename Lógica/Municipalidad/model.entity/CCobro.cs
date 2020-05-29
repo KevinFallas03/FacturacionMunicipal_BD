@@ -10,8 +10,8 @@ namespace model.entity
     {
         protected int iD;
         protected string nombre;
-        protected float tasaInteresesMoratorios;
-        protected byte diaEmisionRecibo;// tipo tinyint
+        protected Decimal tasaInteresesMoratorios;
+        protected DateTime diaEmisionRecibo;// tipo tinyint
         protected byte qDiasVencimiento;
         protected bool esImpuesto;
         protected bool esRecurrente;
@@ -20,20 +20,21 @@ namespace model.entity
         protected bool activo;
 
         public CCobro() { }
-        public CCobro(int pId) { this.ID = pId; } //revisar si es necesario
-        public CCobro(int pID, string pNombre, float pTasaInteresesMoratorios, byte pDiaEmisionRecibo,
+        public CCobro(int pID, string pNombre, Decimal pTasaInteresesMoratorios, DateTime pDiaEmisionRecibo,
                       byte pQDiasVencimiento, bool pEsImpuesto, bool pEsRecurrente, bool pEsFijo,
                       string pTipoCCobro, bool pActivo)
         {
             this.ID = pID;
-            this.TasaInteresesMoratorios = pTasaInteresesMoratorios;
-            this.DiaEmisionRecibo = pDiaEmisionRecibo;
+            this.tasaInteresesMoratorios = pTasaInteresesMoratorios;
+            this.diaEmisionRecibo = pDiaEmisionRecibo;
             this.QDiasVencimiento = pQDiasVencimiento;
             this.EsImpuesto = pEsImpuesto;
             this.EsRecurrente = pEsRecurrente;
             this.EsFijo = pEsFijo;
             this.Activo = pActivo;
         }
+
+        public CCobro(int pId) { this.ID = pId; } //revisar si es necesario
         //getters and setters
         public int ID { get => iD; set => iD = value; }
         public string Nombre { get => nombre; set => nombre = value; }

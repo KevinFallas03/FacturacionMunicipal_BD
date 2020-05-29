@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace model.entity
 {
-    class CCobro_MontoFijo : CCobro
+    public class CCobro_MontoFijo : CCobro
     {
-       // private 
+        private Decimal montoFijo;
+       public CCobro_MontoFijo(){}
+
+        public decimal MontoFijo { get => montoFijo; set => montoFijo = value; }
     }
 }

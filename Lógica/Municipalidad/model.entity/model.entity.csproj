@@ -42,10 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CCobro.cs" />
+    <Compile Include="CCobro_ConsumoAgua.cs" />
+    <Compile Include="CCobro_InteresMoratorio.cs" />
     <Compile Include="CCobro_MontoFijo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Propiedad.cs" />
     <Compile Include="Propietario.cs" />
+    <Compile Include="PropietarioJuridico.cs" />
     <Compile Include="Usuario.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
