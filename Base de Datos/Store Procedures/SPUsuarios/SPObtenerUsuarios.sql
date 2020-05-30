@@ -4,6 +4,6 @@ go
 Create procedure spObtenerUsuarios
 as
 Begin
-	select Nombre, Password, TipoUsuario 
+	select ID, Nombre, Password, TipoUsuario 
 	from [dbo].Usuario
 End

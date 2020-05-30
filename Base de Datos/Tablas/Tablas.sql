@@ -1,5 +1,5 @@
 /** Query Tablas de la base de datos del Municipio**/
-USE [Tarea Programada 1]
+USE [FacturacionMunicipal]
 GO
 
 /****** Object:  Table [dbo].[CCobro_ConsumoAgua]    Script Date: 22/5/2020 01:03:34 ******/
@@ -19,13 +19,6 @@ CREATE TABLE [dbo].[CCobro_ConsumoAgua](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[CCobro_ConsumoAgua]  WITH CHECK ADD  CONSTRAINT [FK_CC Consumo_Concepto Cobro] FOREIGN KEY([ID])
-REFERENCES [dbo].[CCobro] ([ID])
-GO
-
-ALTER TABLE [dbo].[CCobro_ConsumoAgua] CHECK CONSTRAINT [FK_CC Consumo_Concepto Cobro]
-GO
-
 /****** Object:  Table [dbo].[CCobro_MontoFijo]    Script Date: 22/5/2020 01:14:30 ******/
 SET ANSI_NULLS ON
 GO
@@ -43,13 +36,6 @@ CREATE TABLE [dbo].[CCobro_MontoFijo](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[CCobro_MontoFijo]  WITH CHECK ADD  CONSTRAINT [FK_CC Fijo_Concepto Cobro] FOREIGN KEY([ID])
-REFERENCES [dbo].[CCobro] ([ID])
-GO
-
-ALTER TABLE [dbo].[CCobro_MontoFijo] CHECK CONSTRAINT [FK_CC Fijo_Concepto Cobro]
-GO
-
 /****** Object:  Table [dbo].[CCobro_InteresMoratorio]    Script Date: 22/5/2020 01:05:31 ******/
 SET ANSI_NULLS ON
 GO
@@ -65,13 +51,6 @@ CREATE TABLE [dbo].[CCobro_InteresMoratorio](
 	[ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[CCobro_InteresMoratorio]  WITH CHECK ADD  CONSTRAINT [FK_CC Porcentaje_Concepto Cobro] FOREIGN KEY([ID])
-REFERENCES [dbo].[CCobro] ([ID])
-GO
-
-ALTER TABLE [dbo].[CCobro_InteresMoratorio] CHECK CONSTRAINT [FK_CC Porcentaje_Concepto Cobro]
 GO
 
 /****** Object:  Table [dbo].[CCobro]    Script Date: 22/5/2020 01:07:48 ******/
@@ -119,20 +98,6 @@ CREATE TABLE [dbo].[CCobro_PNP](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[CCobro_PNP]  WITH CHECK ADD  CONSTRAINT [FK_CCobro_PNP_CCobro] FOREIGN KEY([IdCCobbro])
-REFERENCES [dbo].[CCobro] ([ID])
-GO
-
-ALTER TABLE [dbo].[CCobro_PNP] CHECK CONSTRAINT [FK_CCobro_PNP_CCobro]
-GO
-
-ALTER TABLE [dbo].[CCobro_PNP]  WITH CHECK ADD  CONSTRAINT [FK_CCobro_PNP_Propiedad] FOREIGN KEY([IdPropiedad])
-REFERENCES [dbo].[Propiedad] ([ID])
-GO
-
-ALTER TABLE [dbo].[CCobro_PNP] CHECK CONSTRAINT [FK_CCobro_PNP_Propiedad]
-GO
-
 /****** Object:  Table [dbo].[Prop_Prop]    Script Date: 22/5/2020 00:47:33 ******/
 SET ANSI_NULLS ON
 GO
@@ -151,20 +116,6 @@ CREATE TABLE [dbo].[Prop_Prop](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Prop_Prop]  WITH CHECK ADD  CONSTRAINT [FK_Prop_Prop_Propiedad] FOREIGN KEY([IdPropiedad])
-REFERENCES [dbo].[Propiedad] ([ID])
-GO
-
-ALTER TABLE [dbo].[Prop_Prop] CHECK CONSTRAINT [FK_Prop_Prop_Propiedad]
-GO
-
-ALTER TABLE [dbo].[Prop_Prop]  WITH CHECK ADD  CONSTRAINT [FK_Prop_Prop_Propietario] FOREIGN KEY([IdPropiedad])
-REFERENCES [dbo].[Propietario] ([ID])
-GO
-
-ALTER TABLE [dbo].[Prop_Prop] CHECK CONSTRAINT [FK_Prop_Prop_Propietario]
-GO
-
 /****** Object:  Table [dbo].[Propiedad]    Script Date: 22/5/2020 00:48:14 ******/
 SET ANSI_NULLS ON
 GO
@@ -173,7 +124,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Propiedad](
-	[ID] [int] NOT NULL,
+	[ID] [int] Identity (1,1) NOT NULL,
 	[NumFinca] [int] NOT NULL,
 	[Valor] [money] NOT NULL,
 	[Direccion] [varchar](150) NOT NULL,
@@ -203,13 +154,6 @@ CREATE TABLE [dbo].[Propietario](
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Propietario]  WITH CHECK ADD  CONSTRAINT [FK_Propietario_TipoDocumentoId] FOREIGN KEY([IdTipoDocumento])
-REFERENCES [dbo].[TipoDocumentoId] ([ID])
-GO
-
-ALTER TABLE [dbo].[Propietario] CHECK CONSTRAINT [FK_Propietario_TipoDocumentoId]
-GO
-
 /****** Object:  Table [dbo].[PropietarioJuridico]    Script Date: 22/5/2020 00:50:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -228,21 +172,6 @@ CREATE TABLE [dbo].[PropietarioJuridico](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
-ALTER TABLE [dbo].[PropietarioJuridico]  WITH CHECK ADD  CONSTRAINT [FK_PropietarioJuridico_Propietario] FOREIGN KEY([ID])
-REFERENCES [dbo].[Propietario] ([ID])
-GO
-
-ALTER TABLE [dbo].[PropietarioJuridico] CHECK CONSTRAINT [FK_PropietarioJuridico_Propietario]
-GO
-
-ALTER TABLE [dbo].[PropietarioJuridico]  WITH CHECK ADD  CONSTRAINT [FK_PropietarioJuridico_TipoDocumentoId] FOREIGN KEY([IdTipoDocumento])
-REFERENCES [dbo].[TipoDocumentoId] ([ID])
-GO
-
-ALTER TABLE [dbo].[PropietarioJuridico] CHECK CONSTRAINT [FK_PropietarioJuridico_TipoDocumentoId]
-GO
-
 
 /****** Object:  Table [dbo].[TipoDocumentoId]    Script Date: 22/5/2020 00:52:02 ******/
 SET ANSI_NULLS ON
@@ -269,7 +198,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[Usuario](
-	[ID] [int] NOT NULL,
+	[ID] [int] Identity (1,1) NOT NULL,
 	[Nombre] [varchar](100) NOT NULL,
 	[Password] [varchar](100) NOT NULL,
 	[TipoUsuario] [varchar](50) NOT NULL,
@@ -298,6 +227,77 @@ CREATE TABLE [dbo].[Usuario_Prop](
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[CCobro_ConsumoAgua]  WITH CHECK ADD  CONSTRAINT [FK_CC Consumo_Concepto Cobro] FOREIGN KEY([ID])
+REFERENCES [dbo].[CCobro] ([ID])
+GO
+
+ALTER TABLE [dbo].[CCobro_ConsumoAgua] CHECK CONSTRAINT [FK_CC Consumo_Concepto Cobro]
+GO
+
+ALTER TABLE [dbo].[CCobro_PNP]  WITH CHECK ADD  CONSTRAINT [FK_CCobro_PNP_CCobro] FOREIGN KEY([IdCCobbro])
+REFERENCES [dbo].[CCobro] ([ID])
+GO
+
+ALTER TABLE [dbo].[CCobro_PNP] CHECK CONSTRAINT [FK_CCobro_PNP_CCobro]
+GO
+
+ALTER TABLE [dbo].[CCobro_PNP]  WITH CHECK ADD  CONSTRAINT [FK_CCobro_PNP_Propiedad] FOREIGN KEY([IdPropiedad])
+REFERENCES [dbo].[Propiedad] ([ID])
+GO
+
+ALTER TABLE [dbo].[CCobro_PNP] CHECK CONSTRAINT [FK_CCobro_PNP_Propiedad]
+GO
+
+ALTER TABLE [dbo].[CCobro_MontoFijo]  WITH CHECK ADD  CONSTRAINT [FK_CC Fijo_Concepto Cobro] FOREIGN KEY([ID])
+REFERENCES [dbo].[CCobro] ([ID])
+GO
+
+ALTER TABLE [dbo].[CCobro_MontoFijo] CHECK CONSTRAINT [FK_CC Fijo_Concepto Cobro]
+GO
+
+ALTER TABLE [dbo].[Prop_Prop]  WITH CHECK ADD  CONSTRAINT [FK_Prop_Prop_Propiedad] FOREIGN KEY([IdPropiedad])
+REFERENCES [dbo].[Propiedad] ([ID])
+GO
+
+ALTER TABLE [dbo].[Prop_Prop] CHECK CONSTRAINT [FK_Prop_Prop_Propiedad]
+GO
+
+ALTER TABLE [dbo].[Prop_Prop]  WITH CHECK ADD  CONSTRAINT [FK_Prop_Prop_Propietario] FOREIGN KEY([IdPropiedad])
+REFERENCES [dbo].[Propietario] ([ID])
+GO
+
+ALTER TABLE [dbo].[Prop_Prop] CHECK CONSTRAINT [FK_Prop_Prop_Propietario]
+GO
+
+ALTER TABLE [dbo].[PropietarioJuridico]  WITH CHECK ADD  CONSTRAINT [FK_PropietarioJuridico_Propietario] FOREIGN KEY([ID])
+REFERENCES [dbo].[Propietario] ([ID])
+GO
+
+ALTER TABLE [dbo].[PropietarioJuridico] CHECK CONSTRAINT [FK_PropietarioJuridico_Propietario]
+GO
+
+ALTER TABLE [dbo].[PropietarioJuridico]  WITH CHECK ADD  CONSTRAINT [FK_PropietarioJuridico_TipoDocumentoId] FOREIGN KEY([IdTipoDocumento])
+REFERENCES [dbo].[TipoDocumentoId] ([ID])
+GO
+
+ALTER TABLE [dbo].[PropietarioJuridico] CHECK CONSTRAINT [FK_PropietarioJuridico_TipoDocumentoId]
+GO
+
+ALTER TABLE [dbo].[Propietario]  WITH CHECK ADD  CONSTRAINT [FK_Propietario_TipoDocumentoId] FOREIGN KEY([IdTipoDocumento])
+REFERENCES [dbo].[TipoDocumentoId] ([ID])
+GO
+
+ALTER TABLE [dbo].[Propietario] CHECK CONSTRAINT [FK_Propietario_TipoDocumentoId]
+GO
+
+ALTER TABLE [dbo].[CCobro_InteresMoratorio]  WITH CHECK ADD  CONSTRAINT [FK_CC Porcentaje_Concepto Cobro] FOREIGN KEY([ID])
+REFERENCES [dbo].[CCobro] ([ID])
+GO
+
+ALTER TABLE [dbo].[CCobro_InteresMoratorio] CHECK CONSTRAINT [FK_CC Porcentaje_Concepto Cobro]
+GO
+
+
 ALTER TABLE [dbo].[Usuario_Prop]  WITH CHECK ADD  CONSTRAINT [FK_Usuario_Prop_Propiedad] FOREIGN KEY([IdPropiedad])
 REFERENCES [dbo].[Propiedad] ([ID])
 GO
@@ -311,3 +311,4 @@ GO
 
 ALTER TABLE [dbo].[Usuario_Prop] CHECK CONSTRAINT [FK_Usuario_Prop_Usuario]
 GO
+
