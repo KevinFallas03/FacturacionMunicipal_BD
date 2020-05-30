@@ -54,7 +54,6 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@ValorDocumento", objPropietario.ValorDocumentoId);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
-
             }
             catch (Exception)
             {

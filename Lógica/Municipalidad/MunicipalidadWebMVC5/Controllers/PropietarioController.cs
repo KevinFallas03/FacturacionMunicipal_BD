@@ -64,10 +64,11 @@ namespace MunicipalidadWebMVC5.Controllers
         }
 
         [HttpPost]
-        public ActionResult Update(Propietario objpropietario)
+        public ActionResult Update(Propietario objpropietario, int ID)
         {
+            objpropietario.IdPropietario = ID;
             objetoPropietario.update(objpropietario);
-            //return Content(obj.propietario.Nombre);
+            //return Content(obj.propietario.Nombre 
             //return View(objpropietario);
             return RedirectToAction("Inicio");
         }

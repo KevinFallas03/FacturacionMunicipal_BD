@@ -28,7 +28,7 @@ namespace MunicipalidadWebMVC5
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Propiedad", action = "Inicio", id = UrlParameter.Optional }
+                defaults: new { controller = "Propietario", action = "Inicio", id = UrlParameter.Optional }
             );
 
             
