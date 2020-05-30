@@ -6,27 +6,22 @@ using System.Data.SqlClient;
 
 namespace model.dao
 {
-    class CCobro_MontoFijoDao : TemplateCRUD<CCobro_MontoFijoDao>
+    class CCobro_MontoFijoDao : TemplateCRUD<CCobro_MontoFijo>
     {
         private Conexion objConexion;
         private SqlCommand comando;
 
-        public CCobro_MontoFijoDao()
-        {
-            objConexion = Conexion.saberEstado();
-        }
-
-        public void create(CCobro_MontoFijoDao objetoCobro)
+        public void create(CCobro_MontoFijo objeto)
         {
             throw new NotImplementedException();
         }
 
-        public void delete(CCobro_MontoFijoDao objetoCobro)
+        public void delete(CCobro_MontoFijo objeto)
         {
             throw new NotImplementedException();
         }
 
-        public bool find(CCobro_MontoFijoDao objetoCobro)
+        public bool find(CCobro_MontoFijo objeto)
         {
             throw new NotImplementedException();
         }
@@ -45,7 +40,7 @@ namespace model.dao
                 {
                     CCobro_MontoFijo objetoCobro = new CCobro_MontoFijo();
                     objetoCobro.Nombre = read[0].ToString();
-                    objetoCobro.TasaInteresesMoratorios = (float)Convert.ToDecimal(read[1].ToString());
+                    objetoCobro.TasaInteresesMoratorios = Convert.ToDecimal(read[1].ToString());
                     objetoCobro.DiaEmisionRecibo = Convert.ToByte(read[2].ToString());
                     objetoCobro.QDiasVencimiento = Convert.ToByte(read[2].ToString());
                     objetoCobro.EsImpuesto = Convert.ToBoolean(read[3]);
@@ -70,7 +65,7 @@ namespace model.dao
             return listaCobrosFijos;
         }
 
-        public void update(CCobro_MontoFijoDao objetoCobro)
+        public void update(CCobro_MontoFijo objeto)
         {
             throw new NotImplementedException();
         }

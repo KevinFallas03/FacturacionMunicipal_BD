@@ -44,7 +44,7 @@ namespace model.dao
                 {
                     CCobro_InteresMoratorio objetoCobro = new CCobro_InteresMoratorio();
                     objetoCobro.Nombre = read[0].ToString();
-                    objetoCobro.TasaInteresesMoratorios = (float)Convert.ToDecimal(read[1].ToString());
+                    objetoCobro.TasaInteresesMoratorios = Convert.ToDecimal(read[1].ToString());
                     objetoCobro.DiaEmisionRecibo = Convert.ToByte(read[2].ToString());
                     objetoCobro.QDiasVencimiento = Convert.ToByte(read[2].ToString());
                     objetoCobro.EsImpuesto = Convert.ToBoolean(read[3]);

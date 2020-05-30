@@ -48,7 +48,7 @@ namespace model.dao
                 {
                     CCobro_ConsumoAgua objetoCobro = new CCobro_ConsumoAgua();
                     objetoCobro.Nombre = read[0].ToString();
-                    objetoCobro.TasaInteresesMoratorios = (float)Convert.ToDecimal(read[1].ToString());
+                    objetoCobro.TasaInteresesMoratorios = Convert.ToDecimal(read[1].ToString());
                     objetoCobro.DiaEmisionRecibo = Convert.ToByte(read[2].ToString());
                     objetoCobro.QDiasVencimiento = Convert.ToByte(read[2].ToString());
                     objetoCobro.EsImpuesto = Convert.ToBoolean(read[3]);
