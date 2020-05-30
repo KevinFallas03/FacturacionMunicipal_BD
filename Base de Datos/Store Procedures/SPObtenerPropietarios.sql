@@ -4,7 +4,7 @@ go
 Create procedure spObtenerPropietarios
 as
 Begin
-	select Nombre, IdTipoDocumento, ValorDocumento 
+	select ID, Nombre, IdTipoDocumento, ValorDocumento 
 	from [dbo].Propietario
 
 

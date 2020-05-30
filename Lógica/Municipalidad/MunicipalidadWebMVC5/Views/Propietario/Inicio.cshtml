@@ -1,5 +1,4 @@
-﻿
-@model List<model.entity.Propietario>
+﻿@model List<model.entity.Propietario>
 @{
     ViewBag.Title = "Inicio";
 }
@@ -14,7 +13,7 @@
             <th>Nombre</th>
             <th>Tipo de documento</th>
             <th>Valor documento</th>
-            <th colspan ="3"> Operaciones</th>
+            <th colspan="3"> Operaciones</th>
         </tr>
         @foreach (var objetoPropietario in Model)
         {
@@ -22,9 +21,9 @@
                 <td>@objetoPropietario.Nombre</td>
                 <td>@objetoPropietario.TipoDocumento</td>
                 <td>@objetoPropietario.ValorDocumentoId</td>
-                <td><a class="btn btn-success" href="">Ver</a></td>
-                <td><a class="btn btn-warning" href="">Editar</a></td>
-                <td><a class="btn btn-danger" href="">Borrar</a></td>
+                <td><a class="btn btn-success" href="~/Propietario/Find/@objetoPropietario.IdPropietario">Ver</a></td>
+                <td><a class="btn btn-warning" href="~/Propietario/Update/@objetoPropietario.IdPropietario">Editar</a></td>
+                <td><a class="btn btn-danger" href="~/Propietario/Delete/@objetoPropietario.IdPropietario">Borrar</a></td>
             </tr>
         }
     </table>

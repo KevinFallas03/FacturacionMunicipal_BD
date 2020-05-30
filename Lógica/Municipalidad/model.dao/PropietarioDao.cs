@@ -42,9 +42,29 @@ namespace model.dao
             }
         }
 
-        public void update(Propietario objetoPropietario)
+        public void update(Propietario objPropietario)
         {
+            try
+            {
+                comando = new SqlCommand("spEditarPropietario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", objPropietario.IdPropietario);
+                comando.Parameters.AddWithValue("@Nombre", objPropietario.Nombre);
+                comando.Parameters.AddWithValue("@IdTipoDocumento", objPropietario.TipoDocumento);
+                comando.Parameters.AddWithValue("@ValorDocumento", objPropietario.ValorDocumentoId);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public void delete(Propietario objetoPropietario)
@@ -52,27 +72,28 @@ namespace model.dao
             
         }
 
-        public bool find(Propietario objetoPropietario)
+        public bool find(Propietario objpropietario)
         {
-            bool existenRegistros;
+            bool hayRegistros;
             try
             {
-                comando = new SqlCommand("spObtenerPropietarios", objConexion.getConexion());
+                comando = new SqlCommand("spVerPropietario", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objpropietario.IdPropietario);
                 objConexion.getConexion().Open();
                 SqlDataReader read = comando.ExecuteReader();
-                existenRegistros = read.Read();
-                if (existenRegistros)
+                hayRegistros = read.Read();
+                if (hayRegistros)
                 {
-                    objetoPropietario.Nombre = read[0].ToString();
-                    objetoPropietario.TipoDocumento = Convert.ToInt32(read[1].ToString());
-                    objetoPropietario.ValorDocumentoId = read[2].ToString();
-
-                    objetoPropietario.EstadoError = 99;
-                }
+                    objpropietario.IdPropietario = Convert.ToInt32(read[0].ToString());
+                    objpropietario.Nombre = read[1].ToString();
+                    objpropietario.TipoDocumento = Convert.ToInt32(read[2].ToString());
+                    objpropietario.ValorDocumentoId = read[3].ToString();
+                    objpropietario.EstadoError = 99;
+                } 
                 else
                 {
-                    objetoPropietario.EstadoError = -99;
+                    objpropietario.EstadoError = 1;
                 }
             }
             catch (Exception)
@@ -84,7 +105,7 @@ namespace model.dao
                 objConexion.getConexion().Close();
                 objConexion.cerrarConexion();
             }
-            return existenRegistros;
+            return hayRegistros;
         }
 
         public List<Propietario> findAll()
@@ -99,10 +120,13 @@ namespace model.dao
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
                 {
-                    Propietario objetoPropietario = new Propietario();
-                    objetoPropietario.Nombre = read[0].ToString();
-                    objetoPropietario.TipoDocumento = Convert.ToInt32(read[1].ToString());
-                    objetoPropietario.ValorDocumentoId = read[2].ToString();
+                    Propietario objetoPropietario = new Propietario
+                    {
+                        IdPropietario = Convert.ToInt32(read[0].ToString()),
+                        Nombre = read[1].ToString(),
+                        TipoDocumento = Convert.ToInt32(read[2].ToString()),
+                        ValorDocumentoId = read[3].ToString()
+                    };
                     listaPropietarios.Add(objetoPropietario);
                 }
             }
