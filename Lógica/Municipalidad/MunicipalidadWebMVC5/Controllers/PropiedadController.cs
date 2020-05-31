@@ -1,9 +1,6 @@
 ﻿using model.dao;
 using model.entity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MunicipalidadWebMVC5.Controllers
