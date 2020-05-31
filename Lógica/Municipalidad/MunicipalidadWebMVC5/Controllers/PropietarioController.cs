@@ -35,7 +35,7 @@ namespace MunicipalidadWebMVC5.Controllers
         {
             objetoPropietario.create(objPropietario);
             mensajeErrorRegistro(objPropietario);
-            return View();
+            return RedirectToAction("Inicio");
         }
 
         public void mensajeErrorRegistro(Propietario objPropietario)
@@ -68,8 +68,6 @@ namespace MunicipalidadWebMVC5.Controllers
         {
             objPropietario.IdPropietario = ID;
             objetoPropietario.update(objPropietario);
-            //return Content(obj.propietario.Nombre 
-            //return View(objpropietario);
             return RedirectToAction("Inicio");
         }
 

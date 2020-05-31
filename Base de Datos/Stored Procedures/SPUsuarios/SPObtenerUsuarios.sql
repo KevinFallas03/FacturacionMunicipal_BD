@@ -6,4 +6,5 @@ as
 Begin
 	select Nombre, Password, TipoUsuario 
 	from [dbo].Usuario
+	where EstaBorrado = 0 
 End

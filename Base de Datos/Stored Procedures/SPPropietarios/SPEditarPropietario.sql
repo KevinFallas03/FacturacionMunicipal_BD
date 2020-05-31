@@ -13,7 +13,7 @@ begin
      
    Update [dbo].Propietario
    set Nombre=@Nombre, IdTipoDocumento=@IdTipoDocumento, ValorDocumento=@ValorDocumento
-   where ID=@id      
+   where ID=@id and EstaBorrado = 0   
 End
 
 go

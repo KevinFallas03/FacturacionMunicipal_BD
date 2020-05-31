@@ -136,6 +136,12 @@
     <Content Include="Views\Propiedad\Inicio.cshtml" />
     <Content Include="Views\Propietario\Find.cshtml" />
     <Content Include="Views\Propietario\Update.cshtml" />
+    <Content Include="Views\Usuario\Create.cshtml" />
+    <Content Include="Views\Usuario\Find.cshtml" />
+    <Content Include="Views\Usuario\Update.cshtml" />
+    <Content Include="Views\Propiedad\Update.cshtml" />
+    <Content Include="Views\Propiedad\Find.cshtml" />
+    <Content Include="Views\Propiedad\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -6,4 +6,5 @@ as
 Begin
 	select NumFinca, Valor, Direccion 
 	from [dbo].Propiedad
+	where EstaBorrado = 0
 End

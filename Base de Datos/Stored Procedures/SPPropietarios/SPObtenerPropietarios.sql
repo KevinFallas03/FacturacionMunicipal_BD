@@ -6,6 +6,6 @@ as
 Begin
 	select ID, Nombre, IdTipoDocumento, ValorDocumento 
 	from [dbo].Propietario
-	where EstaBorrado = 0
+	where EstaBorrado = 0 and EstaBorrado = 0
 
 End

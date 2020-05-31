@@ -9,6 +9,6 @@ Create procedure spInsertarPropietario
 )
 as
 Begin
-	Insert into [dbo].Propietario (Nombre, IdTipoDocumento, ValorDocumento)
-	Values (@Nombre, @IdTipoDocumento, @ValorDocumento)
+	Insert into [dbo].Propietario (Nombre, IdTipoDocumento, ValorDocumento, EstaBorrado)
+	Values (@Nombre, @IdTipoDocumento, @ValorDocumento, 0)
 End

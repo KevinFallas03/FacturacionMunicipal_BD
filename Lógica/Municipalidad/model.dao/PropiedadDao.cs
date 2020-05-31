@@ -21,7 +21,25 @@ namespace model.dao
 
         public void create(Propiedad objetoPropiedad)
         {
-            throw new NotImplementedException();
+            try
+            {
+                comando = new SqlCommand("spInsertarPropiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@NumFinca", objetoPropiedad.NumeroPropiedad);
+                comando.Parameters.AddWithValue("@Valor", objetoPropiedad.ValorPropiedad);
+                comando.Parameters.AddWithValue("@Direccion", objetoPropiedad.DireccionPropiedad);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public void delete(Propiedad objetoPropiedad)
@@ -31,7 +49,33 @@ namespace model.dao
 
         public bool find(Propiedad objetoPropiedad)
         {
-            throw new NotImplementedException();
+            bool hayRegistros;
+            try
+            {
+                comando = new SqlCommand("spVerPropiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objetoPropiedad.IdPropiedad);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    objetoPropiedad.IdPropiedad = Convert.ToInt32(read[0].ToString());
+                    objetoPropiedad.NumeroPropiedad = Convert.ToInt32(read[1].ToString());
+                    objetoPropiedad.ValorPropiedad = Convert.ToDecimal(read[2].ToString());
+                    objetoPropiedad.DireccionPropiedad = read[3].ToString();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return hayRegistros;
         }
 
         public List<Propiedad> findAll()
@@ -50,9 +94,10 @@ namespace model.dao
                 {
                     Propiedad objetoPropiedad = new Propiedad
                     {
-                        NumeroPropiedad = Convert.ToInt32(read[0].ToString()),
-                        ValorPropiedad = Convert.ToDecimal(read[1].ToString()),
-                        DireccionPropiedad = read[2].ToString()
+                        IdPropiedad = Convert.ToInt32(read[0].ToString()),
+                        NumeroPropiedad = Convert.ToInt32(read[1].ToString()),
+                        ValorPropiedad = Convert.ToDecimal(read[2].ToString()),
+                        DireccionPropiedad = read[3].ToString()
                     };
                     listaPropiedades.Add(objetoPropiedad);
                 }
@@ -70,9 +115,28 @@ namespace model.dao
             return listaPropiedades;
         }
 
-        public void update(Propiedad objeto)
+        public void update(Propiedad objetoPropiedad)
         {
-            throw new NotImplementedException();
+            try
+            {
+                comando = new SqlCommand("spEditarPropiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", objetoPropiedad.IdPropiedad);
+                comando.Parameters.AddWithValue("@NumFinca", objetoPropiedad.NumeroPropiedad);
+                comando.Parameters.AddWithValue("@Valor", objetoPropiedad.ValorPropiedad);
+                comando.Parameters.AddWithValue("@Direccion", objetoPropiedad.DireccionPropiedad);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
     }
 }

@@ -22,9 +22,9 @@
                 <td>@objetoUsuario.NombreUsuario</td>
                 <td>@objetoUsuario.Password</td>
                 <td>@objetoUsuario.TipoUsuario</td>
-                <td><a class="btn btn-success" href="">Ver</a></td>
-                <td><a class="btn btn-warning" href="">Editar</a></td>
-                <td><a class="btn btn-danger" href="">Borrar</a></td>
+                <td><a class="btn btn-success" href="~/Usuario/Find/@objetoUsuario.IdUsuario">Ver</a></td>
+                <td><a class="btn btn-warning" href="~/Usuario/Update/@objetoUsuario.IdUsuario">Editar</a></td>
+                <td><a class="btn btn-danger" href="~/Usuario/@objetoUsuario.IdUsuario">Borrar</a></td>
             </tr>
         }
     </table>
