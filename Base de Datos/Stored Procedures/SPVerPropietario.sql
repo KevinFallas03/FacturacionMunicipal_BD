@@ -5,7 +5,7 @@ Create procedure spVerPropietario
 as       
 begin      
    Select ID, Nombre, IdTipoDocumento, ValorDocumento 
-   from [dbo].Propietario where ID=@ID     
+   from [dbo].Propietario where ID=@ID  and EstaBorrado = 0
 End
 
 go
