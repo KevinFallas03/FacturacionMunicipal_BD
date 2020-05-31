@@ -1,14 +1,14 @@
 --SP para insertar Propietarios
 use FacturacionMunicipal
 go
-Create procedure spInsertarUsuario
+Create procedure spInsertarPropiedad
 (
-	@Nombre VARCHAR(100),
-	@Password VARCHAR(100),
-	@TipoUsuario VARCHAR(50)
+	@NumFinca int,
+	@Valor money,
+	@Direccion VARCHAR(150)
 )
 as
 Begin
-	Insert into [dbo].Usuario (Nombre, Password, TipoUsuario)
-	Values (@Nombre, @Password, @TipoUsuario)
+	Insert into [dbo].Propiedad (NumFinca, Valor, Direccion)
+	Values (@NumFinca, @Valor, @Direccion)
 End

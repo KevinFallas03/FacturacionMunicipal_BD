@@ -1,4 +1,4 @@
-Create procedure spVerPropiedad  
+Create procedure spVerPropiedad
 (      
    @ID int      
 )      

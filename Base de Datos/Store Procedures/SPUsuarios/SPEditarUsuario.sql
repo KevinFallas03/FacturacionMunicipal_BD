@@ -1,18 +1,18 @@
 use FacturacionMunicipal
 go
 
-Create procedure spEditarUsuario  
+Create procedure spEditarPropiedad
 (      
 	@id int,
-	@Nombre VARCHAR(100),
-	@Password VARCHAR(100),
-	@TipoUsuario VARCHAR(50)  
+	@NumFinca int,
+	@Valor money,
+	@Direccion VARCHAR(150)  
 )      
 as      
 begin  
      
-   Update [dbo].Usuario
-   set Nombre=@Nombre, Password=@Password, TipoUsuario=@TipoUsuario
+   Update [dbo].Propiedad
+   set NumFinca=@NumFinca, Valor=@Valor, Direccion=@Direccion
    where ID=@id      
 End
 
