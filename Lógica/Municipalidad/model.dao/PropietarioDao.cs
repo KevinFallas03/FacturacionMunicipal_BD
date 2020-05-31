@@ -68,7 +68,23 @@ namespace model.dao
 
         public void delete(Propietario objetoPropietario)
         {
-            
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropietario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objetoPropietario.IdPropietario);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public bool find(Propietario objpropietario)
