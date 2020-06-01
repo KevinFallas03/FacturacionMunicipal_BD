@@ -3,12 +3,21 @@
 
 -- precondición, los nodos para la fecha de operación en el XML vienen en orden ascendente.
 
-Declare @propietarios table (sec int identity(1,1) primary key, TipoDocId int, Nombre varchar(100))
+Declare @propietarios table 
+(
+   sec int identity(1,1) primary key, 
+   TipoDocId int, 
+   Nombre varchar(100)
+)
 
 declare @FechaOperacion date
 
 -- se extraen fechas operación
-Declare @FechasAProcesar table (sec int identity(1,1) primary key, fecha date) 
+Declare @FechasAProcesar table 
+(
+   sec int identity(1,1) primary key, 
+   fecha date
+) 
 insert @FechasAProcesar (fecha)
 select <nombre campo fecha de nodo fechaoperacion del archivo XML>
 from <extracion del nodo fecha operacion del archivo XML>
