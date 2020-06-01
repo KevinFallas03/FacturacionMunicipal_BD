@@ -157,6 +157,7 @@ namespace model.dao
             }
             return listaPropietarios;
         }
+
         public List<Propiedad> findAllPropiedades(int id)
         {
             List<Propiedad> listaPropietarios = new List<Propiedad>();

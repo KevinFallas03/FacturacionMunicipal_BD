@@ -67,7 +67,23 @@ namespace model.dao
 
         public void delete(Usuario objetoUsuario)
         {
-            throw new NotImplementedException();
+            try
+            {
+                comando = new SqlCommand("spBorradoLogUsuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objetoUsuario.IdUsuario);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public bool find(Usuario objetoUsuario)
@@ -136,6 +152,43 @@ namespace model.dao
                 objConexion.cerrarConexion();
             }
             return listaUsuarios;
+        }
+
+        public List<Propiedad> findAllPropiedades(int id)
+        {
+            List<Propiedad> listaPropietarios = new List<Propiedad>();
+            List<int> listaid = new List<int>();
+            try
+            {
+                comando = new SqlCommand("spObtenerPropiedades_Usuarios", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Propiedad objetoPropiedad = new Propiedad
+                    {
+                        IdPropiedad = Convert.ToInt32(read[0].ToString()),
+                        NumeroPropiedad = Convert.ToInt32(read[1].ToString()),
+                        ValorPropiedad = Convert.ToDecimal(read[2].ToString()),
+                        DireccionPropiedad = read[3].ToString(),
+                    };
+                    listaPropietarios.Add(objetoPropiedad);
+                }
+
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaPropietarios;
         }
 
     }
