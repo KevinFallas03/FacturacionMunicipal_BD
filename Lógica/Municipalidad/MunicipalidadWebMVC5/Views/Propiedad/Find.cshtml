@@ -3,7 +3,7 @@
     ViewBag.Title = "Find";
 }
 
-<h2>Datos de Propietario</h2>
+<h2>Datos de Propiedad</h2>
 @using (Html.BeginForm())
 {
     <div class="form-horizontal">
@@ -36,6 +36,8 @@
         </div>
     </div>
     <div class="form-actions col-md-offset-2">
+        <input class="btn btn-primary" type="submit" name=btnguardar value="Usuarios" />
+        <input class="btn btn-primary" type="submit" name=btnguardar value="Propietarios" />
         @Html.ActionLink("Regresar al listado", "Inicio")
     </div>
 }
