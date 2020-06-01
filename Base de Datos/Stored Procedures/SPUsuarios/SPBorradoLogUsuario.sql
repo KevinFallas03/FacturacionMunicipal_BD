@@ -1,12 +1,12 @@
 Use FacturacionMunicipal
 Go
-CREATE PROCEDURE spBorradoLogPropietario
+CREATE PROCEDURE spBorradoLogUsuario
 (
 	@ID int
 )
 AS 
 BEGIN 
-	UPDATE dbo.Propietario
+	UPDATE dbo.Usuario
 	SET EstaBorrado=1
 	WHERE ID = @ID
 END 
