@@ -1,7 +1,9 @@
 Use FacturacionMunicipal
 Go
 CREATE PROCEDURE spBorradoLogPropietario
-@ID int
+(
+	@ID int
+)
 AS 
 BEGIN 
 	UPDATE dbo.Propietario
