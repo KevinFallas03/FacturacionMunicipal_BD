@@ -1,0 +1,31 @@
+﻿@model List<model.entity.Propietario>
+@{
+    ViewBag.Title = "Inicio";
+}
+
+<h2>Propietario</h2>
+<div class="container-fluid">
+    <div>
+        <a class="btn btn-primary" href="/Propietario/Create">Nuevo</a>
+    </div>
+    <table class="table">
+        <tr class="btn-primary">
+            <th>Nombre</th>
+            <th>Tipo de documento</th>
+            <th>Valor documento</th>
+            <th></th>
+        </tr>
+        @foreach (var objetoPropietario in Model)
+        {
+            <tr>
+                <td>@objetoPropietario.Nombre</td>
+                <td>@objetoPropietario.TipoDocumento</td>
+                <td>@objetoPropietario.ValorDocumentoId</td>
+                <td><a class="btn btn-danger" href="~/Propietario/Delete/@objetoPropietario.IdPropietario">Borrar</a></td>
+            </tr>
+        }
+    </table>
+    <div class="form-actions">
+        @Html.ActionLink("Regresar al listado", "Inicio")
+    </div>
+</div>

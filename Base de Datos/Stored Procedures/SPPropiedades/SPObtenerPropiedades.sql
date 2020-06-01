@@ -4,7 +4,7 @@ go
 Create procedure spObtenerPropiedades
 as
 Begin
-	select NumFinca, Valor, Direccion 
+	select ID, NumFinca, Valor, Direccion 
 	from [dbo].Propiedad
 	where EstaBorrado = 0
 End
