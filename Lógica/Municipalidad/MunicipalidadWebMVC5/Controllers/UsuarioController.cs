@@ -37,11 +37,18 @@ namespace MunicipalidadWebMVC5.Controllers
             return RedirectToAction("Inicio");
         }
 
+        [HttpGet]
         public ActionResult Find(int ID)
         {
             Usuario objusuario = new Usuario(ID);
             objetoUsuario.find(objusuario);
             return View(objusuario);
+        }
+
+        [HttpPost]
+        public ActionResult Find(string ID)
+        {
+            return RedirectToAction("Propiedades/" + ID);
         }
 
         [HttpGet]
@@ -57,6 +64,25 @@ namespace MunicipalidadWebMVC5.Controllers
         {
             objusuario.IdUsuario = ID;
             objetoUsuario.update(objusuario);
+            return RedirectToAction("Inicio");
+        }
+
+        public ActionResult Delete(Usuario objUsuario, int ID)
+        {
+            objUsuario.IdUsuario = ID;
+            objetoUsuario.delete(objUsuario);
+            return RedirectToAction("Inicio");
+        }
+
+        public ActionResult Propiedades(int ID)
+        {
+            List<Propiedad> lista = objetoUsuario.findAllPropiedades(ID);
+            return View(lista);
+        }
+
+        public ActionResult DeletePropiedad(int ID)
+        {
+            objetoUsuario.deletePropiedad(ID);
             return RedirectToAction("Inicio");
         }
     }

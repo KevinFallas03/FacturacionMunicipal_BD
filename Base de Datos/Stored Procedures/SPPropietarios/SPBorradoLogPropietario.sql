@@ -7,6 +7,6 @@ CREATE PROCEDURE spBorradoLogPropietario
 AS 
 BEGIN 
 	UPDATE dbo.Propietario
-	SET EstaBorrado=0
+	SET EstaBorrado=1
 	WHERE ID = @ID
 END 

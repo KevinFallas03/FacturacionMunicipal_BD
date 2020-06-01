@@ -4,7 +4,7 @@ go
 Create procedure spObtenerUsuarios
 as
 Begin
-	select Nombre, Password, TipoUsuario 
+	select ID, Nombre, Password, TipoUsuario 
 	from [dbo].Usuario
 	where EstaBorrado = 0 
 End

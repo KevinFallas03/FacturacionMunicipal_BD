@@ -3,12 +3,13 @@ use FacturacionMunicipal
 go
 Create procedure spInsertarUsuario
 (
-	@Nombre int,
+	@ID int,
+	@Nombre VARCHAR(150),
 	@Password VARCHAR(150),
 	@TipoUsuario VARCHAR(150)
 )
 as
 Begin
-	Insert into [dbo].Usuario(Nombre, Password, TipoUsuario, EstaBorrado )
-	Values (@Nombre, @Password, @TipoUsuario, 0)
+	Insert into [dbo].Usuario(ID, Password, TipoUsuario, EstaBorrado )
+	Values (@ID, @Nombre, @Password, @TipoUsuario, 0)
 End

@@ -48,11 +48,18 @@ namespace MunicipalidadWebMVC5.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult Find(int ID)
         {
-            Propietario objpropietario = new Propietario(Convert.ToInt32(ID));
+            Propietario objpropietario = new Propietario(ID);
             objetoPropietario.find(objpropietario);
             return View(objpropietario);
+        }
+
+        [HttpPost]
+        public ActionResult Find(string ID)
+        {
+            return RedirectToAction("Propiedades/"+ID);
         }
 
         [HttpGet]
@@ -76,6 +83,21 @@ namespace MunicipalidadWebMVC5.Controllers
             objPropietario.IdPropietario = ID;
             objetoPropietario.delete(objPropietario);
             return RedirectToAction("Inicio");     
+        }
+
+        public ActionResult Propiedades(int ID)
+        {
+            List<Propiedad> lista = objetoPropietario.findAllPropiedades(ID);
+            Propietario objpropietario = new Propietario(ID);
+            objetoPropietario.find(objpropietario);
+            string nombre = objpropietario.Nombre;
+            return View(lista);
+        }
+
+        public ActionResult DeletePropiedad(int ID)
+        {
+            objetoPropietario.deletePropiedad(ID);
+            return RedirectToAction("Inicio");
         }
     }
 }

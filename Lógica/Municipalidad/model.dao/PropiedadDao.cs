@@ -44,7 +44,23 @@ namespace model.dao
 
         public void delete(Propiedad objetoPropiedad)
         {
-            throw new NotImplementedException();
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objetoPropiedad.IdPropiedad);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public bool find(Propiedad objetoPropiedad)
@@ -125,6 +141,118 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@NumFinca", objetoPropiedad.NumeroPropiedad);
                 comando.Parameters.AddWithValue("@Valor", objetoPropiedad.ValorPropiedad);
                 comando.Parameters.AddWithValue("@Direccion", objetoPropiedad.DireccionPropiedad);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public List<Usuario> findAllUsuarios(int id)
+        {
+            List<Usuario> listaUsuarios = new List<Usuario>();
+            try
+            {
+                comando = new SqlCommand("spObtenerUsuarios_Propiedades", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Usuario objetoUsuario = new Usuario
+                    {
+                        IdUsuario = Convert.ToInt32(read[0].ToString()),
+                        NombreUsuario = read[1].ToString(),
+                        Password = read[2].ToString(),
+                        TipoUsuario = read[3].ToString(),
+                    };
+                    listaUsuarios.Add(objetoUsuario);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaUsuarios;
+        }
+
+        public List<Propietario> findAllPropietarios(int id)
+        {
+            List<Propietario> listaPropietarios = new List<Propietario>();
+            try
+            {
+                comando = new SqlCommand("spObtenerPropietarios_Propiedades", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Propietario objetoPropietario = new Propietario
+                    {
+                        IdPropietario = Convert.ToInt32(read[0].ToString()),
+                        Nombre= read[1].ToString(),
+                        TipoDocumento = Convert.ToInt32(read[2].ToString()),
+                        ValorDocumentoId = read[3].ToString(),
+                    };
+                    listaPropietarios.Add(objetoPropietario);
+                }
+
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaPropietarios;
+        }
+
+        public void deleteUsuario(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogUsuario_Propiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void deletePropietario(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropietario_Propiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }

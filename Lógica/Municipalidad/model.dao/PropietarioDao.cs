@@ -157,5 +157,63 @@ namespace model.dao
             }
             return listaPropietarios;
         }
+
+        public List<Propiedad> findAllPropiedades(int id)
+        {
+            List<Propiedad> listaPropietarios = new List<Propiedad>();
+            List<int> listaid = new List<int>();
+            try
+            {
+                comando = new SqlCommand("spObtenerPropiedades_Propietarios", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Propiedad objetoPropiedad = new Propiedad
+                    {
+                        IdPropiedad = Convert.ToInt32(read[0].ToString()),
+                        NumeroPropiedad = Convert.ToInt32(read[1].ToString()),
+                        ValorPropiedad = Convert.ToDecimal(read[2].ToString()),
+                        DireccionPropiedad = read[3].ToString(),
+                    };
+                    listaPropietarios.Add(objetoPropiedad);
+                }
+                
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaPropietarios;
+        }
+
+        public void deletePropiedad(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropiedad_Propietario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
     }
 }
