@@ -1,4 +1,3 @@
-
 USE [FacturacionMunicipal]
 GO
 
@@ -32,18 +31,37 @@ BEGIN
             , c.value('@EsFijo','VARCHAR(10)') AS EsFijo  
             , c.value('@TipoCC','VARCHAR(10)') AS TipoCC
             , 1 AS Activo
-        FROM @CCobro.nodes('/Conceptos_de_Cobro/conceptocobro') AS t(c);
-
-		;WITH rs AS
+        FROM @CCobro.nodes('/Conceptos_de_Cobro/conceptocobro') AS t(c); 
+		
+		WITH cm AS
 		(
 			SELECT c.value('@id','INT') AS ID
 				, c.value('@Monto','MONEY') AS MontoFijo
 			FROM @CCobro.nodes('/Conceptos_de_Cobro/conceptocobro') AS t(c)
 		)
 		INSERT INTO CCobro_MontoFijo (ID, MontoFijo)
-		SELECT ID, MontoFijo FROM rs
-		WHERE rs.MontoFijo > 0;
+		SELECT ID, MontoFijo FROM cm
+		WHERE cm.MontoFijo > 0;
 
+		WITH ci AS
+		(
+			SELECT cci.value('@id','INT') AS ID
+				, cci.value('@ValorPorcentaje','REAL') AS InteresMoratorio
+			FROM @CCobro.nodes('/Conceptos_de_Cobro/conceptocobro') AS t(cci)
+		)
+		INSERT INTO CCobro_InteresMoratorio(ID, Valor_Porcentual)
+		SELECT ID, InteresMoratorio FROM ci
+		WHERE ci.InteresMoratorio > 0;
+
+		WITH ca AS
+		(
+			SELECT cca.value('@id','INT') AS ID
+				, cca.value('@ValorM3','REAL') AS ConsumoM3
+			FROM @CCobro.nodes('/Conceptos_de_Cobro/conceptocobro') AS t(cca)
+		)
+		INSERT INTO CCobro_ConsumoAgua(ID, ConsumoM3)
+		SELECT ID, ConsumoM3 FROM ca
+		WHERE ca.ConsumoM3 > 0;
 
     END TRY
 
