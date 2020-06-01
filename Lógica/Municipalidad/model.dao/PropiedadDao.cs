@@ -224,5 +224,47 @@ namespace model.dao
             }
             return listaPropietarios;
         }
+
+        public void deleteUsuario(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogUsuario_Propiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void deletePropietario(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropietario_Propiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
     }
 }

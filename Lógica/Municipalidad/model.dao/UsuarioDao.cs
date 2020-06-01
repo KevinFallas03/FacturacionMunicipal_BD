@@ -86,6 +86,27 @@ namespace model.dao
             }
         }
 
+        public void deletePropiedad(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropiedad_Usuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
         public bool find(Usuario objetoUsuario)
         {
             bool hayRegistros;

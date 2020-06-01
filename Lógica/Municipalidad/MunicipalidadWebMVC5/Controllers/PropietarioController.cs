@@ -93,6 +93,12 @@ namespace MunicipalidadWebMVC5.Controllers
             string nombre = objpropietario.Nombre;
             return View(lista);
         }
+
+        public ActionResult DeletePropiedad(int ID)
+        {
+            objetoPropietario.deletePropiedad(ID);
+            return RedirectToAction("Inicio");
+        }
     }
 }
 

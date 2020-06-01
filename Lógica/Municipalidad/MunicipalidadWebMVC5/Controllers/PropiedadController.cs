@@ -81,5 +81,17 @@ namespace MunicipalidadWebMVC5.Controllers
             List<Propietario> lista = objetoPropiedad.findAllPropietarios(ID);
             return View(lista);
         }
+
+        public ActionResult DeleteUsuario(int ID)
+        {
+            objetoPropiedad.deleteUsuario(ID);
+            return RedirectToAction("Inicio");
+        }
+
+        public ActionResult DeletePropietario(int ID)
+        {
+            objetoPropiedad.deletePropietario(ID);
+            return RedirectToAction("Inicio");
+        }
     }
 }
