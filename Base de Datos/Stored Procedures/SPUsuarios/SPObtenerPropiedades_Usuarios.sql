@@ -1,15 +1,15 @@
---SP para obtener los usuarios de propiedades
+--SP para obtener las propiedades de usuarios 
 use FacturacionMunicipal
 go
-create procedure spObtenerUsuarios_Propiedades
+alter procedure spObtenerPropiedades_Usuarios
 (
 	@id int
 )
 as
-	SELECT Usuario_Prop.ID, Usuario.Nombre, Usuario.Password, Usuario.TipoUsuario
+	SELECT Usuario_Prop.ID, Propiedad.NumFinca, Propiedad.Valor, Propiedad.Direccion
 	FROM Usuario_Prop
 	INNER JOIN Propiedad ON Usuario_Prop.IdPropiedad=Propiedad.ID
 	INNER JOIN Usuario ON Usuario_Prop.IdUsuario=Usuario.ID
-	where Propiedad.ID = @id and Usuario_Prop.EstaBorrado = 0 and Usuario.EstaBorrado = 0 and Propiedad.EstaBorrado=0
+	where Usuario.ID = @id and Usuario_Prop.EstaBorrado = 0 and Usuario.EstaBorrado = 0 and Propiedad.EstaBorrado=0
 
 go

@@ -212,5 +212,63 @@ namespace model.dao
             return listaPropietarios;
         }
 
+        public List<Propiedad> createPropiedad(int id)
+        {
+            List<Propiedad> listaPropiedades = new List<Propiedad>();
+            try
+            {
+                comando = new SqlCommand("spObtenerPropiedades_SinUsuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Propiedad objetoPropiedad = new Propiedad
+                    {
+                        IdPropiedad = Convert.ToInt32(read[0].ToString()),
+                        NumeroPropiedad = Convert.ToInt32(read[1].ToString()),
+                        ValorPropiedad = Convert.ToDecimal(read[2].ToString()),
+                        DireccionPropiedad = read[3].ToString(),
+                    };
+                    listaPropiedades.Add(objetoPropiedad);
+                }
+
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaPropiedades;
+        }
+        public void createPropiedad(int idU, int idP)
+        {
+            try
+            {
+                comando = new SqlCommand("spCreatePropiedad_Usuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@idU", idU);
+                comando.Parameters.AddWithValue("@idP", idP);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return;
+        }
     }
 }

@@ -148,6 +148,10 @@
     <Content Include="Views\Usuario\Propiedades.cshtml" />
     <Content Include="Views\Propiedad\Usuarios.cshtml" />
     <Content Include="Views\Propiedad\Propietarios.cshtml" />
+    <Content Include="Views\Usuario\CreatePropiedad.cshtml" />
+    <Content Include="Views\Propietario\CreatePropiedad.cshtml" />
+    <Content Include="Views\Propiedad\CreatePropietario.cshtml" />
+    <Content Include="Views\Propiedad\CreateUsuario.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

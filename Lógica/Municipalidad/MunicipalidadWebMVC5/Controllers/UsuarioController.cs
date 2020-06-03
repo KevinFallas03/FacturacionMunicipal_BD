@@ -10,8 +10,8 @@ namespace MunicipalidadWebMVC5.Controllers
 {
     public class UsuarioController : Controller
     {
+        private static int idUs = 0;
         private UsuarioDao objetoUsuario;
-
         public UsuarioController()
         {
             objetoUsuario = new UsuarioDao();
@@ -40,6 +40,7 @@ namespace MunicipalidadWebMVC5.Controllers
         [HttpGet]
         public ActionResult Find(int ID)
         {
+            idUs = ID;
             Usuario objusuario = new Usuario(ID);
             objetoUsuario.find(objusuario);
             return View(objusuario);
@@ -80,10 +81,22 @@ namespace MunicipalidadWebMVC5.Controllers
             return View(lista);
         }
 
+        public ActionResult CreatePropiedad()
+        {
+            List<Propiedad> listaProp = objetoUsuario.createPropiedad(idUs);
+            return View(listaProp);
+        }
+
+        public ActionResult AgregarPropiedad(int ID)
+        {
+            objetoUsuario.createPropiedad(idUs, ID);
+            return RedirectToAction("Propiedades/" + idUs);
+        }
+
         public ActionResult DeletePropiedad(int ID)
         {
             objetoUsuario.deletePropiedad(ID);
-            return RedirectToAction("Inicio");
+            return RedirectToAction("Propiedades/" + idUs);
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿@model List<model.entity.Propietario>
 @{
-    ViewBag.Title = "Inicio";
+    ViewBag.Title = "CreatePropietario";
 }
 
-<h2>Propietario</h2>
+<h2>Propietarios</h2>
 <div class="container-fluid">
-    <div>
-        <a class="btn btn-primary" href="/Propiedad/CreatePropietario">Nuevo</a>
-    </div>
     <table class="table">
         <tr class="btn-primary">
             <th>Nombre</th>
@@ -19,13 +16,11 @@
         {
             <tr>
                 <td>@objetoPropietario.Nombre</td>
+                <td>@objetoPropietario.IdPropietario</td>
                 <td>@objetoPropietario.TipoDocumento</td>
-                <td>@objetoPropietario.ValorDocumentoId</td>
-                <td><a class="btn btn-danger" href="~/Propiedad/DeletePropietario/@objetoPropietario.IdPropietario">Borrar</a></td>
+                <td><a class="btn btn-warning" href="~/Propiedad/AgregarPropietario/@objetoPropietario.IdPropietario">Agregar</a></td>
             </tr>
         }
     </table>
-    <div class="form-actions">
-        @Html.ActionLink("Regresar al listado", "Inicio")
-    </div>
 </div>
+

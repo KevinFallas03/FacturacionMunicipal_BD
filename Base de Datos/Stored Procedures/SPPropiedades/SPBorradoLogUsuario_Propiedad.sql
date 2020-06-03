@@ -6,7 +6,5 @@ AS
 BEGIN 
 	UPDATE dbo.Usuario_Prop
 	SET EstaBorrado=1
-	FROM Usuario
-	INNER JOIN Prop_Prop ON Prop_Prop.IdPropiedad=Usuario.ID
-	WHERE Usuario.ID = @ID
+	WHERE ID = @ID
 END 

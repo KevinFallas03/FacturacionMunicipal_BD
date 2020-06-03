@@ -8,10 +8,10 @@ namespace MunicipalidadWebMVC5.Controllers
     public class PropiedadController : Controller
     {
         private PropiedadDao objetoPropiedad;
+        private static int idUP = 0;
         public PropiedadController()
         {
             objetoPropiedad = new PropiedadDao();
-            //objPropietarioNeg = new PropietarioNeg();
         }
         // GET: Propiedad
         public ActionResult Inicio()
@@ -35,6 +35,7 @@ namespace MunicipalidadWebMVC5.Controllers
         [HttpGet]
         public ActionResult Find(int ID)
         {
+            idUP = ID;
             Propiedad objPropiedad = new Propiedad(ID);
             objetoPropiedad.find(objPropiedad);
             return View(objPropiedad);
@@ -82,16 +83,41 @@ namespace MunicipalidadWebMVC5.Controllers
             return View(lista);
         }
 
+        public ActionResult CreateUsuario()
+        {
+            List<Usuario> listaProp = objetoPropiedad.createUsuario(idUP);
+            return View(listaProp);
+        }
+
+        public ActionResult AgregarUsuario(int ID)
+        {
+            objetoPropiedad.createUsuario(ID, idUP);
+            return RedirectToAction("Usuarios/" + idUP);
+        }
+
         public ActionResult DeleteUsuario(int ID)
         {
             objetoPropiedad.deleteUsuario(ID);
-            return RedirectToAction("Inicio");
+            return RedirectToAction("Usuarios/" + idUP);
         }
 
+        public ActionResult CreatePropietario()
+        {
+            List<Propietario> listaProp = objetoPropiedad.createPropietario(idUP);
+            return View(listaProp);
+        }
+
+        public ActionResult AgregarPropietario(int ID)
+        {
+            objetoPropiedad.createPropietario(ID, idUP);
+            return RedirectToAction("Propietarios/" + idUP);
+        }
         public ActionResult DeletePropietario(int ID)
         {
             objetoPropiedad.deletePropietario(ID);
-            return RedirectToAction("Inicio");
+            return RedirectToAction("Propietarios/" + idUP);
         }
     }
 }
+
+

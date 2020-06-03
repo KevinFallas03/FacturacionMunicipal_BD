@@ -5,9 +5,6 @@
 
 <h2>Propiedades</h2>
 <div class="container-fluid">
-    <div>
-        <a class="btn btn-primary" href="/Propiedad/Create/">Nuevo</a>
-    </div>
     <table class="table">
         <tr class="btn-primary">
             <th>Número</th>
@@ -21,11 +18,8 @@
                 <td>@objetoPropiedad.NumeroPropiedad</td>
                 <td>@objetoPropiedad.ValorPropiedad</td>
                 <td>@objetoPropiedad.DireccionPropiedad</td>
-                <td><a class="btn btn-success" href="~/Propiedad/Find/@objetoPropiedad.IdPropiedad">Ver</a></td>
-                <td><a class="btn btn-warning" href="~/Propiedad/Update/@objetoPropiedad.IdPropiedad">Editar</a></td>
-                <td><a class="btn btn-danger" href="~/Propiedad/Delete/@objetoPropiedad.IdPropiedad">Borrar</a></td>
+                <td><a class="btn btn-warning" href="~/Usuario/AgregarPropiedad/@objetoPropiedad.IdPropiedad">Agregar</a></td>
             </tr>
         }
     </table>
 </div>
-
