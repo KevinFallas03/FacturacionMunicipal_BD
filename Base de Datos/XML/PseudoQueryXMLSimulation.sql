@@ -10,7 +10,7 @@ Declare @propietarios table
    Nombre varchar(100)
 )
 
-declare @FechaOperacion date
+Declare @FechaOperacion date
 
 -- se extraen fechas operación
 Declare @FechasAProcesar table 
