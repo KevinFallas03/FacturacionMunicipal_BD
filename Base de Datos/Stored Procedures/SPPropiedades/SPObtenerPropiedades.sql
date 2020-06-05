@@ -1,7 +1,7 @@
 --SP para obtener los usuarios
 use FacturacionMunicipal
 go
-Create procedure spObtenerPropiedades
+Create or Alter procedure spObtenerPropiedades
 as
 Begin
 	select ID, NumFinca, Valor, Direccion 

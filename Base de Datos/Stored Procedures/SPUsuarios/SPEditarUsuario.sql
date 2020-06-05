@@ -1,7 +1,7 @@
 use FacturacionMunicipal
 go
 
-Create procedure spEditarUsuario
+Create or Alter procedure spEditarUsuario
 (      
 	@id int,
 	@Nombre varchar(100),

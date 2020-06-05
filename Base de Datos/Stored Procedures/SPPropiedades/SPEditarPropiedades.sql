@@ -1,7 +1,7 @@
 use FacturacionMunicipal
 go
 
-Create procedure spEditarPropiedad 
+Create or Alter procedure spEditarPropiedad 
 (      
 	@id int,
 	@NumFinca int,

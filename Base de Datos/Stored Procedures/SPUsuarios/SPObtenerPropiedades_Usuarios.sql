@@ -1,7 +1,7 @@
 --SP para obtener las propiedades de usuarios 
 use FacturacionMunicipal
 go
-alter procedure spObtenerPropiedades_Usuarios
+Create or Alter procedure spObtenerPropiedades_Usuarios
 (
 	@id int
 )

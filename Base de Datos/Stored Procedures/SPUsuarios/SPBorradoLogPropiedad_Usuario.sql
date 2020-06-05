@@ -1,6 +1,6 @@
 --SP para eliminar las propiedades de Usuarios 
 
-create PROCEDURE [dbo].[spBorradoLogPropiedad_Usuario]
+CREATE OR ALTER PROCEDURE [dbo].[spBorradoLogPropiedad_Usuario]
 	@ID int
 AS 
 BEGIN 

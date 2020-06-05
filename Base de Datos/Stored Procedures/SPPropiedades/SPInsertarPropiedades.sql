@@ -1,7 +1,8 @@
 --SP para insertar Propiedades
 use FacturacionMunicipal
 go
-Create procedure spInsertarPropiedad
+
+Create or Alter procedure spInsertarPropiedad
 (
 	@NumFinca int,
 	@Valor money,

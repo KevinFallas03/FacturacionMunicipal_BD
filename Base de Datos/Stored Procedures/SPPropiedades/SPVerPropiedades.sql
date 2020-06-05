@@ -1,7 +1,7 @@
 --SP para ver una Propiedad
 use FacturacionMunicipal
 go
-Create procedure spVerPropiedad
+Create or Alter procedure spVerPropiedad
 (      
    @ID int      
 )      

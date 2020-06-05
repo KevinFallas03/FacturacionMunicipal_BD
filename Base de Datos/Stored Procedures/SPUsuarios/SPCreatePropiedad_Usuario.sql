@@ -1,6 +1,6 @@
 -- SP para crear enlaces entre propiedades y usuarios
 
-alter procedure [dbo].[spCreatePropiedad_Usuario]
+Create or alter procedure [dbo].[spCreatePropiedad_Usuario]
 (
 	@idU int,
 	@idP int

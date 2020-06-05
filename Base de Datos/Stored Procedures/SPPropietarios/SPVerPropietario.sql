@@ -1,4 +1,7 @@
-Create procedure spVerPropietario     
+Use FacturacionMunicipal
+Go
+
+Create or Alter procedure spVerPropietario     
 (      
    @ID int      
 )      

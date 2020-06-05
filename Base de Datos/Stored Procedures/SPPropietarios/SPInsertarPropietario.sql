@@ -1,7 +1,7 @@
 --SP para insertar Propietarios
 use FacturacionMunicipal
 go
-Create procedure spInsertarPropietario
+Create or Alter procedure spInsertarPropietario
 (
 	@Nombre VARCHAR(100),
 	@IdTipoDocumento int,

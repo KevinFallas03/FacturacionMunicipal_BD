@@ -1,6 +1,9 @@
 --SP para eliminar las propiedades de Propietarios 
+USE FacturacionMunicipal
+Go
 
-create PROCEDURE [dbo].[spBorradoLogPropiedad_Propietario]
+
+CREATE OR ALTER PROCEDURE [dbo].[spBorradoLogPropiedad_Propietario]
 	@ID int
 AS 
 BEGIN 

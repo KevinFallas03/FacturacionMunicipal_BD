@@ -1,6 +1,7 @@
 Use FacturacionMunicipal
 Go
-CREATE PROCEDURE spBorradoLogPropietario
+
+CREATE OR ALTER PROCEDURE spBorradoLogPropietario
 (
 	@ID int
 )

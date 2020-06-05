@@ -1,7 +1,7 @@
 --SP para insertar Usuario
 use FacturacionMunicipal
 go
-Create procedure spInsertarUsuario
+Create or Alter procedure spInsertarUsuario
 (
 	@ID int,
 	@Nombre VARCHAR(150),
@@ -10,6 +10,6 @@ Create procedure spInsertarUsuario
 )
 as
 Begin
-	Insert into [dbo].Usuario(ID, Password, TipoUsuario, EstaBorrado )
+	Insert into [dbo].Usuario(ID, Nombre, Password, TipoUsuario, EstaBorrado )
 	Values (@ID, @Nombre, @Password, @TipoUsuario, 0)
 End

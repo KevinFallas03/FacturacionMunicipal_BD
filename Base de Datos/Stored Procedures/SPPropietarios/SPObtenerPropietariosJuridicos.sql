@@ -1,6 +1,7 @@
 use FacturacionMunicipal
 go
-Create procedure spObtenerPropietariosJuridicos
+
+Create or Alter procedure spObtenerPropietariosJuridicos
 as
 Begin
 	select P.Nombre, P.IdTipoDocumento, P.ValorDocumento, PJ.IdTipoDocumento, PJ.NombrePersonaResponsable, PJ.ValorDocumento

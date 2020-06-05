@@ -1,6 +1,6 @@
 -- SP para verificar usuarios
 
-create procedure [dbo].[spValidarUsuario]
+create or Alter procedure [dbo].[spValidarUsuario]
 (      
    @Nombre varchar(100),
    @Password varchar(100)

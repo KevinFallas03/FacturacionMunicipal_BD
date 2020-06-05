@@ -2,7 +2,7 @@
 use FacturacionMunicipal
 go  
 
-Create procedure spVerUsuario
+Create or Alter procedure spVerUsuario
 (      
    @ID int      
 )      

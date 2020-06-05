@@ -1,6 +1,8 @@
 --SP para saber que usuarios no están con la propiedad
+Use FacturacionMunicipal
+Go
 
-create procedure [dbo].[spObtenerUsuarios_SinPropiedad]
+Create or Alter procedure [dbo].[spObtenerUsuarios_SinPropiedad]
 (
 	@id int
 )

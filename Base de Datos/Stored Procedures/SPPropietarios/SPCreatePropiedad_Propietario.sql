@@ -1,6 +1,8 @@
 -- SP para crear enlaces entre propiedades y propietarios
+Use FacturacionMunicipal
+Go
 
-create procedure [dbo].[spCreatePropiedad_Propietario]
+Create or Alter procedure [dbo].[spCreatePropiedad_Propietario]
 (
 	@idPropietario int,
 	@idPropiedad int

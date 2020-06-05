@@ -1,6 +1,8 @@
 --SP para saber que propiedades no están con el propietario
+Use FacturacionMunicipal
+Go 
 
-create procedure [dbo].[spObtenerPropiedades_SinPropietario]
+Create or Alter procedure [dbo].[spObtenerPropiedades_SinPropietario]
 (
 	@id int
 )
