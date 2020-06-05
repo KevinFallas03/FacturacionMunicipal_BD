@@ -228,7 +228,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[PropietarioJuridico](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[ID] [int] NOT NULL,
 	[NombrePersonaResponsable] [varchar](100) NOT NULL,
 	[IdTipoDocumento] [int] NOT NULL,
 	[ValorDocumento] [varchar](30) NOT NULL,
