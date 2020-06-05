@@ -16,11 +16,12 @@ CREATE TABLE [dbo].[CCobro](
 	[TasaInteresMoratorio] [real] NOT NULL,
 	[DiaEmisionRecibo] [tinyint] NOT NULL,
 	[QDiasVencimiento] [tinyint] NOT NULL,
-	[EsImpuesto] [bit] NOT NULL,
-	[EsRecurrente] [bit] NOT NULL,
-	[EsFijo] [bit] NOT NULL,
+	[EsImpuesto] [varchar](10) NOT NULL,
+	[EsRecurrente] [varchar](10) NOT NULL,
+	[EsFijo] [varchar](10) NOT NULL,
 	[TipoCC] [varchar](30) NOT NULL,
-	[Activo] [bit] NOT NULL,
+	[
+	] [bit] NOT NULL,
  CONSTRAINT [PK_Concepto Cobro] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
