@@ -270,5 +270,43 @@ namespace model.dao
             }
             return;
         }
+
+        public string verificar(Usuario usuario)
+        {
+            string result;
+            try
+            {
+                comando = new SqlCommand("spValidarUsuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@Nombre", usuario.NombreUsuario);
+                comando.Parameters.AddWithValue("@Password", usuario.Password);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+                SqlDataReader read = comando.ExecuteReader();
+                bool hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    usuario.IdUsuario = Convert.ToInt32(read[0].ToString());
+                    usuario.NombreUsuario = read[1].ToString();
+                    usuario.Password = read[2].ToString();
+                    usuario.TipoUsuario = read[3].ToString();
+                    result = usuario.TipoUsuario;
+                }
+                else
+                {
+                    result = "";
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return result;
+        }
     }
 }

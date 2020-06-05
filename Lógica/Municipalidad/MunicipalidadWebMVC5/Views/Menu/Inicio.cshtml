@@ -3,16 +3,41 @@
     ViewBag.Title = "Inicio";
 }
 
-<a style='display:flex;position:unset;bottom:1000px;left:0px;'>
-    <img src='https://www.metalocus.es/sites/default/files/file-images/ml_Vasco%20Mour%C3%A3o_01_1200.png' height=280 alt="Menu Principal" />
-</a>
-<h2>Inicio</h2>
-<menu>
-    <li><a href="~/Usuario"><big><b>Usuarios</b></big></a></li>
-    <br>
-    <li><a href="~/Propietario"><big><b>Propietarios</b><br></big></a></li>
-    <br>
-    <li><a href="~/Propiedad"><big><b>Propiedades</b><br></big></a></li>
-    <br>
-</menu>
+<link href="~/Content/style.css" rel="stylesheet" type="text/css" />
 
+<h1></h1>
+<div class="clear-loading spinner">
+    <span></span>
+</div>
+<div class="w3ls-login box box--big">
+    <!-- form starts here -->
+    <form action="~/Menu/Inicio" method="post">
+        <div class="agile-field-txt">
+            <label><i class="fa fa-user" aria-hidden="true"></i> Usuario </label>
+            <!--<input type="text" name="name" placeholder=" Usuario" required="" />-->
+            @Html.EditorFor(model => model.NombreUsuario, new { htmlAttributes = new {@type = "text", @name = "name", @placeholder = " Usuario", required = "" } })
+        </div>
+        <div class="agile-field-txt">
+            <label><i class="fa fa-unlock-alt" aria-hidden="true"></i> Contraseña </label>
+            <!--<input type="password" name="password" placeholder=" Contraseña" required="" id="myInput" />-->
+            @Html.EditorFor(model => model.Password, new { htmlAttributes = new {@type = "password", @name = "password", @placeholder = " Contraseña", @required = "", @id = "myInput" } })
+            <div class="agile_label">
+                <input id="check3" name="check3" type="checkbox" value="show password" onclick="myFunction()">
+                <label class="check" for="check3">Mostrar contraseña</label>
+            </div>
+        </div>
+        <!-- script for show password -->
+        <script>
+            function myFunction() {
+                var x = document.getElementById("myInput");
+                if (x.type === "password") {
+                    x.type = "text";
+                } else {
+                    x.type = "password";
+                }
+            }
+        </script>
+        <!-- //end script -->
+        <input type="submit" value="LOGIN">
+    </form>
+</div>
