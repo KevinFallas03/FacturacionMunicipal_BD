@@ -1,3 +1,4 @@
+
 -- ==========================================================================================
 -- Autores:		<Kevin Fallas y Johel Mora>
 -- Fecha de creacion: <03/06/2020>
@@ -151,10 +152,11 @@ BEGIN
 		, pd.value('@Direccion', 'VARCHAR(150)')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propiedad') AS t(pd)
-		
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+
 		-- iteramos en propiedades
-		Select @Lo2=min(P.sec), @Hi2=max(P.sec) 
-		from @Propiedades P
+		Select @Lo2=min(sec), @Hi2=max(sec) 
+		from @Propiedades
 		while @Lo2<=@Hi2
 		Begin
 		   insert dbo.Propiedad(NumFinca, Valor, Direccion, EstaBorrado)
@@ -210,4 +212,6 @@ BEGIN
 	end
 end
 
-exec Simulacion
+exec IniciarSimulacion
+
+   

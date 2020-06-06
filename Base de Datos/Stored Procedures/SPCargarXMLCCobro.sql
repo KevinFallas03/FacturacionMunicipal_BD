@@ -10,13 +10,14 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[spCargarDatosCC]
 AS
 BEGIN
-    SET NOCOUNT ON;
+    SET NOCOUNT ON;                                                                                                                                                                                                                                                                                             
 
     -- VARIABLES --
     DECLARE @CCobro xml, @Monto MONEY, @ValorM3 MONEY, @ValorPorcentaje REAL
 
     BEGIN TRY
-        --Insercion de los tipos de documentos de identificacion
+        --Insercion de los tipos de CCobro
+
         SELECT @CCobro = CC
         FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Concepto_de_Cobro.xml', Single_BLOB) AS CCobro(CC)
 
