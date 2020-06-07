@@ -158,7 +158,7 @@ namespace model.dao
             return listaPropietarios;
         }
 
-        public List<Propiedad> findAllPropiedades(int id)
+        public List<Propiedad> findAllPropiedades(int ID)
         {
             List<Propiedad> listaPropietarios = new List<Propiedad>();
             List<int> listaid = new List<int>();
@@ -166,7 +166,7 @@ namespace model.dao
             {
                 comando = new SqlCommand("spObtenerPropiedades_Propietarios", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@id", id);
+                comando.Parameters.AddWithValue("@id", ID);
                 objConexion.getConexion().Open();
                 SqlDataReader read = comando.ExecuteReader();
                 while (read.Read())
@@ -181,6 +181,43 @@ namespace model.dao
                     listaPropietarios.Add(objetoPropiedad);
                 }
                 
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaPropietarios;
+        }
+
+        public List<Propiedad> findAllPropiedadesIngresado(string valorIngresado)
+        {
+            List<Propiedad> listaPropietarios = new List<Propiedad>();
+            List<int> listaid = new List<int>();
+            try
+            {
+                comando = new SqlCommand("spObtenerPropiedades_Propietarios_Ingresado", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ingresado", valorIngresado);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Propiedad objetoPropiedad = new Propiedad
+                    {
+                        IdPropiedad = Convert.ToInt32(read[0].ToString()),
+                        NumeroPropiedad = Convert.ToInt32(read[1].ToString()),
+                        ValorPropiedad = Convert.ToDecimal(read[2].ToString()),
+                        DireccionPropiedad = read[3].ToString(),
+                    };
+                    listaPropietarios.Add(objetoPropiedad);
+                }
+
             }
 
             catch (Exception)

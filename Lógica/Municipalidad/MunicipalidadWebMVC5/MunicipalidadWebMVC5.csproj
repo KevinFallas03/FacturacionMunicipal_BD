@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ConsultaController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\PropiedadController.cs" />
     <Compile Include="Controllers\PropietarioController.cs" />
@@ -157,6 +158,8 @@
     <Content Include="Views\Propiedad\CreateUsuario.cshtml" />
     <Content Include="Views\Menu\MenuAdmin.cshtml" />
     <Content Include="Views\Menu\MenuProp.cshtml" />
+    <Content Include="Views\Propietario\PropiedadesPorValor.cshtml" />
+    <Content Include="Views\Consulta\Inicio.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

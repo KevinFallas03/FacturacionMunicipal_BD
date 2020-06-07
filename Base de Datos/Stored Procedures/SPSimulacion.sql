@@ -48,7 +48,8 @@ BEGIN
 
 	Declare @PropJuridico table
 	(
-		sec int primary key,
+		sec int identity(1,1) primary key,
+		DocIdPersonaJuridica varchar(100),
 		NombrePersonaResponsable varchar(100),
 		IdTipoDocumento int,
 		ValorDocumento varchar(100),
@@ -58,8 +59,8 @@ BEGIN
 	Declare @PropiedadVsPropietario table
 	(
 		sec int identity(1,1) primary key, 
-		IdPropiedad int,
-		IdPropietario int,
+		IdPropiedad varchar(100),
+		IdPropietario varchar(100),
 		EstaBorrado bit
 	)
 
@@ -84,8 +85,8 @@ BEGIN
 	Declare @UsuarioVersusPropiedad table
 	(
 		sec int identity(1,1) primary key,
-		IdPropiedad int,
-		IdUsuario int,
+		IdPropiedad varchar(100),
+		IdUsuario varchar(100),
 		EstaBorrado bit
 	)
 
@@ -174,7 +175,7 @@ BEGIN
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propietario') AS t(pt)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
 		
-		-- parte 5
+
 		-- iteramos en propietarios
 		Select @Lo2=min(sec), @Hi2=max(sec)
 		from @Propietarios
@@ -185,7 +186,28 @@ BEGIN
 		   Set @Lo2=@Lo2+1
 		end
 
-		--pegar parte 1 
+		--Propietarios Juridicos 
+		-- procesar nodos propietarios juridicos
+		delete @PropJuridico 
+		insert @PropJuridico(DocIdPersonaJuridica, NombrePersonaResponsable, IdTipoDocumento, ValorDocumento, EstaBorrado)
+		select --ID VALUE
+		  pd.value('@docidPersonaJuridica', 'VARCHAR(100)')
+		, pd.value('@Nombre', 'VARCHAR(100)')
+		, pd.value('@DocidRepresentante', 'VARCHAR(100)')
+		, pd.value('@TipDocIdRepresentante', 'INT')
+		, 0 AS EstaBorrado
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PersonaJuridica') AS t(pd)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+
+		--Propietarios x Propiedades
+		-- procesar nodos PropietarioxPropiedad
+		delete @PropiedadVsPropietario
+		insert @PropiedadVsPropietario (IdPropiedad, IdPropietario, EstaBorrado)
+		select pp.value('@NumFinca', 'VARCHAR(100)')
+		, pp.value('@identificacion', 'VARCHAR(100)')
+		, 0 AS EstaBorrado
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadVersusPropietario') AS t(pp)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 
 		--insertamos Usuarios
 		delete @Usuarios
@@ -207,6 +229,29 @@ BEGIN
 		   Set @Lo2=@Lo2+1
 		end
 
+		--CCobros x Propiedad
+		--procesar nodos CCobroVsPropiedad
+		delete @PropiedadesxCCobro 
+		insert @PropiedadesxCCobro (IdCCobro, IdPropiedad, FechaInic)-- revisar ultimo atributo 
+		select pc.value('@idcobro','INT') --buscar el id de ese valor
+		, pc.value('@NumFinca', 'INT') --buscar el id de ese valor
+		, @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[]', 'DATE') as FechaInic --error carga solo la primera fecha
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/ConceptoCobroVersusPropiedad') AS t(pc)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+
+		-- Usuarios x Propiedad
+		-- insertamos Usuarios x Propiedad
+		delete @UsuarioVersusPropiedad
+		insert @UsuarioVersusPropiedad (IdPropiedad, IdUsuario, EstaBorrado)
+		select pp.value('@NumFinca', 'VARCHAR(100)') --REVISAR, encontrar la ID de ese valor
+		, pp.value('@nombreUsuario', 'VARCHAR(100)') --Revisar, ""
+		, 0 AS EstaBorrado
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadVersusPropietario') AS t(pp)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+
+		select * from @PropiedadesxCCobro
+
+		
 		set @Lo1 = @Lo1 + 1
 		
 	end
