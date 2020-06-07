@@ -11,4 +11,5 @@ as
 Begin
 	Insert into [dbo].Propietario (Nombre, IdTipoDocumento, ValorDocumento, EstaBorrado)
 	Values (@Nombre, @IdTipoDocumento, @ValorDocumento, 0)
+	select ID from Propietario where @Nombre=Nombre and @IdTipoDocumento=IdTipoDocumento and @ValorDocumento=ValorDocumento and 0=EstaBorrado
 End
