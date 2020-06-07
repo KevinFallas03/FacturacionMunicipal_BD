@@ -2,7 +2,7 @@
 -- ==========================================================================================
 -- Autores:		<Kevin Fallas y Johel Mora>
 -- Fecha de creacion: <03/06/2020>
--- Fecha de ultima modificacion <>
+-- Fecha de ultima modificacion <7/6/2020>
 -- Descripcion:	<SP para hacer la simulacion de actividades de la municipalidad>
 -- ==========================================================================================
 
@@ -193,11 +193,23 @@ BEGIN
 		select --ID VALUE
 		  pd.value('@docidPersonaJuridica', 'VARCHAR(100)')
 		, pd.value('@Nombre', 'VARCHAR(100)')
-		, pd.value('@DocidRepresentante', 'VARCHAR(100)')
 		, pd.value('@TipDocIdRepresentante', 'INT')
+		, pd.value('@DocidRepresentante', 'VARCHAR(100)')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PersonaJuridica') AS t(pd)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+
+		--iteramos en propietarios juridico
+		Select @Lo2=min(sec), @Hi2=max(sec)
+		from @PropJuridico
+		while @Lo2<=@Hi2
+		Begin
+		   insert dbo.PropietarioJuridico(ID, NombrePersonaResponsable, IdTipoDocumento, ValorDocumento, EstaBorrado)
+		   Select Pt.ID, Pj.NombrePersonaResponsable, Pj.IdTipoDocumento, Pj.ValorDocumento, Pj.EstaBorrado
+		   from @PropJuridico Pj, dbo.Propietario Pt
+		   where sec=@Lo2 and Pj.DocIdPersonaJuridica = Pt.ValorDocumento
+		   Set @Lo2=@Lo2+1
+		end
 
 		--Propietarios x Propiedades
 		-- procesar nodos PropietarioxPropiedad
@@ -208,6 +220,18 @@ BEGIN
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadVersusPropietario') AS t(pp)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+
+		--iteramos en PropiedadVsPropietario
+		Select @Lo2=min(sec), @Hi2=max(sec)
+		from @PropiedadVsPropietario
+		while @Lo2<=@Hi2
+		Begin
+		   insert dbo.Prop_Prop(IdPropiedad, IdPropietario, EstaBorrado)
+		   Select Pd.ID, Pt.ID, Pp.EstaBorrado
+		   from @PropiedadVsPropietario Pp, dbo.Propietario Pt, dbo.Propiedad Pd
+		   where sec=@Lo2 and Pp.IdPropietario = Pt.ValorDocumento and Pp.IdPropiedad = Pd.NumFinca
+		   Set @Lo2=@Lo2+1
+		end
 
 		--insertamos Usuarios
 		delete @Usuarios
@@ -235,26 +259,50 @@ BEGIN
 		insert @PropiedadesxCCobro (IdCCobro, IdPropiedad, FechaInic)-- revisar ultimo atributo 
 		select pc.value('@idcobro','INT') --buscar el id de ese valor
 		, pc.value('@NumFinca', 'INT') --buscar el id de ese valor
-		, @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[]', 'DATE') as FechaInic --error carga solo la primera fecha
+		, @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') as FechaInic --error carga solo la primera fecha
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/ConceptoCobroVersusPropiedad') AS t(pc)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 
-		-- Usuarios x Propiedad
-		-- insertamos Usuarios x Propiedad
+		-- iteramos en PropiedadesxCCobro 
+		Select @Lo2=min(sec), @Hi2=max(sec)
+		from @PropiedadesxCCobro 
+		while @Lo2<=@Hi2
+		Begin
+		   insert dbo.CCobro_PNP(IdCCobbro, IdPropiedad, FechaInic)
+		   Select PC.IdCCobro, Pd.ID, PC.FechaInic 
+		   from @PropiedadesxCCobro PC, dbo.Propiedad Pd
+		   where sec=@Lo2 and PC.IdPropiedad = Pd.NumFinca
+		   Set @Lo2=@Lo2+1
+		end
+		
+		--Usuarios Versus Propiedad
+		--procesamos nodos UsuarioVersusPropiedad
 		delete @UsuarioVersusPropiedad
 		insert @UsuarioVersusPropiedad (IdPropiedad, IdUsuario, EstaBorrado)
-		select pp.value('@NumFinca', 'VARCHAR(100)') --REVISAR, encontrar la ID de ese valor
-		, pp.value('@nombreUsuario', 'VARCHAR(100)') --Revisar, ""
-		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadVersusPropietario') AS t(pp)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
-
-		select * from @PropiedadesxCCobro
-
+		select up.value('@NumFinca', 'VARCHAR(100)')
+		, up.value('@nombreUsuario', 'VARCHAR(100)')
+		, 0 as EstaBorrado
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/UsuarioVersusPropiedad') AS t(up)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		
+		-- iteramos en @UsuarioVersusPropiedad 
+		Select @Lo2=min(sec), @Hi2=max(sec)
+		from @UsuarioVersusPropiedad 
+		while @Lo2<=@Hi2
+		Begin
+		   insert dbo.Usuario_Prop(IdPropiedad, IdUsuario, EstaBorrado)
+		   Select Pd.ID, U.ID, Up.EstaBorrado
+		   from @UsuarioVersusPropiedad Up, dbo.Usuario U, dbo.Propiedad Pd
+		   where sec=@Lo2 and Up.IdUsuario = U.Nombre and Up.IdPropiedad = Pd.NumFinca
+		   Set @Lo2=@Lo2+1
+		end
+
+
+
 		set @Lo1 = @Lo1 + 1
 		
 	end
+
 end
 
 exec IniciarSimulacion
