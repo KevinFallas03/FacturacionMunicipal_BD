@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ConsultaController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\PropiedadController.cs" />
     <Compile Include="Controllers\PropietarioController.cs" />
@@ -156,11 +157,15 @@
     <Content Include="Views\Propiedad\Propietarios.cshtml" />
     <Content Include="Views\Usuario\CreatePropiedad.cshtml" />
     <Content Include="Views\Propietario\CreatePropiedad.cshtml" />
-    <Content Include="Views\Propiedad\CreatePropietario.cshtml" />
     <Content Include="Views\Propiedad\CreateUsuario.cshtml" />
+    <Content Include="Views\Propiedad\CreatePropietario.cshtml" />
     <Content Include="Views\Menu\MenuAdmin.cshtml" />
     <Content Include="Views\Menu\MenuProp.cshtml" />
     <Content Include="Views\Propietario\CreateResponsable.cshtml" />
+    <Content Include="Views\Menu\MenuProp.cshtml" />
+    <Content Include="Views\Propietario\PropiedadesPorValor.cshtml" />
+    <Content Include="Views\Consulta\Inicio.cshtml" />
+    <Content Include="Views\Propietario\createResponsable.cshtml" />
     <Content Include="Views\Propietario\Responsable.cshtml" />
     <Content Include="Views\Propietario\Updateresponsable.cshtml" />
     <None Include="Web.Debug.config">

@@ -141,9 +141,17 @@ namespace MunicipalidadWebMVC5.Controllers
         public ActionResult Propiedades(int ID)
         {
             List<Propiedad> lista = objetoPropietario.findAllPropiedades(ID);
-            Propietario objpropietario = new Propietario(ID);
-            objetoPropietario.find(objpropietario);
-            string nombre = objpropietario.Nombre;
+            return View(lista);
+        }
+        [HttpGet]
+        public ActionResult PropiedadesPorValor()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult PropiedadesPorValor(string valorIngresado)
+        {
+            List<Propiedad> lista = objetoPropietario.findAllPropiedadesIngresado(valorIngresado);
             return View(lista);
         }
 

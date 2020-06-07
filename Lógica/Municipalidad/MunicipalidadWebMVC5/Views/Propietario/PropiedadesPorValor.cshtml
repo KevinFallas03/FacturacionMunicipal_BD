@@ -1,0 +1,36 @@
+﻿@model List<model.entity.Propiedad>
+@{
+    ViewBag.Title = "PropiedadesPorValor";
+}
+
+<h2>Consulta de propiedades de un propietario</h2>
+<div class="container-fluid">
+    <div>
+        <a class="btn btn-primary" href="~/Propietario/CreatePropiedad/">Nuevo</a>
+    </div>
+    <table class="table">
+        <tr class="btn-primary">
+            <th>Número</th>
+            <th>Valor</th>
+            <th>Dirección</th>
+            <th></th>
+        </tr>
+        @foreach (var objetoPropiedad in Model)
+        {
+            <tr>
+                <td>@objetoPropiedad.NumeroPropiedad</td>
+                <td>@objetoPropiedad.ValorPropiedad</td>
+                <td>@objetoPropiedad.DireccionPropiedad</td>
+                <td><a class="btn btn-danger" href="~/Propietario/DeletePropiedad/@objetoPropiedad.IdPropiedad">Borrar</a></td>
+            </tr>
+        }
+    </table>
+    <div class="form-actions">
+        @Html.ActionLink("Regresar al listado", "Inicio")
+    </div>
+</div>
+
+
+
+
+

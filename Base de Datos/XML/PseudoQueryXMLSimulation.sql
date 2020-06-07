@@ -62,7 +62,7 @@ Begin
     while @Lo2<=@Hi2
     Begin
        insert dbo.propietarios (TipoDocId, Nombre, ValorDocId, FechaInsercion)
-       Select P.TipoDocId, P.Nombre, P.ValorDocId, @FechaOperacion from @Propietarios P where sec=@Lo1
+       Select P.TipoDocId, P.Nombre, P.ValorDocId, @FechaOperacion from @Propietarios P where sec=@Lo1--en realidad es @Lo2
        Set @Lo2=@Lo2+1
     end
 
