@@ -5,9 +5,38 @@
 <a style='display:flex;position:unset;bottom:1000px;left:0px;'>
     <img src='https://image.freepik.com/vector-gratis/ilustracion-lupa_53876-28516.jpg' height=200 alt="Menu Principal" />
 </a>
-<h2>Consultas</h2>
+<h2>Consultas</h2><br /><br />
+<div class="form-actions col-md-offset-2">
+    <form action="~/Propietario/PropiedadesPorValor/" method="post">
+        <b>Propiedades de un propietario</b><br>
+        <input type="search" value="ID o Nombre" name="valor", id="F1" />
+        <button class="btn btn-success" >Consultar</button>
+    </form>
+    <br>
+    <form action="~/Propiedad/PropietarioVsPropiedades/" method="post">
+        <b>Propietarios de una propiedad</b><br>
+        <input type="number" value="0" name="valor", id="F1" />
+        <button class="btn btn-success" >Consultar</button>
+    </form>
+    <br>
+    <form action="~/Usuario/PropiedadesVsUsuario/" method="post">
+    <b>Propiedades de un usuario</b><br>
+    <input type="search"  value="ID o Nombre" name="valor", id="F1" />
+    <button class="btn btn-success" >Consultar</button>
+    </form>
+    <br>
+    <form action="~/Propiedad/UsuarioVsPropiedad/" method="post">
+    <b>Usuarios de una propiedad</b><br>
+    <input type="number" value="0" name="valor", id="F1" />
+    <button class="btn btn-success" >Consultar</button>
+    </form>
+    <br>
+</div>
+
+<!--
 <menu>
     <li><a href="~/Propietario/PropiedadesPorValor"><big><b>Propiedades de un propietario</b></big></a></li>
+    
     <br>
     <li><a href="~/PropietarioVsPropiedades"><big><b>Propietarios de una propiedad</b><br></big></a></li>
     <br>
@@ -16,3 +45,4 @@
     <li><a href="~/UsuarioVsPropiedad"><big><b>Usuarios de una propiedad</b><br></big></a></li>
     <br>
 </menu>
+-->

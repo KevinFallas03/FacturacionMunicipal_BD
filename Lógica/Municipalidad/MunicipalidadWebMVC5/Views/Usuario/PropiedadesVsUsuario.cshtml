@@ -1,10 +1,13 @@
 ﻿@model List<model.entity.Propiedad>
 @{
-    ViewBag.Title = "PropiedadesPorValor";
+    ViewBag.Title = "PropiedadesVsUsuario";
 }
 
-<h2>Consulta de propiedades de un propietario</h2>
+<h2>Consulta de propiedades de un usuario</h2>
 <div class="container-fluid">
+    <div>
+        <a class="btn btn-primary" href="~/Usuario/CreatePropiedad/">Nuevo</a>
+    </div>
     <table class="table">
         <tr class="btn-primary">
             <th>Número</th>
@@ -26,8 +29,3 @@
         @Html.ActionLink("Regresar al listado", "Inicio")
     </div>
 </div>
-
-
-
-
-

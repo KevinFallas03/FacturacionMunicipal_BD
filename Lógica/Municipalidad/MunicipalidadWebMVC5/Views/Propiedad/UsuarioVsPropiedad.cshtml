@@ -1,0 +1,31 @@
+﻿@model List<model.entity.Usuario>
+@{
+    ViewBag.Title = "UsuarioVsPropiedad";
+}
+
+<h2>Consulta de usuarios de una propiedad</h2>
+<div class="container-fluid">
+    <div>
+        <a class="btn btn-primary" href="~/Usuario/CreatePropiedad/">Nuevo</a>
+    </div>
+    <table class="table">
+        <tr class="btn-primary">
+            <th>Nombre</th>
+            <th>Password</th>
+            <th>Tipo</th>
+            <th></th>
+        </tr>
+        @foreach (var objetoUsuario in Model)
+        {
+            <tr>
+                <td>@objetoUsuario.NombreUsuario</td>
+                <td>@objetoUsuario.Password</td>
+                <td>@objetoUsuario.TipoUsuario</td>
+                <td><a class="btn btn-danger" href="~/Propiedad/DeletePropietario/@objetoUsuario.IdUsuario">Borrar</a></td>
+            </tr>
+        }
+    </table>
+    <div class="form-actions">
+        @Html.ActionLink("Regresar al listado", "Inicio")
+    </div>
+</div>

@@ -117,6 +117,19 @@ namespace MunicipalidadWebMVC5.Controllers
             objetoPropiedad.deletePropietario(ID);
             return RedirectToAction("Propietarios/" + idUP);
         }
+
+        public ActionResult PropietarioVsPropiedades()
+        {
+            string valorIngresado = Request["valor"];
+            List<Propietario> lista = objetoPropiedad.findAllPropietariosIngresado(@valorIngresado);
+            return View(lista);
+        }
+        public ActionResult UsuarioVsPropiedad()
+        {
+            string valorIngresado = Request["valor"];
+            List<Usuario> lista = objetoPropiedad.findAllUsuariosIngresado(@valorIngresado);
+            return View(lista);
+        }
     }
 }
 

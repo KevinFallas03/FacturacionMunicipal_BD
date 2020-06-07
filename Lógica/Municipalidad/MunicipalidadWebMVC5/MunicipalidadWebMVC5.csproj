@@ -168,6 +168,9 @@
     <Content Include="Views\Propietario\createResponsable.cshtml" />
     <Content Include="Views\Propietario\Responsable.cshtml" />
     <Content Include="Views\Propietario\Updateresponsable.cshtml" />
+    <Content Include="Views\Usuario\PropiedadesVsUsuario.cshtml" />
+    <Content Include="Views\Propiedad\PropietarioVsPropiedades.cshtml" />
+    <Content Include="Views\Propiedad\UsuarioVsPropiedad.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

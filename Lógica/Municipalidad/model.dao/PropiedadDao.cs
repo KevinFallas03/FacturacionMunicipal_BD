@@ -131,6 +131,80 @@ namespace model.dao
             return listaPropiedades;
         }
 
+        public List<Usuario> findAllUsuariosIngresado(string valorIngresado)
+        {
+            List<Usuario> listaUsuarios = new List<Usuario>();
+            List<int> listaid = new List<int>();
+            try
+            {
+                comando = new SqlCommand("spObtenerUsuarios_Propiedades_PorFinca", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@finca", Convert.ToInt32(valorIngresado));
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Usuario objetoUsuario = new Usuario
+                    {
+                        IdUsuario = Convert.ToInt32(read[0].ToString()),
+                        NombreUsuario = read[1].ToString(),
+                        Password = read[2].ToString(),
+                        TipoUsuario = read[3].ToString(),
+                    };
+                    listaUsuarios.Add(objetoUsuario);
+                }
+
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaUsuarios;
+        }
+
+        public List<Propietario> findAllPropietariosIngresado(string valorIngresado)
+        {
+            List<Propietario> listaPropietarios = new List<Propietario>();
+            int aux = Convert.ToInt32(valorIngresado.ToString());
+            try
+            {
+                comando = new SqlCommand("spObtenerPropietarios_Propiedades_PorFinca", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@finca", aux);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Propietario objetoPropietario = new Propietario
+                    {
+                        IdPropietario = Convert.ToInt32(read[0].ToString()),
+                        Nombre = read[1].ToString(),
+                        TipoDocumento = Convert.ToInt32(read[2].ToString()),
+                        ValorDocumentoId = read[3].ToString(),
+                    };
+                    listaPropietarios.Add(objetoPropietario);
+                }
+
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaPropietarios;
+        }
+
         public void update(Propiedad objetoPropiedad)
         {
             try
