@@ -160,8 +160,9 @@
     <Content Include="Views\Propiedad\CreateUsuario.cshtml" />
     <Content Include="Views\Menu\MenuAdmin.cshtml" />
     <Content Include="Views\Menu\MenuProp.cshtml" />
-    <Content Include="Views\Propietario\createResponsable.cshtml" />
+    <Content Include="Views\Propietario\CreateResponsable.cshtml" />
     <Content Include="Views\Propietario\Responsable.cshtml" />
+    <Content Include="Views\Propietario\Updateresponsable.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

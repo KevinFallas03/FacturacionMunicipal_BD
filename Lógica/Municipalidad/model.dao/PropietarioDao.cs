@@ -50,9 +50,9 @@ namespace model.dao
 
         public void createresponsable(Propietario Propietario, PropietarioJuridico Responsable)
         {
-            create(Propietario);
             try
             {
+                create(Propietario);
                 comando = new SqlCommand("spInsertarPropietario_Jud", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@id", IDPJ);
@@ -87,7 +87,7 @@ namespace model.dao
                 if (hayRegistros)
                 {
                     objpropietario.IdPropietario = Convert.ToInt32(read[0].ToString());
-                    objpropietario.Nombre = read[1].ToString();
+                    objpropietario.PersonaResponsable = read[1].ToString();
                     objpropietario.TipoDocumento = Convert.ToInt32(read[2].ToString());
                     objpropietario.ValorDocumentoId = read[3].ToString();
                     objpropietario.EstadoError = 99;
@@ -107,6 +107,51 @@ namespace model.dao
                 objConexion.cerrarConexion();
             }
             return hayRegistros;
+        }
+
+        public void updateresponsable(PropietarioJuridico objPropietario)
+        {
+            try
+            {
+                comando = new SqlCommand("spEditarPropietario_Jud", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", objPropietario.IdPropietario);
+                comando.Parameters.AddWithValue("@Nombre", objPropietario.PersonaResponsable);
+                comando.Parameters.AddWithValue("@IdTipoDocumento", objPropietario.TipoDocumento);
+                comando.Parameters.AddWithValue("@ValorDocumento", objPropietario.ValorDocumentoId);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public void deleteresponsable(int ID)
+        {
+            try
+            {
+                comando = new SqlCommand("spBorradoLogPropietario_Jud", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", ID);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public void update(Propietario objPropietario)

@@ -36,11 +36,14 @@ namespace MunicipalidadWebMVC5.Controllers
             if (objPropietario.TipoDocumento == 4)
             {
                 PropietarioJud = objPropietario;
-                return RedirectToAction("createResponsable");
+                return RedirectToAction("CreateResponsable");
             }
-            objetoPropietario.create(objPropietario);
-            mensajeErrorRegistro(objPropietario);
-            return RedirectToAction("Inicio");
+            else
+            {
+                objetoPropietario.create(objPropietario);
+                mensajeErrorRegistro(objPropietario);
+                return RedirectToAction("Inicio");
+            }
         }
 
         public void mensajeErrorRegistro(Propietario objPropietario)
@@ -88,26 +91,21 @@ namespace MunicipalidadWebMVC5.Controllers
         {
             objPropietario.IdPropietario = ID;
             objetoPropietario.delete(objPropietario);
+            objetoPropietario.deleteresponsable(ID);
             return RedirectToAction("Inicio");     
         }
 
         [HttpGet]
-        public ActionResult createResponsable()
+        public ActionResult CreateResponsable()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult createResponsable(PropietarioJuridico responsable)
+        public ActionResult CreateResponsable(PropietarioJuridico responsable)
         {
             objetoPropietario.createresponsable(PropietarioJud, responsable);
             return RedirectToAction("Inicio");
-        }
-
-        [HttpPost]
-        public ActionResult Responsable(string ID)
-        {
-            return RedirectToAction("Responsable/" + ID);
         }
 
         [HttpGet]
@@ -116,6 +114,28 @@ namespace MunicipalidadWebMVC5.Controllers
             PropietarioJuridico objpropietario = new PropietarioJuridico(ID);
             objetoPropietario.responsable(objpropietario);
             return View(objpropietario);
+        }
+
+        [HttpPost]
+        public ActionResult Responsable(string ID)
+        {
+            return RedirectToAction("Find/" + ID);
+        }
+
+        [HttpGet]
+        public ActionResult Updateresponsable(int ID)
+        {
+            PropietarioJuridico objpropietario = new PropietarioJuridico(ID);
+            objetoPropietario.responsable(objpropietario);
+            return View(objpropietario);
+        }
+
+        [HttpPost]
+        public ActionResult Updateresponsable(PropietarioJuridico objPropietario, int ID)
+        {
+            objPropietario.IdPropietario = ID;
+            objetoPropietario.updateresponsable(objPropietario);
+            return RedirectToAction("Inicio");
         }
 
         public ActionResult Propiedades(int ID)
