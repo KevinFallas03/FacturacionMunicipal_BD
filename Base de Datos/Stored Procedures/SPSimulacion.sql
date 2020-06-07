@@ -297,8 +297,6 @@ BEGIN
 		   Set @Lo2=@Lo2+1
 		end
 
-
-
 		set @Lo1 = @Lo1 + 1
 		
 	end

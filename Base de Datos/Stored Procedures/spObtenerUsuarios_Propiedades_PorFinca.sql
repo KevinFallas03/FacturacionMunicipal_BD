@@ -18,4 +18,4 @@ BEGIN
 	where Propiedad.NumFinca = @finca and Usuario_Prop.EstaBorrado = 0 and Usuario.EstaBorrado=0 and Propiedad.EstaBorrado=0
 END 
 
-exec spObtenerUsuarios_Propiedades_PorFinca @finca = '2520127'
+exec spObtenerUsuarios_Propiedades_PorFinca @finca = '1176180'

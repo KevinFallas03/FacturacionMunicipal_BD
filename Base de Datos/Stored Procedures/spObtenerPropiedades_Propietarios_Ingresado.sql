@@ -21,4 +21,5 @@ BEGIN
 END
 GO
 
-exec spObtenerPropiedades_Propietarios_Ingresado @ingresado = '301659662'
+exec spObtenerPropiedades_Propietarios_Ingresado @ingresado = 'DIEGO ARMANDO RAMIREZ MATA' --por Nombre
+exec spObtenerPropiedades_Propietarios_Ingresado @ingresado = 110670556 --por ID
