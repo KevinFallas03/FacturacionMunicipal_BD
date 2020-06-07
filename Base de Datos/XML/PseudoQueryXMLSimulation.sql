@@ -69,8 +69,9 @@ Begin
  -- procesar nodos PropietarioxCCobro
     delete @propietariosxCCobro  
     insert @propietariosxCCobro (IdCCobro, ValorDocIdPropietario)
-    select <nombre campo TipoDocId de nodo PropietarioxCCobro del archivo XML>, <nombre ValorDocId fecha de nodo Propietario del archivo XML>,
-          <nombre campo ValorDocId de nodo PropietarioxCCobro )del archivo XML>
+    select <nombre campo TipoDocId de nodo PropietarioxCCobro del archivo XML>, 
+           <nombre ValorDocId fecha de nodo Propietario del archivo XML>,
+           <nombre campo ValorDocId de nodo PropietarioxCCobro )del archivo XML>
     from <extracion de nodo PropietarioxCCobro del archivo XML>
     where <fechaoperacion en nodo fecha=@FechaOperacion>
 

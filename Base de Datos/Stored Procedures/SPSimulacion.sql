@@ -161,7 +161,8 @@ BEGIN
 		while @Lo2<=@Hi2
 		Begin
 		   insert dbo.Propiedad(NumFinca, Valor, Direccion, EstaBorrado)
-		   Select Pd.NumFinca, Pd.Valor, Pd.Direccion, Pd.EstaBorrado from @Propiedades Pd where sec=@Lo2
+		   Select Pd.NumFinca, Pd.Valor, Pd.Direccion, Pd.EstaBorrado 
+		   from @Propiedades Pd where sec=@Lo2
 		   Set @Lo2=@Lo2+1
 		end
 		
@@ -182,7 +183,8 @@ BEGIN
 		while @Lo2<=@Hi2
 		Begin
 		   insert dbo.Propietario(IdTipoDocumento, Nombre, ValorDocumento, EstaBorrado)
-		   Select P.TipoDocId, P.Nombre, P.ValorDocId, P.EstaBorrado from @Propietarios P where sec=@Lo2
+		   Select P.TipoDocId, P.Nombre, P.ValorDocId, P.EstaBorrado 
+		   from @Propietarios P where sec=@Lo2
 		   Set @Lo2=@Lo2+1
 		end
 

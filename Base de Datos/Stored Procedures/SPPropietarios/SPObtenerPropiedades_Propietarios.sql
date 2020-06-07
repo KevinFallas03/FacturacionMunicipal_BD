@@ -1,7 +1,7 @@
 --SP para obtener los propiedades de propietarios
 use FacturacionMunicipal
 go
-create procedure spObtenerPropiedades_Propietarios
+CREATE OR ALTER procedure spObtenerPropiedades_Propietarios
 (
 	@id int
 )
