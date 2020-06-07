@@ -13,7 +13,7 @@ namespace model.entity
         private string valorDocumento;
 
         public PropietarioJuridico() { }
-
+        public PropietarioJuridico(int ID) { IdPropietario = ID; }
         public string PersonaResponsable { get => personaResponsable; set => personaResponsable = value; }
         public int IdTipoDocumento { get => idTipoDocumento; set => idTipoDocumento = value; }
         public string ValorDocumento { get => valorDocumento; set => valorDocumento = value; }

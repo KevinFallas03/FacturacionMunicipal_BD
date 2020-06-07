@@ -11,6 +11,7 @@ namespace MunicipalidadWebMVC5.Controllers
     public class PropietarioController : Controller
     {
         private PropietarioDao objetoPropietario;
+        private static Propietario PropietarioJud = new Propietario();
         private static int idPr = 0;
         public PropietarioController()
         {
@@ -32,6 +33,11 @@ namespace MunicipalidadWebMVC5.Controllers
         [HttpPost]
         public ActionResult Create(Propietario objPropietario)
         {
+            if (objPropietario.TipoDocumento == 4)
+            {
+                PropietarioJud = objPropietario;
+                return RedirectToAction("createResponsable");
+            }
             objetoPropietario.create(objPropietario);
             mensajeErrorRegistro(objPropietario);
             return RedirectToAction("Inicio");
@@ -83,6 +89,33 @@ namespace MunicipalidadWebMVC5.Controllers
             objPropietario.IdPropietario = ID;
             objetoPropietario.delete(objPropietario);
             return RedirectToAction("Inicio");
+        }
+
+        [HttpGet]
+        public ActionResult createResponsable()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult createResponsable(PropietarioJuridico responsable)
+        {
+            objetoPropietario.createresponsable(PropietarioJud, responsable);
+            return RedirectToAction("Inicio");
+        }
+
+        [HttpPost]
+        public ActionResult Responsable(string ID)
+        {
+            return RedirectToAction("Responsable/" + ID);
+        }
+
+        [HttpGet]
+        public ActionResult Responsable(int ID)
+        {
+            PropietarioJuridico objpropietario = new PropietarioJuridico(ID);
+            objetoPropietario.responsable(objpropietario);
+            return View(objpropietario);
         }
 
         public ActionResult Propiedades(int ID)

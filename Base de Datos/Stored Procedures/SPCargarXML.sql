@@ -31,7 +31,7 @@ BEGIN
 	BEGIN TRY
 		--Insercion de los tipos de documentos de identificacion
 		SELECT @TipoDocumento = TD
-		FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\TipoDocumentoIdentidad.xml', Single_BLOB) AS TipoDocumento(TD)
+		FROM OPENROWSET (Bulk 'C:\Users\Johel Mora\Desktop\FacturacionMunicipal_BD\Base de Datos\XML\TipoDocumentoIdentidad.xml', Single_BLOB) AS TipoDocumento(TD)
 
 		INSERT INTO TipoDocumentoId(ID, Nombre)
 		SELECT td.value('@codigoDoc', 'VARCHAR(10)')
@@ -47,4 +47,4 @@ END
 GO
 
 exec spCargarDatos
-exec ReiniciarTablas
+--exec ReiniciarTablas

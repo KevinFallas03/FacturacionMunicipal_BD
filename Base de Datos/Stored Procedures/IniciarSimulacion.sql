@@ -17,6 +17,7 @@ BEGIN
 	EXEC spCargarDatosCC
 	EXEC Simulacion
 END
+
 GO
 
 EXEC IniciarSimulacion

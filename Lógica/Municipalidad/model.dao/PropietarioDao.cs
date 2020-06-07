@@ -13,6 +13,7 @@ namespace model.dao
     {
         private Conexion objConexion;
         private SqlCommand comando;
+        private static int IDPJ=0;
 
         public PropietarioDao()
         {
@@ -30,6 +31,11 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@ValorDocumento", objetoPropietario.ValorDocumentoId);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
+                SqlDataReader read = comando.ExecuteReader();
+                if (read.Read())
+                {
+                    IDPJ = Convert.ToInt32(read[0].ToString());
+                }
             }
             catch (Exception)
             {
@@ -40,6 +46,67 @@ namespace model.dao
                 objConexion.getConexion().Close();
                 objConexion.cerrarConexion();
             }
+        }
+
+        public void createresponsable(Propietario Propietario, PropietarioJuridico Responsable)
+        {
+            create(Propietario);
+            try
+            {
+                comando = new SqlCommand("spInsertarPropietario_Jud", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", IDPJ);
+                comando.Parameters.AddWithValue("@Nombre", Responsable.PersonaResponsable);
+                comando.Parameters.AddWithValue("@IdTipoDocumento", Responsable.TipoDocumento);
+                comando.Parameters.AddWithValue("@ValorDocumento", Responsable.ValorDocumentoId);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
+
+        public bool responsable(PropietarioJuridico objpropietario)
+        {
+            bool hayRegistros;
+            try
+            {
+                comando = new SqlCommand("spVerPropietario_Jud", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objpropietario.IdPropietario);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    objpropietario.IdPropietario = Convert.ToInt32(read[0].ToString());
+                    objpropietario.Nombre = read[1].ToString();
+                    objpropietario.TipoDocumento = Convert.ToInt32(read[2].ToString());
+                    objpropietario.ValorDocumentoId = read[3].ToString();
+                    objpropietario.EstadoError = 99;
+                }
+                else
+                {
+                    objpropietario.EstadoError = 1;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return hayRegistros;
         }
 
         public void update(Propietario objPropietario)
@@ -159,6 +226,7 @@ namespace model.dao
         }
 
         public List<Propiedad> findAllPropiedades(int ID)
+
         {
             List<Propiedad> listaPropietarios = new List<Propiedad>();
             List<int> listaid = new List<int>();

@@ -30,7 +30,7 @@ BEGIN
     END TRY
 
     BEGIN CATCH
-        return @@ERROR * -1
+        return @@ERROR
     END CATCH
  END
 
