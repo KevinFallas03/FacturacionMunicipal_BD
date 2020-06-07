@@ -36,8 +36,8 @@
     </div>
 </div>
 <div class="form-actions col-md-offset-2">
-    <input class="btn btn-primary" type="submit" name=btnresp value="Responsable" />
-    <input class="btn btn-primary" type="submit" name=btnprop value="Propiedades" />
+    <a class="btn btn-primary" href="/Propietario/Responsable/@Model.IdPropietario">Responsable</a>
+    <input class="btn btn-primary" type="submit" name=btnprop id="prp" value="Propiedades" href="Propietario/Propiedades" />
     @Html.ActionLink("Regresar al listado", "Inicio")
 </div>
 }
