@@ -1,3 +1,10 @@
+-- ==========================================================================================
+-- Autores:		<Kevin Fallas y Johel Mora>
+-- Fecha de creacion: <03/06/2020>
+-- Fecha de ultima modificacion <6/6/2020>
+-- Descripcion:	<SP para hacer la simulacion de actividades de la municipalidad>
+-- ==========================================================================================
+
 USE [FacturacionMunicipal]
 GO
 
