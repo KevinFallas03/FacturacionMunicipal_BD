@@ -20,22 +20,21 @@ BEGIN
     SET NOCOUNT ON;                                                                                                                                                                                                                                                                                             
 
     -- VARIABLES --
-    DECLARE @CCobro xml, @Monto MONEY, @ValorM3 MONEY, @ValorPorcentaje REAL
+    DECLARE @CCobro XML
 
     BEGIN TRY
         --Insercion de los tipos de CCobro
-
         SELECT @CCobro = CC
         FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Concepto_de_Cobro.xml', Single_BLOB) AS CCobro(CC)
 
-        INSERT INTO CCobro (ID, Nombre, TasaInteresMoratorio, DiaEmisionRecibo, QDiasVencimiento, EsImpuesto, EsRecurrente, EsFijo, TipoCC, Activo)
+        INSERT INTO dbo.CCobro (ID, Nombre, TasaInteresMoratorio, DiaEmisionRecibo, QDiasVencimiento, EsImpuesto, EsRecurrente, EsFijo, TipoCC, Activo)
         SELECT c.value('@id','INT') AS ID
             , c.value('@Nombre','VARCHAR(100)') AS Nombre
-            , c.value('@TasaInteresMoratoria','DECIMAL(10,2)') AS TasaInteresMoratorio
+            , c.value('@TasaInteresMoratoria','REAL') AS TasaInteresMoratorio
             , c.value('@DiaCobro','TINYINT') AS DiaEmisionRecibo
             , c.value('@QDiasVencimiento','TINYINT') AS QDiasVencimiento
-            , c.value('@EsImpuesto','VARCHAR(10)') AS EsImpuesto 
-            , c.value('@EsRecurrente','VARCHAR(10)') AS EsRecurrente  
+            , c.value('@EsImpuesto','VARCHAR(10)') AS EsImpuesto
+            , c.value('@EsRecurrente','VARCHAR(10)') AS EsRecurrente
             , c.value('@EsFijo','VARCHAR(10)') AS EsFijo  
             , c.value('@TipoCC','VARCHAR(10)') AS TipoCC
             , 1 AS Activo
@@ -64,12 +63,15 @@ BEGIN
 		WITH ca AS
 		(
 			SELECT cca.value('@id','INT') AS ID
-				, cca.value('@ValorM3','REAL') AS ConsumoM3
+				, cca.value('@ValorM3','INT') AS ConsumoM3
+				, cca.value('@MontoMinRecibo', 'INT') AS MontoMinimoRecibo
 			FROM @CCobro.nodes('/Conceptos_de_Cobro/conceptocobro') AS t(cca)
 		)
-		INSERT INTO CCobro_ConsumoAgua(ID, ConsumoM3)
-		SELECT ID, ConsumoM3 FROM ca
+		INSERT INTO CCobro_ConsumoAgua(ID, ConsumoM3, MontoMinimoRecibo)
+		SELECT ID, ConsumoM3, MontoMinimoRecibo FROM ca
 		WHERE ca.ConsumoM3 > 0;
+		
+		return 1
 
     END TRY
 
