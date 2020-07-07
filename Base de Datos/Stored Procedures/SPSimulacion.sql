@@ -161,7 +161,7 @@ BEGIN
 		, pd.value('../@fecha', 'DATE')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propiedad') AS t(pd)
-		where @fechaOperacionNodo = @FechaOperacion 
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
 		
 
 		/*-- iteramos en propiedades
@@ -185,7 +185,7 @@ BEGIN
 		, pt.value('../@fecha', 'DATE')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propietario') AS t(pt)
-		where @fechaOperacionNodo = @FechaOperacion 
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
 		
 
 		/*-- iteramos en propietarios
@@ -200,7 +200,7 @@ BEGIN
 		end*/
 
 		--Propietarios Juridicos 
-		-- procesar nodos propietarios juridicos ITERATIVO
+		-- procesar nodos propietarios juridicos ITERATIVO -- considerar hacerlos masivos
 		delete @PropJuridico 
 		insert @PropJuridico(DocIdPersonaJuridica, NombrePersonaResponsable, IdTipoDocumento, ValorDocumento, EstaBorrado)
 		select --ID VALUE
@@ -255,7 +255,7 @@ BEGIN
 		, u.value('../@fecha', 'DATE')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Usuario') AS t(u)
-		where @fechaOperacionNodo = @FechaOperacion
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 
 		/*-- iteramos en Usuarios
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -313,6 +313,34 @@ BEGIN
 		   Set @Lo2=@Lo2+1
 		end
 		
+		-- PSEUDOCODIGO PARA PROCESAR PAGOS
+		/*
+		Extraer en una variable table los pagos del dia, @PagosHoy
+
+		-- en algun lado un 
+		declare @PagosHoy table (id int identity Primary Key, NumFinca int, IdTipoRecibo int)
+
+		INSERT @PagosHoy (NumFinca, IdTipoRecibo)
+		select ph.value('@NumFinca', 'INT')
+			, ph.value('idTipoRecibo', 'INT')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+		
+		EXEC SP_PROCESACAMBIOVALORPROPIEDAD
+
+		EXEC SP_PROCESAPAGOS ... (se le envia @PagosHoy) --ES ATOMICO, se usa transact
+
+		EXEC SP_PROCESACONSUMO ... se le envia la tabla con la info
+
+		EXEC SP_ProcesaCortes ... se le envia la tabla con la info
+
+		EXEC SP_ProcesaReconexion ... se le envia la tabla con la info
+
+		EXEC_SP_GeneraRecibos
+
+
+		*/
+
 		set @Lo1 = @Lo1 + 1
 		
 	end
