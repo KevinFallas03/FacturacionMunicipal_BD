@@ -49,6 +49,7 @@
     <Compile Include="Propiedad.cs" />
     <Compile Include="Propietario.cs" />
     <Compile Include="PropietarioJuridico.cs" />
+    <Compile Include="Recibo.cs" />
     <Compile Include="Usuario.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
