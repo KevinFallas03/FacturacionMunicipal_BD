@@ -1,8 +1,27 @@
-﻿
+﻿@model List<model.entity.Propiedad>
 @{
     ViewBag.Title = "MenuProp";
 }
+<h2>Propiedades disponibles</h2>
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-primary">
+            <th>Número</th>
+            <th>Valor</th>
+            <th>Dirección</th>
+            <th colspan="3"> Operaciones</th>
+        </tr>
+        @foreach (var objetoPropiedad in Model)
+        {
+        <tr>
+            <td>@objetoPropiedad.NumeroPropiedad</td>
+            <td>@objetoPropiedad.ValorPropiedad</td>
+            <td>@objetoPropiedad.DireccionPropiedad</td>
+            <td><a class="btn btn-danger" href="~/Recibo/RecibosPendientes/@objetoPropiedad.IdPropiedad">Recibos Pendientes</a></td>
+            <td><a class="btn btn-success" href="~/Recibo/RecibosPagados/@objetoPropiedad.IdPropiedad">Recibos Pagados</a></td>
+            <td><a class="btn btn-warning" href="~/Recibo/ComprobantesPago/@objetoPropiedad.IdPropiedad">Comprobantes de Pago</a></td>
+        </tr>
+        }
+    </table>
+</div>
 
-<a style='display:flex;position:unset;bottom:1000px;left:0px;'>
-    <img src='http://gea-ecohidraulica.org/images/BajoConstrucci%C3%B3n.png' size=full alt="Menu Principal" />
-</a>

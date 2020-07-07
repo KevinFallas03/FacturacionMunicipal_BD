@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using model.entity;
 using model.dao;
 
@@ -26,10 +27,10 @@ namespace MunicipalidadWebMVC5.Controllers
             {
                 return RedirectToAction("/MenuAdmin");
             }
-            else if (tipo == "Propietario")
+            else if (tipo == "Normal")
             {
-                user = new Usuario();
-                return RedirectToAction("/MenuProp");
+                //user = new Usuario();
+                return RedirectToAction("/MenuProp/" +user.IdUsuario);
             }
             else
             {
@@ -43,9 +44,11 @@ namespace MunicipalidadWebMVC5.Controllers
             return View();
         }
 
-        public ActionResult MenuProp()
+        [HttpGet]
+        public ActionResult MenuProp(int ID)
         {
-            return View();
+            List<Propiedad> lista = objetoUsuario.findAllPropiedades(ID);
+            return View(lista);
         }
     }
 }

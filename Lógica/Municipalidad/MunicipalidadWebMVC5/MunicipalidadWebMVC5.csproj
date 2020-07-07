@@ -117,6 +117,7 @@
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\PropiedadController.cs" />
     <Compile Include="Controllers\PropietarioController.cs" />
+    <Compile Include="Controllers\ReciboController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -160,9 +161,7 @@
     <Content Include="Views\Propiedad\CreateUsuario.cshtml" />
     <Content Include="Views\Propiedad\CreatePropietario.cshtml" />
     <Content Include="Views\Menu\MenuAdmin.cshtml" />
-    <Content Include="Views\Menu\MenuProp.cshtml" />
     <Content Include="Views\Propietario\CreateResponsable.cshtml" />
-    <Content Include="Views\Menu\MenuProp.cshtml" />
     <Content Include="Views\Propietario\PropiedadesPorValor.cshtml" />
     <Content Include="Views\Consulta\Inicio.cshtml" />
     <Content Include="Views\Propietario\createResponsable.cshtml" />
@@ -171,6 +170,10 @@
     <Content Include="Views\Usuario\PropiedadesVsUsuario.cshtml" />
     <Content Include="Views\Propiedad\PropietarioVsPropiedades.cshtml" />
     <Content Include="Views\Propiedad\UsuarioVsPropiedad.cshtml" />
+    <Content Include="Views\Menu\MenuProp.cshtml" />
+    <Content Include="Views\Recibo\RecibosPagados.cshtml" />
+    <Content Include="Views\Recibo\RecibosPendientes.cshtml" />
+    <Content Include="Views\Recibo\ComprobantesPago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
