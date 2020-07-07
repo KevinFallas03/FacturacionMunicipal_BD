@@ -79,6 +79,7 @@ BEGIN
 		Nombre varchar(100),
 		Password varchar(100),
 		TipoUsuario varchar(100),
+		FechaIngreso date,
 		EstaBorrado bit
 	)
 
@@ -110,11 +111,12 @@ BEGIN
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia') AS t(f);
 	END TRY
 	BEGIN CATCH
-		SELECT 'Hubo un error de cargar fechas'
+		PRINT 'Hubo un error de cargar fechas'
+		RETURN @@ERROR * -1
 	END CATCH
+
 	--parte 3 
 	
-	--select * from @FechasAProcesar
 	-- variables que almacenan valor constante para controlar emision masiva de recibos
 
 	--Declare @IdCCobro_ConsumoAgua=1, @IdCCobro_PatenteCantina=7   -- Son ids con valores solo de ejemplo
@@ -122,9 +124,9 @@ BEGIN
 	-- Variables para controlar la iteración
 	declare @Lo1 int, @Hi1 int, @Lo2 int, @Hi2 int
 	declare @minfecha datetime, @maxfecha datetime 
+	DECLARE @fechaOperacionNodo date
 
 	-- iterando de la fecha más antigua a la menos antigua
-
 	Select @minfecha=min(F.fecha), @maxfecha=max(F.fecha)  -- min y max son funciones agregadas
 	from @FechasAProcesar F
 
@@ -137,25 +139,32 @@ BEGIN
 	where F.Fecha=@maxfecha
 
 	--parte4
-	-- iteramos por fecha
+	--iteramos por fecha
 	while @Lo1<=@Hi1
 	Begin
 		Select @FechaOperacion=F.Fecha from @FechasAProcesar F where sec=@Lo1
 		
 		--DECLARE @fechaOperacionNodo date
-		--SET @fechaOperacionNodo = @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE')--revisar
+		SET @fechaOperacionNodo = @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE')--revisar
 
-		-- procesar nodos propiedades
-		delete @Propiedades
-		insert @Propiedades (NumFinca, Valor, Direccion, EstaBorrado)
+		
+		--delete @Propiedades -- ELIMINAR
+
+		--procesar nodos propiedades MASIVO
+
+		INSERT INTO Propiedad (NumFinca, Valor, Direccion, M3Acumulados, M3AcumuladosUltimoRecibo, FechaIngreso, EstaBorrado)
 		select pd.value('@NumFinca', 'INT')
 		, pd.value('@Valor', 'MONEY')
 		, pd.value('@Direccion', 'VARCHAR(150)')
+		, 0 AS M3Acumulados
+		, 0 AS M3AcumuladosUltimoRecibo
+		, pd.value('../@fecha', 'DATE')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propiedad') AS t(pd)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+		where @fechaOperacionNodo = @FechaOperacion 
+		
 
-		-- iteramos en propiedades
+		/*-- iteramos en propiedades
 		Select @Lo2=min(sec), @Hi2=max(sec) 
 		from @Propiedades
 		while @Lo2<=@Hi2
@@ -165,19 +174,21 @@ BEGIN
 		   from @Propiedades Pd where sec=@Lo2
 		   Set @Lo2=@Lo2+1
 		end
-		
+		*/
+
+		--delete @Propietarios
 		-- procesar nodos propietario
-		delete @Propietarios  
-		insert @Propietarios (TipoDocId, Nombre, ValorDocId, EstaBorrado)
+		INSERT INTO Propietario (IdTipoDocumento, Nombre, ValorDocumento, FechaIngreso, EstaBorrado)
 		select pt.value('@TipoDocIdentidad','INT')
 		, pt.value('@Nombre', 'VARCHAR(100)')
 		, pt.value('@identificacion', 'VARCHAR(100)')
+		, pt.value('../@fecha', 'DATE')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propietario') AS t(pt)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+		where @fechaOperacionNodo = @FechaOperacion 
 		
 
-		-- iteramos en propietarios
+		/*-- iteramos en propietarios
 		Select @Lo2=min(sec), @Hi2=max(sec)
 		from @Propietarios
 		while @Lo2<=@Hi2
@@ -186,10 +197,10 @@ BEGIN
 		   Select P.TipoDocId, P.Nombre, P.ValorDocId, P.EstaBorrado 
 		   from @Propietarios P where sec=@Lo2
 		   Set @Lo2=@Lo2+1
-		end
+		end*/
 
 		--Propietarios Juridicos 
-		-- procesar nodos propietarios juridicos
+		-- procesar nodos propietarios juridicos ITERATIVO
 		delete @PropJuridico 
 		insert @PropJuridico(DocIdPersonaJuridica, NombrePersonaResponsable, IdTipoDocumento, ValorDocumento, EstaBorrado)
 		select --ID VALUE
@@ -234,26 +245,29 @@ BEGIN
 		   where sec=@Lo2 and Pp.IdPropietario = Pt.ValorDocumento and Pp.IdPropiedad = Pd.NumFinca
 		   Set @Lo2=@Lo2+1
 		end
-
-		--insertamos Usuarios
-		delete @Usuarios
-		insert @Usuarios (Nombre, Password, TipoUsuario, EstaBorrado)-- rultimo atributo 
+	 
+		--insertamos Usuarios insert MASIVO
+		--delete @Usuarios
+		INSERT INTO Usuario (Nombre, Password, TipoUsuario, FechaIngreso, EstaBorrado)-- rultimo atributo 
 		select u.value('@Nombre','VARCHAR(100)')
 		, u.value('@password', 'VARCHAR(100)')
 		, 'Normal' AS TipoUsuario
+		, u.value('../@fecha', 'DATE')
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Usuario') AS t(u)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		where @fechaOperacionNodo = @FechaOperacion
 
-		-- iteramos en Usuarios
+		/*-- iteramos en Usuarios
 		Select @Lo2=min(sec), @Hi2=max(sec)
 		from @Usuarios
 		while @Lo2<=@Hi2
 		Begin
-		   insert dbo.Usuario(Nombre, Password, TipoUsuario ,EstaBorrado)
-		   Select U.Nombre, U.Password, U.TipoUsuario, U.EstaBorrado from @Usuarios U where sec=@Lo2
+		   Insert dbo.Usuario(Nombre, Password, TipoUsuario, FechaIngreso, EstaBorrado)
+		   Select U.Nombre, U.Password, U.TipoUsuario, U.FechaIngreso, U.EstaBorrado from @Usuarios U 
+		   Where sec=@Lo2
 		   Set @Lo2=@Lo2+1
 		end
+		*/
 
 		--CCobros x Propiedad
 		--procesar nodos CCobroVsPropiedad
@@ -261,7 +275,7 @@ BEGIN
 		insert @PropiedadesxCCobro (IdCCobro, IdPropiedad, FechaInic)-- revisar ultimo atributo 
 		select pc.value('@idcobro','INT') --buscar el id de ese valor
 		, pc.value('@NumFinca', 'INT') --buscar el id de ese valor
-		, @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') as FechaInic --error carga solo la primera fecha
+		, pc.value('../@fecha', 'DATE' ) as FechaInic -- POSIBLE error carga solo la primera fecha
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/ConceptoCobroVersusPropiedad') AS t(pc)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 
@@ -298,13 +312,14 @@ BEGIN
 		   where sec=@Lo2 and Up.IdUsuario = U.Nombre and Up.IdPropiedad = Pd.NumFinca
 		   Set @Lo2=@Lo2+1
 		end
-
+		
 		set @Lo1 = @Lo1 + 1
 		
 	end
 
 end
 
+exec ReiniciarTablas
 exec IniciarSimulacion
 
    
