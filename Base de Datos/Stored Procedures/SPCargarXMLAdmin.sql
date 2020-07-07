@@ -14,24 +14,28 @@ BEGIN
 
     -- VARIABLES --
     DECLARE @Usuario XML
-
+	
     BEGIN TRY
         --Insercion de los tipos de documentos de identificacion
         SELECT @Usuario = U
         FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Administradores.xml', Single_BLOB) AS Usuario(U)
-
-        INSERT INTO Usuario (Nombre, Password, TipoUsuario, EstaBorrado)
+		INSERT INTO [dbo].[Usuario] ([Nombre],[Password],[TipoUsuario],[FechaIngreso], EstaBorrado)
         SELECT u.value('@user','VARCHAR(100)') AS Nombre
             , u.value('@password','VARCHAR(100)') AS Password
             , 'Administrador' AS TipoUsuario
+			, CONVERT(DATE,GETDATE()) AS FechaIngreso
             , 0 AS EstaBorrado
-        FROM @Usuario.nodes('/Administrador/UsuarioAdmi') AS t(u); 
+        FROM @Usuario.nodes('/Administrador/UsuarioAdmi') AS t(u);
+
+		RETURN 1
 
     END TRY
 
     BEGIN CATCH
-        return @@ERROR
+        return @@ERROR * -1
     END CATCH
  END
 
- exec spCargarDatosAdmin
+exec spCargarDatosAdmin
+
+exec ReiniciarTablas
