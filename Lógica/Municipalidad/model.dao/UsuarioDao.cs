@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,21 @@ namespace model.dao
     {
         private Conexion objConexion;
         private SqlCommand comando;
+        private string ip;
+        private string host;
 
         public UsuarioDao()
         {
+            host = obtenerIP()[0];
+            ip = obtenerIP()[1];
             objConexion = Conexion.saberEstado();
+        }
+        private string[] obtenerIP()
+        {
+            string Host = Dns.GetHostName();
+            IPAddress[] Ip = Dns.GetHostAddresses(Host);
+            string[] result = { Host, Ip[1].ToString() };
+            return result;
         }
         public void create(Usuario objetoUsuario)
         {
@@ -27,6 +39,8 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@Nombre", objetoUsuario.NombreUsuario);
                 comando.Parameters.AddWithValue("@Password", objetoUsuario.Password);
                 comando.Parameters.AddWithValue("@TipoUsuario", objetoUsuario.TipoUsuario);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
@@ -51,6 +65,8 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@Nombre", objUsuario.NombreUsuario);
                 comando.Parameters.AddWithValue("@Password", objUsuario.Password);
                 comando.Parameters.AddWithValue("@TipoUsuario", objUsuario.TipoUsuario);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Net;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +15,22 @@ namespace model.dao
         private Conexion objConexion;
         private SqlCommand comando;
         private static int IDPJ=0;
+        private string ip;
+        private string host;
 
         public PropietarioDao()
         {
+            host = obtenerIP()[0];
+            ip = obtenerIP()[1];
             objConexion = Conexion.saberEstado();
+        }
+
+        private string[] obtenerIP()
+        {
+            string Host = Dns.GetHostName();
+            IPAddress[] Ip = Dns.GetHostAddresses(Host);
+            string[] result = { Host, Ip[1].ToString() };
+            return result;
         }
 
         public void create(Propietario objetoPropietario)
@@ -29,6 +42,8 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@Nombre", objetoPropietario.Nombre);
                 comando.Parameters.AddWithValue("@IdTipoDocumento", objetoPropietario.TipoDocumento);
                 comando.Parameters.AddWithValue("@ValorDocumento", objetoPropietario.ValorDocumentoId);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
                 SqlDataReader read = comando.ExecuteReader();
@@ -164,6 +179,8 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@Nombre", objPropietario.Nombre);
                 comando.Parameters.AddWithValue("@IdTipoDocumento", objPropietario.TipoDocumento);
                 comando.Parameters.AddWithValue("@ValorDocumento", objPropietario.ValorDocumentoId);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
