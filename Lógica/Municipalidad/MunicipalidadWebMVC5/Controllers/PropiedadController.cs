@@ -9,10 +9,12 @@ namespace MunicipalidadWebMVC5.Controllers
     {
         private PropiedadDao objetoPropiedad;
         private static int idUP = 0;
+
         public PropiedadController()
         {
             objetoPropiedad = new PropiedadDao();
         }
+
         // GET: Propiedad
         public ActionResult Inicio()
         {
