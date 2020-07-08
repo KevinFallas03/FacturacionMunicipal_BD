@@ -91,6 +91,19 @@ BEGIN
 		EstaBorrado bit
 	)
 
+	--Tabla para almacenar los cambios en un dia
+
+	Declare @PropiedadCambio CambioValorPropiedadType
+
+	--Tabla variable para almacenar los pagos dia por dia
+	Declare @PagosHoy table 
+	(
+		id int identity Primary Key, 
+		NumFinca int, 
+		IdTipoRecibo int,
+		Fecha date
+	)
+
 	Declare @FechaOperacion date
 
 	-- se extraen fechas operación
@@ -142,7 +155,9 @@ BEGIN
 	--iteramos por fecha
 	while @Lo1<=@Hi1
 	Begin
-		Select @FechaOperacion=F.Fecha from @FechasAProcesar F where sec=@Lo1
+		Select @FechaOperacion=F.Fecha 
+		from @FechasAProcesar F 
+		where sec=@Lo1
 		
 		--DECLARE @fechaOperacionNodo date
 		SET @fechaOperacionNodo = @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE')--revisar
@@ -312,6 +327,25 @@ BEGIN
 		   where sec=@Lo2 and Up.IdUsuario = U.Nombre and Up.IdPropiedad = Pd.NumFinca
 		   Set @Lo2=@Lo2+1
 		end
+
+		-- procesar los cambios en las propiedades por dia
+		DELETE @PropiedadCambio
+		INSERT @PropiedadCambio (NumFinca, NuevoValor)
+		select pc.value('@NumFinca', 'INT')
+			, pc.value('@NuevoValor', 'MONEY')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadCambio') AS t(pc)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
+
+		SELECT * FROM @PropiedadCambio
+
+		DELETE @PagosHoy
+		INSERT @PagosHoy (NumFinca, IdTipoRecibo, Fecha)
+		select ph.value('@NumFinca', 'INT')
+			, ph.value('@idTipoRecibo', 'INT')
+			, ph.value('../@fecha', 'DATE')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		
 		-- PSEUDOCODIGO PARA PROCESAR PAGOS
 		/*
@@ -326,7 +360,7 @@ BEGIN
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
 		
-		EXEC SP_PROCESACAMBIOVALORPROPIEDAD
+		EXEC SP_PROCESACAMBIOVALORPROPIEDAD ... se le envia la tabla con la info
 
 		EXEC SP_PROCESAPAGOS ... (se le envia @PagosHoy) --ES ATOMICO, se usa transact
 
@@ -344,10 +378,11 @@ BEGIN
 		set @Lo1 = @Lo1 + 1
 		
 	end
-
+	
 end
 
 exec ReiniciarTablas
-exec IniciarSimulacion
+
+
 
    
