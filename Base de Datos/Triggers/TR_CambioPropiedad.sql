@@ -5,6 +5,7 @@
 USE [FacturacionMunicipal]
 GO
 
+
 CREATE OR ALTER TRIGGER [dbo].[TRCambioPropiedad]
 ON [dbo].[Propiedad]
 AFTER  INSERT, UPDATE --VER SI SE HACE UNO SOLO PARA EL INSERT CON JSONDESPUES = NULL
