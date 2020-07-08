@@ -74,6 +74,8 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@Nombre", Responsable.PersonaResponsable);
                 comando.Parameters.AddWithValue("@IdTipoDocumento", Responsable.TipoDocumento);
                 comando.Parameters.AddWithValue("@ValorDocumento", Responsable.ValorDocumentoId);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
@@ -134,6 +136,8 @@ namespace model.dao
                 comando.Parameters.AddWithValue("@Nombre", objPropietario.PersonaResponsable);
                 comando.Parameters.AddWithValue("@IdTipoDocumento", objPropietario.TipoDocumento);
                 comando.Parameters.AddWithValue("@ValorDocumento", objPropietario.ValorDocumentoId);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
