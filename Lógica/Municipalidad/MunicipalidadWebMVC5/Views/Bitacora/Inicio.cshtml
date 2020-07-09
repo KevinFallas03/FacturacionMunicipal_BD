@@ -1,0 +1,24 @@
+﻿@model List<model.entity.Bitacora>
+@{
+    ViewBag.Title = "Inicio";
+}
+
+<h2>Bitácora de operaciones</h2>
+
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-danger">
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th></th>
+        </tr>
+        @foreach (var objetoBitacora in Model)
+        {
+        <tr>
+            <td>@objetoBitacora.Fecha</td>
+            <td>@objetoBitacora.Hora</td>
+            <td><a class="btn btn-success" href="~/Bitacora/Find/@objetoBitacora.IdBitacora">Ver</a></td>
+        </tr>
+        }
+    </table>
+</div>

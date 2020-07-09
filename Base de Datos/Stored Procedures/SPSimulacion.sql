@@ -118,7 +118,7 @@ BEGIN
 
 	BEGIN TRY
 		SELECT @DocumentoXML = DXML
-		FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
+		FROM OPENROWSET (Bulk 'C:\Users\Johel Mora\Desktop\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
 		insert @FechasAProcesar (fecha)
 		select f.value('@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia') AS t(f);
@@ -381,7 +381,7 @@ BEGIN
 	
 end
 
-exec ReiniciarTablas
+--exec ReiniciarTablas
 
 
 
