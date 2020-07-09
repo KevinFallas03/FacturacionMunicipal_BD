@@ -431,6 +431,8 @@ namespace model.dao
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@idPropietario", idPropietario);
                 comando.Parameters.AddWithValue("@idPropiedad", idPropiedad);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }

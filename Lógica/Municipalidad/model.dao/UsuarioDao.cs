@@ -23,6 +23,7 @@ namespace model.dao
             ip = obtenerIP()[1];
             objConexion = Conexion.saberEstado();
         }
+
         private string[] obtenerIP()
         {
             string Host = Dns.GetHostName();
@@ -30,6 +31,7 @@ namespace model.dao
             string[] result = { Host, Ip[1].ToString() };
             return result;
         }
+
         public void create(Usuario objetoUsuario)
         {
             try
@@ -308,6 +310,8 @@ namespace model.dao
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@idU", idU);
                 comando.Parameters.AddWithValue("@idP", idP);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }

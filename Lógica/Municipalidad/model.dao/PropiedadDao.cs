@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using model.entity;
 
 namespace model.dao
@@ -13,10 +11,22 @@ namespace model.dao
     {
         private Conexion objConexion;
         private SqlCommand comando;
+        private string ip;
+        private string host;
 
         public PropiedadDao()
         {
+            host = obtenerIP()[0];
+            ip = obtenerIP()[1];
             objConexion = Conexion.saberEstado();
+        }
+
+        private string[] obtenerIP()
+        {
+            string Host = Dns.GetHostName();
+            IPAddress[] Ip = Dns.GetHostAddresses(Host);
+            string[] result = { Host, Ip[1].ToString() };
+            return result;
         }
 
         public void create(Propiedad objetoPropiedad)
@@ -382,6 +392,8 @@ namespace model.dao
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@idPropietario", idPropietario);
                 comando.Parameters.AddWithValue("@idPropiedad", idPropiedad);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
@@ -440,6 +452,8 @@ namespace model.dao
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@idU", idU);
                 comando.Parameters.AddWithValue("@idP", idP);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
