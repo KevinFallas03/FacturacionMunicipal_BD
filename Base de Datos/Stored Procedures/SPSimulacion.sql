@@ -1,4 +1,4 @@
-
+ 
 -- ==========================================================================================
 -- Autores:		<Kevin Fallas y Johel Mora>
 -- Fecha de creacion: <03/06/2020>
@@ -96,14 +96,12 @@ BEGIN
 	Declare @PropiedadCambio CambioValorPropiedadType
 
 	--Tabla variable para almacenar los pagos dia por dia
-	Declare @PagosHoy table 
-	(
-		id int identity Primary Key, 
-		NumFinca int, 
-		IdTipoRecibo int,
-		Fecha date
-	)
+	Declare @PagosHoy PagosHoyType
 
+	--Tabla para los movimientos de consumo de agua
+	Declare @MovConsumo MovConsumoType
+
+	--Fecha para las simulaciones
 	Declare @FechaOperacion date
 
 	-- se extraen fechas operación
@@ -337,16 +335,28 @@ BEGIN
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
 
-		SELECT * FROM @PropiedadCambio
-
+		--procesa los pagos de un dia
 		DELETE @PagosHoy
-		INSERT @PagosHoy (NumFinca, IdTipoRecibo, Fecha)
+		INSERT @PagosHoy (NumFinca, TipoRecibo, Fecha)
 		select ph.value('@NumFinca', 'INT')
 			, ph.value('@idTipoRecibo', 'INT')
 			, ph.value('../@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		--EXEC spProcesaPagos @PagosHoy
+
+		--procesa los movimientos en los consumos de las propiedades
+		--DELETE @MovConsumo
+		INSERT @MovConsumo(NumFinca, M3, TipoMov, Fecha)
+		select mc.value('@NumFinca', 'INT')
+			, mc.value('@LecturaM3', 'INT')
+			, mc.value('@id', 'INT')
+			, mc.value('../@fecha', 'DATE')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Consumo') AS t(mc)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		
+		
+	
 		-- PSEUDOCODIGO PARA PROCESAR PAGOS
 		/*
 		Extraer en una variable table los pagos del dia, @PagosHoy
@@ -378,10 +388,10 @@ BEGIN
 		set @Lo1 = @Lo1 + 1
 		
 	end
-	
+	select * from @MovConsumo
 end
 
-exec ReiniciarTablas
+exec IniciarSimulacion
 
 
 
