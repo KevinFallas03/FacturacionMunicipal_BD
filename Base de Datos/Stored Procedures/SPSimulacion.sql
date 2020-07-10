@@ -1,4 +1,4 @@
-
+ 
 -- ==========================================================================================
 -- Autores:		<Kevin Fallas y Johel Mora>
 -- Fecha de creacion: <03/06/2020>
@@ -9,7 +9,7 @@
 	--	///		TABLAS VARIABLES	//
 --- SCRIPT DE SIMULACION PARA LA TAREA PROGRAMADA
 
--- precondición, los nodos para la fecha de operación en el XML vienen en orden ascendente.
+-- precondiciï¿½n, los nodos para la fecha de operaciï¿½n en el XML vienen en orden ascendente.
 
 /****** Object:  StoredProcedure [dbo].[Simulacion]    Script Date: 11/27/2019 10:20:30 PM ******/
 USE [FacturacionMunicipal]
@@ -96,17 +96,15 @@ BEGIN
 	Declare @PropiedadCambio CambioValorPropiedadType
 
 	--Tabla variable para almacenar los pagos dia por dia
-	Declare @PagosHoy table 
-	(
-		id int identity Primary Key, 
-		NumFinca int, 
-		IdTipoRecibo int,
-		Fecha date
-	)
+	Declare @PagosHoy PagosHoyType
 
+	--Tabla para los movimientos de consumo de agua
+	Declare @MovConsumo MovConsumoType
+
+	--Fecha para las simulaciones
 	Declare @FechaOperacion date
 
-	-- se extraen fechas operación
+	-- se extraen fechas operaciï¿½n
 	Declare @FechasAProcesar table 
 	(
 	   sec int identity(1,1) primary key, 
@@ -134,12 +132,12 @@ BEGIN
 
 	--Declare @IdCCobro_ConsumoAgua=1, @IdCCobro_PatenteCantina=7   -- Son ids con valores solo de ejemplo
 
-	-- Variables para controlar la iteración
+	-- Variables para controlar la iteraciï¿½n
 	declare @Lo1 int, @Hi1 int, @Lo2 int, @Hi2 int
 	declare @minfecha datetime, @maxfecha datetime 
 	DECLARE @fechaOperacionNodo date
 
-	-- iterando de la fecha más antigua a la menos antigua
+	-- iterando de la fecha mï¿½s antigua a la menos antigua
 	Select @minfecha=min(F.fecha), @maxfecha=max(F.fecha)  -- min y max son funciones agregadas
 	from @FechasAProcesar F
 
@@ -337,16 +335,28 @@ BEGIN
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
 
-		SELECT * FROM @PropiedadCambio
-
+		--procesa los pagos de un dia
 		DELETE @PagosHoy
-		INSERT @PagosHoy (NumFinca, IdTipoRecibo, Fecha)
+		INSERT @PagosHoy (NumFinca, TipoRecibo, Fecha)
 		select ph.value('@NumFinca', 'INT')
 			, ph.value('@idTipoRecibo', 'INT')
 			, ph.value('../@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		--EXEC spProcesaPagos @PagosHoy
+
+		--procesa los movimientos en los consumos de las propiedades
+		--DELETE @MovConsumo
+		INSERT @MovConsumo(NumFinca, M3, TipoMov, Fecha)
+		select mc.value('@NumFinca', 'INT')
+			, mc.value('@LecturaM3', 'INT')
+			, mc.value('@id', 'INT')
+			, mc.value('../@fecha', 'DATE')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Consumo') AS t(mc)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		
+		
+	
 		-- PSEUDOCODIGO PARA PROCESAR PAGOS
 		/*
 		Extraer en una variable table los pagos del dia, @PagosHoy
@@ -378,9 +388,10 @@ BEGIN
 		set @Lo1 = @Lo1 + 1
 		
 	end
-	
+	select * from @MovConsumo
 end
 
+exec IniciarSimulacion
 --exec ReiniciarTablas
 
 
