@@ -12,7 +12,7 @@ CREATE TYPE CambioValorPropiedadType AS TABLE
 )
 
 IF type_id('[dbo].[PagosHoyType]') IS NOT NULL
-        DROP TYPE [dbo].[PagosHoyType]; 
+        DROP TYPE [dbo].[PagosHoyType];
 
 CREATE TYPE PagosHoyType AS TABLE
 (
@@ -29,6 +29,7 @@ CREATE TYPE MovConsumoType AS TABLE
 (
 	sec INT IDENTITY(1,1),
 	NumFinca INT,
-	TipoRecibo INT,
+	M3 INT,
+	TipoMov INT,
 	Fecha DATE
 )
