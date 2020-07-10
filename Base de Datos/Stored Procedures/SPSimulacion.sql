@@ -9,7 +9,7 @@
 	--	///		TABLAS VARIABLES	//
 --- SCRIPT DE SIMULACION PARA LA TAREA PROGRAMADA
 
--- precondición, los nodos para la fecha de operación en el XML vienen en orden ascendente.
+-- precondiciï¿½n, los nodos para la fecha de operaciï¿½n en el XML vienen en orden ascendente.
 
 /****** Object:  StoredProcedure [dbo].[Simulacion]    Script Date: 11/27/2019 10:20:30 PM ******/
 USE [FacturacionMunicipal]
@@ -104,7 +104,7 @@ BEGIN
 	--Fecha para las simulaciones
 	Declare @FechaOperacion date
 
-	-- se extraen fechas operación
+	-- se extraen fechas operaciï¿½n
 	Declare @FechasAProcesar table 
 	(
 	   sec int identity(1,1) primary key, 
@@ -116,7 +116,7 @@ BEGIN
 
 	BEGIN TRY
 		SELECT @DocumentoXML = DXML
-		FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
+		FROM OPENROWSET (Bulk 'C:\Users\Johel Mora\Desktop\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
 		insert @FechasAProcesar (fecha)
 		select f.value('@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia') AS t(f);
@@ -132,12 +132,12 @@ BEGIN
 
 	--Declare @IdCCobro_ConsumoAgua=1, @IdCCobro_PatenteCantina=7   -- Son ids con valores solo de ejemplo
 
-	-- Variables para controlar la iteración
+	-- Variables para controlar la iteraciï¿½n
 	declare @Lo1 int, @Hi1 int, @Lo2 int, @Hi2 int
 	declare @minfecha datetime, @maxfecha datetime 
 	DECLARE @fechaOperacionNodo date
 
-	-- iterando de la fecha más antigua a la menos antigua
+	-- iterando de la fecha mï¿½s antigua a la menos antigua
 	Select @minfecha=min(F.fecha), @maxfecha=max(F.fecha)  -- min y max son funciones agregadas
 	from @FechasAProcesar F
 
@@ -392,6 +392,7 @@ BEGIN
 end
 
 exec IniciarSimulacion
+--exec ReiniciarTablas
 
 
 
