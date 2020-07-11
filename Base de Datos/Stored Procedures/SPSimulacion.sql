@@ -9,7 +9,7 @@
 	--	///		TABLAS VARIABLES	//
 --- SCRIPT DE SIMULACION PARA LA TAREA PROGRAMADA
 
--- precondici�n, los nodos para la fecha de operaci�n en el XML vienen en orden ascendente.
+-- precondición, los nodos para la fecha de operaci�n en el XML vienen en orden ascendente.
 
 /****** Object:  StoredProcedure [dbo].[Simulacion]    Script Date: 11/27/2019 10:20:30 PM ******/
 USE [FacturacionMunicipal]
@@ -125,6 +125,14 @@ BEGIN
 		PRINT 'Hubo un error de cargar fechas'
 		RETURN @@ERROR * -1
 	END CATCH
+
+	--GUARDAR EL XML CON OPENXML
+	DECLARE @XMLData XML
+	DECLARE @hdoc INT
+	SELECT @XMLData = C
+	FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS ReturnData(C)
+	EXEC sp_xml_preparedocument @hdoc OUTPUT, @XMLData
+
 
 	--parte 3 
 	
@@ -299,25 +307,36 @@ BEGIN
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		EXEC spProcesaCambioValorPropiedad @PropiedadCambio*/
 
-		--procesa los pagos de un dia
+		--PAGO DE LOS RECIBOS  
+	
 		DELETE @PagosHoy
-		INSERT @PagosHoy (NumFinca, TipoRecibo, Fecha)
-		select ph.value('@NumFinca', 'INT')
-			, ph.value('@TipoRecibo', 'INT')
-			, ph.value('../@fecha', 'DATE')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		INSERT INTO @PagosHoy(NumFinca,TipoRecibo,Fecha)  
+			SELECT [NumFinca],[TipoRecibo],[fechaDeIngreso9]
+			FROM OPENXML (@hdoc, 'Operaciones_por_Dia/OperacionDia/PagoRecibo',1)  
+				WITH (	[NumFinca]		VARCHAR(30)	'@NumFinca',  
+						[TipoRecibo]	INT			'@TipoRecibo',
+						[fechaDeIngreso9]	VARCHAR(100)	'../@fecha')
+				WHERE [fechaDeIngreso9] = @FechaOperacion
 		EXEC spProcesaPagos @PagosHoy
-
+		
 		--procesa los movimientos en los consumos de las propiedades
 		DELETE @MovConsumo
-		INSERT @MovConsumo(NumFinca, M3, TipoMov, Fecha)
-		select mc.value('@NumFinca', 'INT')
+		INSERT INTO @MovConsumo(NumFinca, M3, TipoMov, Fecha)
+		SELECT [NumFinca], [M3], [TipoMov], [fechaDeIngreso10]
+		FROM OPENXML (@hdoc,'/Operaciones_por_Dia/OperacionDia/TransConsumo',1)  
+			WITH (	[NumFinca]		VARCHAR(30)	'@NumFinca',  
+					[M3]			INT			'@LecturaM3',
+					[TipoMov]		INT			'@id',
+					[fechaDeIngreso10]	VARCHAR(100)	'../@fecha')
+			WHERE [fechaDeIngreso10] = @FechaOperacion
+
+		/*select mc.value('@NumFinca', 'INT')
 			, mc.value('@LecturaM3', 'INT')
 			, mc.value('@id', 'INT')
 			, mc.value('../@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/TransConsumo') AS t(mc)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion*/
+
 		EXEC spProcesaConsumo @MovConsumo
 
 		EXEC spCortaAgua @FechaActual = @FechaOperacion
@@ -325,7 +344,9 @@ BEGIN
 
 		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
 		
+
 		-- PSEUDOCODIGO PARA PROCESAR PAGOS
+
 		/*
 		Extraer en una variable table los pagos del dia, @PagosHoy
 
@@ -351,6 +372,66 @@ BEGIN
 		EXEC_SP_GeneraRecibos
 
 
+
+
+		/*--procesa los pagos de un dia
+		DELETE @PagosHoy
+		INSERT @PagosHoy (NumFinca, TipoRecibo, Fecha)
+		select ph.value('@NumFinca', 'INT')
+			, ph.value('@TipoRecibo', 'INT')
+			, ph.value('../@fecha', 'DATE')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		--PRINT  @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE')
+		PRINT @FechaOperacion
+		SELECT * from @PagosHoy
+		EXEC spProcesaPagos @PagosHoy*/
+
+		/*--procesa los movimientos en los consumos de las propiedades
+		DELETE @MovConsumo
+		INSERT @MovConsumo(NumFinca, M3, TipoMov, Fecha)
+		select mc.value('@NumFinca', 'INT')
+			, mc.value('@LecturaM3', 'INT')
+			, mc.value('@id', 'INT')
+			, mc.value('../@fecha', 'DATE')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/TransConsumo') AS t(mc)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		EXEC spProcesaConsumo @MovConsumo
+
+		EXEC spCortaAgua @FechaActual = @FechaOperacion
+		EXEC spReconexionAgua @FechaActual = @FechaOperacion
+
+		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
+		*/
+
+		-- PSEUDOCODIGO PARA PROCESAR PAGOS
+
+		/*
+		Extraer en una variable table los pagos del dia, @PagosHoy
+
+		-- en algun lado un 
+		declare @PagosHoy table (id int identity Primary Key, NumFinca int, IdTipoRecibo int)
+
+		INSERT @PagosHoy (NumFinca, IdTipoRecibo)
+		select ph.value('@NumFinca', 'INT')
+			, ph.value('idTipoRecibo', 'INT')
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
+		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+		
+		EXEC SP_PROCESACAMBIOVALORPROPIEDAD ... se le envia la tabla con la info
+
+		EXEC SP_PROCESAPAGOS ... (se le envia @PagosHoy) --ES ATOMICO, se usa transact
+
+		EXEC SP_PROCESACONSUMO ... se le envia la tabla con la info
+
+		EXEC SP_ProcesaCortes ... se le envia la tabla con la info
+
+		EXEC SP_ProcesaReconexion ... se le envia la tabla con la info
+
+		EXEC_SP_GeneraRecibos*/
+
+
+		
 		*/
 
 		set @Lo1 = @Lo1 + 1
@@ -358,6 +439,10 @@ BEGIN
 	end
 	--select * from @PagosHoy
 end
+EXEC sp_xml_removedocument @hdoc 
+
+
+exec ReiniciarTablas
 
 exec IniciarSimulacion
 

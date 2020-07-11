@@ -7,6 +7,7 @@ AS
 		--BEGIN TRY
 		SET NOCOUNT ON 
 		SET XACT_ABORT ON
+
 			DECLARE @idMenor INT, @idMayor INT, @fechaVence DATE, @fechaOperacion DATE, @montoMoratorio MONEY, @contador INT,
 					@idComprobante INT, @tasaMoratoria FLOAT, @montoRecibo MONEY, @tipoCC int, @idPropiedad INT
 			--TABLA DE IDS DE RECIBOS POR CONCEPTO DE COBRO DE CADA PROPIEDAD 
@@ -14,6 +15,7 @@ AS
 			--CONTADOR PARA ITERAR TABLA DE RECIBOS DE CADA PROPIEDAD Y SABER DONDE QUEDE LA ULTIMA VEZ
 			SET @contador = 1
 			SELECT @idMenor = min([sec]), @idMayor=max([sec]) FROM @PagosHoy--SACA ID MAYOR Y MENOR PARA ITERAR LA TABLA
+			
 			--BEGIN TRAN
 				--RECORRE LOS PAGOS DE FINCAS
 				WHILE @idMenor<=@idMayor
@@ -63,13 +65,11 @@ AS
 							FROM @PagosHoy P
 							INNER JOIN [dbo].[Propiedad] AS PR ON PR.NumFinca = P.NumFinca 
 							INNER JOIN [dbo].[Recibo] AS R ON R.IdPropiedad = PR.ID
-							--WHERE P.sec = @idMenor AND R.[Estado] = 0
-							--AND (R.IdCCobro = 11			--GUARDA TODOS LOS RECIBOS MORATORIOS PENDIENTES (11)
-							--	OR	R.IdCCobro = @tipoCC)--GUARDA TODOS LOS RECIBOS DE DE ESE CONCEPTO DE COBRO PENDIENTES (@TIPOCC)
+							WHERE P.sec = @idMenor AND R.[Estado] = 0
+							AND (R.IdCCobro = 11			--GUARDA TODOS LOS RECIBOS MORATORIOS PENDIENTES (11)
+								OR	R.IdCCobro = @tipoCC)--GUARDA TODOS LOS RECIBOS DE DE ESE CONCEPTO DE COBRO PENDIENTES (@TIPOCC)
 						END
 					
-
-					/*
 					--MIENTRAS EXISTA UN CONCEPTO DE COBRO SIN PAGAR, RECORRA LOS RECIBOS
 					WHILE EXISTS(SELECT idRP.id FROM @idRecibosPagar idRP INNER JOIN [dbo].[Recibo] AS R ON R.ID = idRP.idRecibo WHERE R.Estado = 0)
 					BEGIN
@@ -121,12 +121,12 @@ AS
 						SET MontoTotal = MontoTotal+@montoRecibo+@montoMoratorio--SI NO HUBO RECIBO MORATORIO SUMA 0 MAS EL MONTO POR LOS DEMAS RECIBOS
 						WHERE ID = @idComprobante
 						SET @contador = @contador+1--INCREMENTA EL CONTADOR
-					END*/
-
+					END
+					--PRINT @idMenor
 					SET @idMenor = @idMenor+1
 				END
-				select * from @idRecibosPagar
-			--COMMIT
+				
+				--COMMIT
 		/*END TRY
 		BEGIN CATCH
 			If @@TRANCOUNT > 0 
