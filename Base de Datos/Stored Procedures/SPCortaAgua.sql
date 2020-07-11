@@ -35,12 +35,14 @@ AS
 					INSERT INTO ReciboReconexion(id)
 					SELECT @id
 
+					/* HACER IDENTITY
 					SELECT @idc = MAX(ID) + 1 FROM Corte
 					SELECT @cant = (COUNT(*)) FROM Corte
 					IF  @cant = 0 
 						BEGIN
 							SELECT @idc=1
 						END
+					*/
 
 					INSERT INTO Corte(ID, IdPropiedad,IdReciboReconexion,Fecha)
 					SELECT @idc, idp.idPropiedad, @id, @FechaActual
