@@ -355,8 +355,9 @@ BEGIN
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Consumo') AS t(mc)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 		
+		EXEC spCortaAgua @FechaActual = @FechaOperacion
+		EXEC spReconexionAgua @FechaActual = @FechaOperacion
 		
-	
 		-- PSEUDOCODIGO PARA PROCESAR PAGOS
 		/*
 		Extraer en una variable table los pagos del dia, @PagosHoy
