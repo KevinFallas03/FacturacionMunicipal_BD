@@ -44,8 +44,8 @@ AS
 						END
 					*/
 
-					INSERT INTO Corte(ID, IdPropiedad,IdReciboReconexion,Fecha)
-					SELECT @idc, idp.idPropiedad, @id, @FechaActual
+					INSERT INTO Corte(IdPropiedad,IdReciboReconexion,Fecha)
+					SELECT idp.idPropiedad, @id, @FechaActual
 					FROM @idPropiedades as idP
 					WHERE idP.id =	@idMenor
 					
@@ -56,7 +56,7 @@ AS
 		END TRY
 		BEGIN CATCH
 			ROLLBACK TRAN;
-			THROW -1,'Error: No se ha podido cortar el agua', 1;
+			THROW 50002,'Error: No se ha podido cortar el agua', 1;
 		END CATCH
 		
 	END

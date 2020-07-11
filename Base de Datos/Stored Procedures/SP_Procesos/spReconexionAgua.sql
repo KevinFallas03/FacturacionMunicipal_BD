@@ -22,19 +22,12 @@ CREATE or ALTER PROC [dbo].[spReconexionAgua] @FechaActual DATE AS
 				SELECT @idMenor = MIN(id), @idMayor = MAX(id) FROM @idPropiedades
 				WHILE @idMenor<=@idMayor
 				BEGIN
-				SELECT @idc = MAX(ID) + 1 FROM Reconexion
-					SELECT @cant = (COUNT(*)) FROM Reconexion
-					IF  @cant = 0 
-						BEGIN
-							SELECT @idc=1
-						END
-
-					INSERT INTO Reconexion(ID, IdPropiedad,IdReciboReconexion, Fecha)
-					SELECT @idc, idP.idPropiedad, R.id, @FechaActual
+					INSERT INTO Reconexion(IdPropiedad,IdReciboReconexion, Fecha)
+					SELECT idP.idPropiedad, R.id, @FechaActual
 					FROM @idPropiedades idP
 					INNER JOIN Recibo AS R ON R.IdPropiedad = idP.idPropiedad
 					WHERE idP.id = @idMenor AND R.IdCCobro = 10
-				SET @idMenor = @idMenor+1
+					SET @idMenor = @idMenor+1
 				END
 				
 			COMMIT
@@ -43,6 +36,6 @@ CREATE or ALTER PROC [dbo].[spReconexionAgua] @FechaActual DATE AS
 			If 
 			@@TRANCOUNT > 0 
 				ROLLBACK TRAN;
-			THROW -1,'Error: No se ha podido reconectar',1;
+			THROW 50003,'Error: No se ha podido reconectar',1;
 		END CATCH
 	END

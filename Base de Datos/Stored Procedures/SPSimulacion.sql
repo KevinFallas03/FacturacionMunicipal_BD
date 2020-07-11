@@ -116,7 +116,7 @@ BEGIN
 
 	BEGIN TRY
 		SELECT @DocumentoXML = DXML
-		FROM OPENROWSET (Bulk 'C:\Users\Johel Mora\Desktop\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
+		FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
 		insert @FechasAProcesar (fecha)
 		select f.value('@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia') AS t(f);
@@ -177,18 +177,6 @@ BEGIN
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
 		
 
-		/*-- iteramos en propiedades
-		Select @Lo2=min(sec), @Hi2=max(sec) 
-		from @Propiedades
-		while @Lo2<=@Hi2
-		Begin
-		   insert dbo.Propiedad(NumFinca, Valor, Direccion, EstaBorrado)
-		   Select Pd.NumFinca, Pd.Valor, Pd.Direccion, Pd.EstaBorrado 
-		   from @Propiedades Pd where sec=@Lo2
-		   Set @Lo2=@Lo2+1
-		end
-		*/
-
 		--delete @Propietarios
 		-- procesar nodos propietario
 		INSERT INTO Propietario (IdTipoDocumento, Nombre, ValorDocumento, FechaIngreso, EstaBorrado)
@@ -201,23 +189,11 @@ BEGIN
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
 		
 
-		/*-- iteramos en propietarios
-		Select @Lo2=min(sec), @Hi2=max(sec)
-		from @Propietarios
-		while @Lo2<=@Hi2
-		Begin
-		   insert dbo.Propietario(IdTipoDocumento, Nombre, ValorDocumento, EstaBorrado)
-		   Select P.TipoDocId, P.Nombre, P.ValorDocId, P.EstaBorrado 
-		   from @Propietarios P where sec=@Lo2
-		   Set @Lo2=@Lo2+1
-		end*/
-
 		--Propietarios Juridicos 
 		-- procesar nodos propietarios juridicos ITERATIVO -- considerar hacerlos masivos
 		delete @PropJuridico 
 		insert @PropJuridico(DocIdPersonaJuridica, NombrePersonaResponsable, IdTipoDocumento, ValorDocumento, EstaBorrado)
-		select --ID VALUE
-		  pd.value('@docidPersonaJuridica', 'VARCHAR(100)')
+		select pd.value('@docidPersonaJuridica', 'VARCHAR(100)')
 		, pd.value('@Nombre', 'VARCHAR(100)')
 		, pd.value('@TipDocIdRepresentante', 'INT')
 		, pd.value('@DocidRepresentante', 'VARCHAR(100)')
@@ -270,18 +246,6 @@ BEGIN
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Usuario') AS t(u)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
 
-		/*-- iteramos en Usuarios
-		Select @Lo2=min(sec), @Hi2=max(sec)
-		from @Usuarios
-		while @Lo2<=@Hi2
-		Begin
-		   Insert dbo.Usuario(Nombre, Password, TipoUsuario, FechaIngreso, EstaBorrado)
-		   Select U.Nombre, U.Password, U.TipoUsuario, U.FechaIngreso, U.EstaBorrado from @Usuarios U 
-		   Where sec=@Lo2
-		   Set @Lo2=@Lo2+1
-		end
-		*/
-
 		--CCobros x Propiedad
 		--procesar nodos CCobroVsPropiedad
 		delete @PropiedadesxCCobro 
@@ -326,37 +290,40 @@ BEGIN
 		   Set @Lo2=@Lo2+1
 		end
 
-		-- procesar los cambios en las propiedades por dia
+		/*-- procesar los cambios en las propiedades por dia
 		DELETE @PropiedadCambio
 		INSERT @PropiedadCambio (NumFinca, NuevoValor)
 		select pc.value('@NumFinca', 'INT')
 			, pc.value('@NuevoValor', 'MONEY')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadCambio') AS t(pc)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
+		EXEC spProcesaCambioValorPropiedad @PropiedadCambio*/
 
 		--procesa los pagos de un dia
 		DELETE @PagosHoy
 		INSERT @PagosHoy (NumFinca, TipoRecibo, Fecha)
 		select ph.value('@NumFinca', 'INT')
-			, ph.value('@idTipoRecibo', 'INT')
+			, ph.value('@TipoRecibo', 'INT')
 			, ph.value('../@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-		--EXEC spProcesaPagos @PagosHoy
+		EXEC spProcesaPagos @PagosHoy
 
 		--procesa los movimientos en los consumos de las propiedades
-		--DELETE @MovConsumo
+		DELETE @MovConsumo
 		INSERT @MovConsumo(NumFinca, M3, TipoMov, Fecha)
 		select mc.value('@NumFinca', 'INT')
 			, mc.value('@LecturaM3', 'INT')
 			, mc.value('@id', 'INT')
 			, mc.value('../@fecha', 'DATE')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Consumo') AS t(mc)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/TransConsumo') AS t(mc)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-		
+		EXEC spProcesaConsumo @MovConsumo
+
 		EXEC spCortaAgua @FechaActual = @FechaOperacion
 		EXEC spReconexionAgua @FechaActual = @FechaOperacion
+
+		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
 		
 		-- PSEUDOCODIGO PARA PROCESAR PAGOS
 		/*
@@ -389,12 +356,8 @@ BEGIN
 		set @Lo1 = @Lo1 + 1
 		
 	end
-	select * from @MovConsumo
+	--select * from @PagosHoy
 end
 
 exec IniciarSimulacion
---exec ReiniciarTablas
 
-
-
-   
