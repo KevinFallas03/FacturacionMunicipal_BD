@@ -56,7 +56,7 @@ AS
 		END TRY
 		BEGIN CATCH
 			ROLLBACK TRAN;
-			THROW 554004,'Error: No se ha podido cortar el agua',1;
+			THROW -1,'Error: No se ha podido cortar el agua', 1;
 		END CATCH
 		
 	END

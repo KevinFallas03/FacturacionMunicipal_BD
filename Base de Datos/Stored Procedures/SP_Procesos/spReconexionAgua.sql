@@ -8,7 +8,7 @@ GO
 
 CREATE or ALTER PROC [dbo].[spReconexionAgua] @FechaActual DATE AS  	
 	BEGIN
-		--BEGIN TRY
+		BEGIN TRY
 			DECLARE @idPropiedades TABLE(id INT IDENTITY(1,1),IdPropiedad int)
 			DECLARE @idMenor INT, @idMayor INT, @idc INT, @cant INT
 			BEGIN TRAN
@@ -29,7 +29,6 @@ CREATE or ALTER PROC [dbo].[spReconexionAgua] @FechaActual DATE AS
 							SELECT @idc=1
 						END
 
-				
 					INSERT INTO Reconexion(ID, IdPropiedad,IdReciboReconexion, Fecha)
 					SELECT @idc, idP.idPropiedad, R.id, @FechaActual
 					FROM @idPropiedades idP
@@ -39,11 +38,11 @@ CREATE or ALTER PROC [dbo].[spReconexionAgua] @FechaActual DATE AS
 				END
 				
 			COMMIT
-		/*END TRY
+		END TRY
 		BEGIN CATCH
 			If 
 			@@TRANCOUNT > 0 
 				ROLLBACK TRAN;
-			THROW 55004,'Error: No se ha podido reconectar',1;
-		END CATCH	*/
+			THROW -1,'Error: No se ha podido reconectar',1;
+		END CATCH
 	END
