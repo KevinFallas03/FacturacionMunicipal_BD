@@ -11,7 +11,11 @@ CREATE or ALTER procedure [dbo].[spVerBitacora]
    @ID int      
 )      
 as       
-begin      
+begin
+	If @ID IS Null
+    BEGIN
+        Return -1 --ocurrio un error
+    END
    Select ID, insertedAt, insertedBy, insertedIn, IdEntityType, EntityId, jsonAntes, jsonDespues
    from [dbo].BitacoraCambios where ID=@ID     
 End

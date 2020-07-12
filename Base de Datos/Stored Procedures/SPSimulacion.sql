@@ -179,11 +179,14 @@ BEGIN
 		, pd.value('@Direccion', 'VARCHAR(150)')
 		, 0 AS M3Acumulados
 		, 0 AS M3AcumuladosUltimoRecibo
-		, pd.value('../@fecha', 'DATE')
+		, @FechaOperacion AS FechaIngreso
 		, 0 AS EstaBorrado
+		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propiedad') AS t(pd)
+		
+		/*
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propiedad') AS t(pd)
 		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
-		
+		*/
 
 		--delete @Propietarios
 		-- procesar nodos propietario
@@ -191,12 +194,10 @@ BEGIN
 		select pt.value('@TipoDocIdentidad','INT')
 		, pt.value('@Nombre', 'VARCHAR(100)')
 		, pt.value('@identificacion', 'VARCHAR(100)')
-		, pt.value('../@fecha', 'DATE')
+		, @FechaOperacion AS FechaIngreso
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propietario') AS t(pt)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propietario') AS t(pt)
 		
-
 		--Propietarios Juridicos 
 		-- procesar nodos propietarios juridicos ITERATIVO -- considerar hacerlos masivos
 		delete @PropJuridico 
@@ -206,8 +207,7 @@ BEGIN
 		, pd.value('@TipDocIdRepresentante', 'INT')
 		, pd.value('@DocidRepresentante', 'VARCHAR(100)')
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PersonaJuridica') AS t(pd)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PersonaJuridica') AS t(pd)
 
 		--iteramos en propietarios juridico
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -228,9 +228,8 @@ BEGIN
 		select pp.value('@NumFinca', 'VARCHAR(100)')
 		, pp.value('@identificacion', 'VARCHAR(100)')
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadVersusPropietario') AS t(pp)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PropiedadVersusPropietario') AS t(pp)
+		
 		--iteramos en PropiedadVsPropietario
 		Select @Lo2=min(sec), @Hi2=max(sec)
 		from @PropiedadVsPropietario
@@ -249,20 +248,19 @@ BEGIN
 		select u.value('@Nombre','VARCHAR(100)')
 		, u.value('@password', 'VARCHAR(100)')
 		, 'Normal' AS TipoUsuario
-		, u.value('../@fecha', 'DATE')
+		, @FechaOperacion AS FechaIngreso
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Usuario') AS t(u)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Usuario') AS t(u)
+		
 
 		--CCobros x Propiedad
 		--procesar nodos CCobroVsPropiedad
 		delete @PropiedadesxCCobro 
-		insert @PropiedadesxCCobro (IdCCobro, IdPropiedad, FechaInic)-- revisar ultimo atributo 
-		select pc.value('@idcobro','INT') --buscar el id de ese valor
-		, pc.value('@NumFinca', 'INT') --buscar el id de ese valor
-		, pc.value('../@fecha', 'DATE' ) as FechaInic -- POSIBLE error carga solo la primera fecha
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/ConceptoCobroVersusPropiedad') AS t(pc)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		insert @PropiedadesxCCobro (IdCCobro, IdPropiedad, FechaInic)
+		select pc.value('@idcobro','INT') 
+		, pc.value('@NumFinca', 'INT') 
+		, @FechaOperacion AS FechaInic
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/ConceptoCobroVersusPropiedad') AS t(pc)
 
 		-- iteramos en PropiedadesxCCobro 
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -283,8 +281,7 @@ BEGIN
 		select up.value('@NumFinca', 'VARCHAR(100)')
 		, up.value('@nombreUsuario', 'VARCHAR(100)')
 		, 0 as EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/UsuarioVersusPropiedad') AS t(up)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/UsuarioVersusPropiedad') AS t(up)
 		
 		-- iteramos en @UsuarioVersusPropiedad 
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -298,45 +295,31 @@ BEGIN
 		   Set @Lo2=@Lo2+1
 		end
 
-		/*-- procesar los cambios en las propiedades por dia
+		--procesar los cambios en las propiedades por dia
 		DELETE @PropiedadCambio
-		INSERT @PropiedadCambio (NumFinca, NuevoValor)
+		INSERT INTO @PropiedadCambio (NumFinca, NuevoValor)
 		select pc.value('@NumFinca', 'INT')
 			, pc.value('@NuevoValor', 'MONEY')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PropiedadCambio') AS t(pc)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-		EXEC spProcesaCambioValorPropiedad @PropiedadCambio*/
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PropiedadCambio') AS t(pc)
+		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
 
 		--PAGO DE LOS RECIBOS  
-	
 		DELETE @PagosHoy
-		INSERT INTO @PagosHoy(NumFinca,TipoRecibo,Fecha)  
-			SELECT [NumFinca],[TipoRecibo],[fechaDeIngreso9]
-			FROM OPENXML (@hdoc, 'Operaciones_por_Dia/OperacionDia/PagoRecibo',1)  
-				WITH (	[NumFinca]		VARCHAR(30)	'@NumFinca',  
-						[TipoRecibo]	INT			'@TipoRecibo',
-						[fechaDeIngreso9]	VARCHAR(100)	'../@fecha')
-				WHERE [fechaDeIngreso9] = @FechaOperacion
+		INSERT INTO @PagosHoy(NumFinca,TipoRecibo,Fecha)
+		SELECT c.value('@NumFinca', 'INT')
+			, c.value('@TipoRecibo', 'INT')
+			, @FechaOperacion AS FechaOperacion
+		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PagoRecibo') AS t(c)
 		EXEC spProcesaPagos @PagosHoy
 		
 		--procesa los movimientos en los consumos de las propiedades
 		DELETE @MovConsumo
 		INSERT INTO @MovConsumo(NumFinca, M3, TipoMov, Fecha)
-		SELECT [NumFinca], [M3], [TipoMov], [fechaDeIngreso10]
-		FROM OPENXML (@hdoc,'/Operaciones_por_Dia/OperacionDia/TransConsumo',1)  
-			WITH (	[NumFinca]		VARCHAR(30)	'@NumFinca',  
-					[M3]			INT			'@LecturaM3',
-					[TipoMov]		INT			'@id',
-					[fechaDeIngreso10]	VARCHAR(100)	'../@fecha')
-			WHERE [fechaDeIngreso10] = @FechaOperacion
-
-		/*select mc.value('@NumFinca', 'INT')
+		SELECT mc.value('@NumFinca', 'INT')
 			, mc.value('@LecturaM3', 'INT')
 			, mc.value('@id', 'INT')
-			, mc.value('../@fecha', 'DATE')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/TransConsumo') AS t(mc)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion*/
-
+			, @FechaOperacion AS FechaOperacion
+		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/TransConsumo') AS t(mc)
 		EXEC spProcesaConsumo @MovConsumo
 
 		EXEC spCortaAgua @FechaActual = @FechaOperacion
@@ -344,95 +327,6 @@ BEGIN
 
 		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
 		
-
-		-- PSEUDOCODIGO PARA PROCESAR PAGOS
-
-		/*
-		Extraer en una variable table los pagos del dia, @PagosHoy
-
-		-- en algun lado un 
-		declare @PagosHoy table (id int identity Primary Key, NumFinca int, IdTipoRecibo int)
-
-		INSERT @PagosHoy (NumFinca, IdTipoRecibo)
-		select ph.value('@NumFinca', 'INT')
-			, ph.value('idTipoRecibo', 'INT')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
-		
-		EXEC SP_PROCESACAMBIOVALORPROPIEDAD ... se le envia la tabla con la info
-
-		EXEC SP_PROCESAPAGOS ... (se le envia @PagosHoy) --ES ATOMICO, se usa transact
-
-		EXEC SP_PROCESACONSUMO ... se le envia la tabla con la info
-
-		EXEC SP_ProcesaCortes ... se le envia la tabla con la info
-
-		EXEC SP_ProcesaReconexion ... se le envia la tabla con la info
-
-		EXEC_SP_GeneraRecibos
-
-
-
-
-		/*--procesa los pagos de un dia
-		DELETE @PagosHoy
-		INSERT @PagosHoy (NumFinca, TipoRecibo, Fecha)
-		select ph.value('@NumFinca', 'INT')
-			, ph.value('@TipoRecibo', 'INT')
-			, ph.value('../@fecha', 'DATE')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-		--PRINT  @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE')
-		PRINT @FechaOperacion
-		SELECT * from @PagosHoy
-		EXEC spProcesaPagos @PagosHoy*/
-
-		/*--procesa los movimientos en los consumos de las propiedades
-		DELETE @MovConsumo
-		INSERT @MovConsumo(NumFinca, M3, TipoMov, Fecha)
-		select mc.value('@NumFinca', 'INT')
-			, mc.value('@LecturaM3', 'INT')
-			, mc.value('@id', 'INT')
-			, mc.value('../@fecha', 'DATE')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/TransConsumo') AS t(mc)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion
-		EXEC spProcesaConsumo @MovConsumo
-
-		EXEC spCortaAgua @FechaActual = @FechaOperacion
-		EXEC spReconexionAgua @FechaActual = @FechaOperacion
-
-		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
-		*/
-
-		-- PSEUDOCODIGO PARA PROCESAR PAGOS
-
-		/*
-		Extraer en una variable table los pagos del dia, @PagosHoy
-
-		-- en algun lado un 
-		declare @PagosHoy table (id int identity Primary Key, NumFinca int, IdTipoRecibo int)
-
-		INSERT @PagosHoy (NumFinca, IdTipoRecibo)
-		select ph.value('@NumFinca', 'INT')
-			, ph.value('idTipoRecibo', 'INT')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/PagoRecibo') AS t(ph)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
-		
-		EXEC SP_PROCESACAMBIOVALORPROPIEDAD ... se le envia la tabla con la info
-
-		EXEC SP_PROCESAPAGOS ... (se le envia @PagosHoy) --ES ATOMICO, se usa transact
-
-		EXEC SP_PROCESACONSUMO ... se le envia la tabla con la info
-
-		EXEC SP_ProcesaCortes ... se le envia la tabla con la info
-
-		EXEC SP_ProcesaReconexion ... se le envia la tabla con la info
-
-		EXEC_SP_GeneraRecibos*/
-
-
-		
-		*/
 
 		set @Lo1 = @Lo1 + 1
 		

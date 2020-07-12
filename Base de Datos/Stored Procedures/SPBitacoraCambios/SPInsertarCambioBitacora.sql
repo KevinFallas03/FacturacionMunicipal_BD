@@ -1,9 +1,5 @@
 USE [FacturacionMunicipal]
 GO
-IF OBJECT_ID('[dbo].[spInsertarBitacoraCambios]') IS NOT NULL
-BEGIN 
-    DROP PROC [dbo].[spInsertarBitacoraCambios] 
-END
 
 SET ANSI_NULLS ON
 GO
@@ -19,15 +15,19 @@ CREATE OR ALTER PROCEDURE [dbo].[spInsertarBitacoraCambios]
 	@inInsertedIn varchar(20),  --Ip desde donde se insertó
 	@inInsertedAt DATE --Fecha del cambio
 AS   
-BEGIN 
+BEGIN
+	If (@inIdEntityType IS Null and @inEntityID is NUll)
+    BEGIN
+        Return -1 --ocurrio un error
+    END
 	BEGIN TRY
-		DECLARE @IdUsuario int
+		DECLARE @IdUsuario int --para obtener por quien se inserto
 		SET @IdUsuario = (SELECT [ID] FROM [dbo].[Usuario] WHERE [Nombre] = @inInsertedBy)
 		INSERT INTO [dbo].[BitacoraCambios] ([idEntityType], [EntityId], [jsonAntes],[jsonDespues],
 											 [insertedAt],[insertedBy],[insertedIn])
 		SELECT @inIdEntityType, @inEntityID, @inJsonAntes, @inJsonDespues, @inInsertedAt, @IdUsuario, @inInsertedIn
 	END TRY
 	BEGIN CATCH
-		THROW 762839,'Error: No se realizó el cambio en la bitacora',1; --REVISAR CODIGOS
+		THROW 50001,'Error: No se realizó el cambio en la bitacora',1;
 	END CATCH
 END

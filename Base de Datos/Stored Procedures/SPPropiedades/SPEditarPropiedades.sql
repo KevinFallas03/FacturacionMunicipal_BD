@@ -10,10 +10,13 @@ Create or Alter procedure spEditarPropiedad
 )      
 as      
 begin  
-     
-   Update [dbo].Propiedad
-   set NumFinca=@NumFinca, Valor=@Valor, Direccion = @Direccion
-   where ID=@id      
+    If @id is null
+	BEGIN
+		return -1
+	END  
+	Update [dbo].Propiedad
+	set NumFinca=@NumFinca, Valor=@Valor, Direccion = @Direccion
+	where ID=@id      
 End
 
 go

@@ -8,6 +8,10 @@ Create or Alter procedure [dbo].[spObtenerUsuarios_SinPropiedad]
 )
 as
 BEGIN
+	If @id is null
+	BEGIN
+		return -1
+	END 
 	SELECT DISTINCT Usuario.ID, Usuario.Nombre, Usuario.Password, Usuario.TipoUsuario
 	FROM Usuario_Prop
 	FULL JOIN Propiedad ON Propiedad.ID=Usuario_Prop.IdPropiedad
