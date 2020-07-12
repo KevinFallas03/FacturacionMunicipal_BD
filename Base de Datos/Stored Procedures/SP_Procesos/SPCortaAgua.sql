@@ -10,47 +10,32 @@ CREATE or ALTER PROC [dbo].[spCortaAgua] @FechaActual DATE
 AS  	
 	BEGIN
 		BEGIN TRY
-			DECLARE @idPropiedades TABLE(ID INT IDENTITY(1,1),IdPropiedad int,IdCCobro INT)
-			DECLARE @idMenor INT, @idMayor INT, @id int, @idc int, @cant int
+			DECLARE @idPropiedades TABLE(ID int IDENTITY(1,1),IdPropiedad int,IdCCobro INT)
+			DECLARE @idMenor INT, @idMayor INT, @cant int = IDENT_CURRENT('Recibo')
 			BEGIN TRANSACTION
-				INSERT INTO @idPropiedades(IdPropiedad,IdCCobro)
+				INSERT INTO @idPropiedades(IdPropiedad, IdCCobro)
 				SELECT R.IdPropiedad, R.IdCCobro
 				FROM Recibo AS R
 				WHERE R.Estado = 0 AND R.IdCCobro = 1 AND NOT EXISTS (SELECT ID FROM [dbo].[Recibo] WHERE IdCCobro = 10)
 				GROUP BY IdPropiedad, IdCCobro
 				HAVING COUNT(*) > 1
 				 
-				SELECT @idMenor = MIN(ID), @idMayor = MAX(ID) FROM @idPropiedades
+				INSERT INTO Recibo (IdCCobro,Monto,Estado,IdPropiedad,FechaEmision,FechaMaximaPago)
+				SELECT 10, CM.MontoFijo, 0, P.idPropiedad, @FechaActual, DATEADD(DAY,CC.QDiasVencimiento,@FechaActual)
+				FROM @idPropiedades AS P
+				INNER JOIN CCobro_MontoFijo AS CM ON CM.ID = 10
+				INNER JOIN CCobro AS CC ON CC.ID = 10					
 
-				WHILE @idMenor<=@idMayor
-				BEGIN
-					INSERT INTO Recibo (IdCCobro,Monto,Estado,IdPropiedad,FechaEmision,FechaMaximaPago)
-					SELECT 10, CM.MontoFijo, 0, P.idPropiedad, @FechaActual, DATEADD(DAY,CC.QDiasVencimiento,@FechaActual)
-					FROM @idPropiedades AS P
-					INNER JOIN CCobro_MontoFijo AS CM ON CM.ID = 10
-					INNER JOIN CCobro AS CC ON CC.ID = 10
-					WHERE P.id = @idMenor
+				INSERT INTO ReciboReconexion(id)
+				SELECT R.ID
+				FROM Recibo AS R
+				JOIN @idPropiedades AS P ON 10 = R.IdCCobro AND P.IdPropiedad = R.IdPropiedad 
 
-					SET @id = IDENT_CURRENT('Recibo')
-					INSERT INTO ReciboReconexion(id)
-					SELECT @id
-
-					/* HACER IDENTITY
-					SELECT @idc = MAX(ID) + 1 FROM Corte
-					SELECT @cant = (COUNT(*)) FROM Corte
-					IF  @cant = 0 
-						BEGIN
-							SELECT @idc=1
-						END
-					*/
-
-					INSERT INTO Corte(IdPropiedad,IdReciboReconexion,Fecha)
-					SELECT idp.idPropiedad, @id, @FechaActual
-					FROM @idPropiedades as idP
-					WHERE idP.id =	@idMenor
-					
-					SET @idMenor = @idMenor+1
-				END
+				INSERT INTO Corte(IdPropiedad,IdReciboReconexion,Fecha)
+				SELECT P.IdPropiedad, R.ID, @FechaActual
+				FROM @idPropiedades AS P 
+				JOIN Recibo AS R ON P.IdPropiedad = R.IdPropiedad
+				JOIN ReciboReconexion AS RR ON RR.ID = R.ID
 				
 			COMMIT
 		END TRY

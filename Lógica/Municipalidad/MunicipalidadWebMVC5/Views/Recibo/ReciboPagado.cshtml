@@ -1,0 +1,57 @@
+﻿@model model.entity.Recibo
+@{
+    ViewBag.Title = "ReciboPagado";
+}
+
+<h2>Recibo Pagado</h2>
+@using (Html.BeginForm())
+{
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(model => model.IdRecibo, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.DisplayFor(model => model.IdRecibo, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FechaEm, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.DisplayFor(model => model.FechaEm, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FechaMx, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.DisplayFor(model => model.FechaMx, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NumFinca, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.DisplayFor(model => model.NumFinca, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NombreCC, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.DisplayFor(model => model.NombreCC, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Monto, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-6">
+            @Html.DisplayFor(model => model.Monto, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+
+    <div class="form-actions col-md-offset-2">
+        @Html.ActionLink("Regresar al listado", "RecibosPendientes/" + @Model.IdPropiedad)
+    </div>
+
+</div>
+}

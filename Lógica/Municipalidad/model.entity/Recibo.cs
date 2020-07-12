@@ -16,8 +16,8 @@ namespace model.entity
         private string nombreCC;
         private decimal monto;
         private Boolean estado;
-        private DateTime fechaEm;
-        private DateTime fechaMx;
+        private string fechaEm;
+        private string fechaMx;
 
         //Constructores
         public Recibo() { } // mapeo
@@ -29,7 +29,7 @@ namespace model.entity
 
         public Recibo(int pIdRecibo, int pIdPropiedad, int pnumFinca, 
             int pIdCCobro, string pnombreCC, decimal pmonto, 
-            Boolean pestado, DateTime pfechaEm, DateTime pfechaMx)
+            Boolean pestado, string pfechaEm, string pfechaMx)
         {
             this.idRecibo = pIdRecibo;
             this.idPropiedad = pIdPropiedad;
@@ -50,7 +50,7 @@ namespace model.entity
         public string NombreCC { get => nombreCC; set => nombreCC = value; }
         public decimal Monto { get => monto; set => monto = value; }
         public Boolean Estado { get => estado; set => estado = value; }
-        public DateTime FechaEm { get => fechaEm; set => fechaEm = value; }
-        public DateTime FechaMx { get => fechaMx; set => fechaMx = value; }
+        public string FechaEm { get => fechaEm; set => fechaEm = value; }
+        public string FechaMx { get => fechaMx; set => fechaMx = value; }
     }
 }
