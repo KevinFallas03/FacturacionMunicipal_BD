@@ -6,7 +6,7 @@ Create or Alter procedure spObtenerPropiedades_Usuarios
 	@id int
 )
 as
-	SELECT Usuario_Prop.ID, Propiedad.NumFinca, Propiedad.Valor, Propiedad.Direccion
+	SELECT Propiedad.ID, Propiedad.NumFinca, Propiedad.Valor, Propiedad.Direccion
 	FROM Usuario_Prop
 	INNER JOIN Propiedad ON Usuario_Prop.IdPropiedad=Propiedad.ID
 	INNER JOIN Usuario ON Usuario_Prop.IdUsuario=Usuario.ID

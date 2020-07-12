@@ -1,7 +1,23 @@
-﻿
+﻿@model List<model.entity.Recibo>
 @{
     ViewBag.Title = "ComprobantesPago";
 }
 
-<h2>ComprobantesPago</h2>
-
+<h2>Comprobantes de Pago</h2>
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-success">
+            <th>ID Comprobante</th>
+            <th>Fecha de Pago</th>
+            <th>Monto Total</th>
+        </tr>
+        @foreach (var objetoRecibo in Model)
+        {
+            <tr>
+                <td>@objetoRecibo.IdRecibo</td>
+                <td>@objetoRecibo.FechaEm</td>
+                <td>@objetoRecibo.Monto</td>
+            </tr>
+        }
+    </table>
+</div>

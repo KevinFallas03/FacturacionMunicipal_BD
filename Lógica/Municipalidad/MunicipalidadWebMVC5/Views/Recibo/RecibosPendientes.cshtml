@@ -1,7 +1,25 @@
-﻿
+﻿@model List<model.entity.Recibo>
 @{
-    ViewBag.Title = "RecibosPendientes";
+    ViewBag.Title = "Recibos Pendientes";
 }
 
 <h2>RecibosPendientes</h2>
-
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-success">
+            <th></th>
+            <th>ID Recibo</th>
+            <th>Fecha</th>
+            <th>Concepto de Cobro</th>
+        </tr>
+        @foreach (var objetoRecibo in Model)
+        { 
+        <tr>
+            <td><a class="btn btn-info" href="~/Recibo/ReciboPendiente/@objetoRecibo.IdRecibo">Ver</a></td>
+            <td>@objetoRecibo.IdRecibo</td>
+            <td>@objetoRecibo.FechaEm</td>
+            <td>@objetoRecibo.NombreCC</td>
+        </tr>
+        }
+    </table>
+</div>
