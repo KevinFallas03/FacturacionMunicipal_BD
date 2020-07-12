@@ -10,10 +10,13 @@ Create or Alter procedure spEditarUsuario
 )      
 as      
 begin  
-     
-   Update [dbo].Usuario
-   set Nombre=@Nombre, Password=@Password, TipoUsuario=@TipoUsuario
-   where ID=@id      
+	If @id is NULL
+	begin
+		RETURN -1	
+	end
+	Update [dbo].Usuario
+	set Nombre=@Nombre, Password=@Password, TipoUsuario=@TipoUsuario
+	where ID=@id      
 End
 
 go

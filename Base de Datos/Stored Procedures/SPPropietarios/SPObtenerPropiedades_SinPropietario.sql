@@ -7,6 +7,10 @@ Create or Alter procedure [dbo].[spObtenerPropiedades_SinPropietario]
 	@id int
 )
 as
+	If @id is NULL
+	BEGIN
+		Return -1
+	END
 	SELECT DISTINCT Propiedad.ID, Propiedad.NumFinca, Propiedad.Valor, Propiedad.Direccion
 	FROM Prop_Prop
 	FULL JOIN Propiedad ON Propiedad.ID=Prop_Prop.IdPropiedad

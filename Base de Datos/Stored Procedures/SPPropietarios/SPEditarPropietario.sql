@@ -10,10 +10,13 @@ Create or Alter procedure spEditarPropietario
 )      
 as      
 begin  
-     
-   Update [dbo].Propietario
-   set Nombre=@Nombre, IdTipoDocumento=@IdTipoDocumento, ValorDocumento=@ValorDocumento
-   where ID=@id and EstaBorrado = 0   
+    If @id is NULL
+	BEGIN
+		Return -1
+	END 
+	Update [dbo].Propietario
+	set Nombre=@Nombre, IdTipoDocumento=@IdTipoDocumento, ValorDocumento=@ValorDocumento
+	where ID=@id and EstaBorrado = 0   
 End
 
 go

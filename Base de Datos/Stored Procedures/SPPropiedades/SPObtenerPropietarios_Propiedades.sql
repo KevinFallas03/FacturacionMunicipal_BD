@@ -8,6 +8,10 @@ Create or Alter procedure spObtenerPropietarios_Propiedades
 )
 as
 BEGIN
+	If @id is null
+	BEGIN
+		return -1
+	END 
 	SELECT Prop_Prop.ID, Propietario.Nombre, Propietario.IdTipoDocumento, Propietario.ValorDocumento
 	FROM Prop_Prop
 	INNER JOIN Propiedad ON Prop_Prop.IdPropiedad=Propiedad.ID

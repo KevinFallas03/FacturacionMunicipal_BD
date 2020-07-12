@@ -5,7 +5,11 @@ CREATE OR ALTER procedure spObtenerPropiedades_Propietarios
 (
 	@id int
 )
-as
+as	
+	If @id is NULL
+	BEGIN
+		Return -1
+	END
 	SELECT Prop_Prop.ID, Propiedad.NumFinca, Propiedad.Valor, Propiedad.Direccion
 	FROM Prop_Prop
 	INNER JOIN Propiedad ON Prop_Prop.IdPropiedad=Propiedad.ID

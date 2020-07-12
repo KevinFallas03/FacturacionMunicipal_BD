@@ -37,3 +37,6 @@ End
 GO
 
 
+EXEC ReiniciarTablas
+
+EXEC IniciarSimulacion
