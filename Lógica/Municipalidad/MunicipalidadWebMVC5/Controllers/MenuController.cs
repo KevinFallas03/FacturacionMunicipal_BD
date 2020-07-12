@@ -2,6 +2,8 @@
 using System.Web.Mvc;
 using model.entity;
 using model.dao;
+using System;
+
 
 namespace MunicipalidadWebMVC5.Controllers
 {
@@ -25,7 +27,7 @@ namespace MunicipalidadWebMVC5.Controllers
             string tipo = objetoUsuario.verificar(user);
             if (tipo == "Administrador")
             {
-                return RedirectToAction("/MenuAdmin");
+                return RedirectToAction("/MenuAdmin/" + user.IdUsuario);
             }
             else if (tipo == "Normal")
             {
@@ -39,15 +41,20 @@ namespace MunicipalidadWebMVC5.Controllers
             }
         }
 
-        public ActionResult MenuAdmin()
+        public ActionResult MenuAdmin(int ID)
         {
-            return View();
+            Usuario usuario = new Usuario(ID);
+            objetoUsuario.find(usuario);
+            return View(usuario);
         }
 
         [HttpGet]
         public ActionResult MenuProp(int ID)
         {
             List<Propiedad> lista = objetoUsuario.findAllPropiedades(ID);
+            Usuario user = new Usuario(ID);
+            string username = user.NombreUsuario;
+            Console.WriteLine(username);
             return View(lista);
         }
     }
