@@ -469,5 +469,7 @@ namespace model.dao
             }
             return;
         }
+
+        public string Host { get => host; set => host = value; }
     }
 }

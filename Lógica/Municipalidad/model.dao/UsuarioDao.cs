@@ -10,29 +10,27 @@ using model.entity;
 
 namespace model.dao
 {
-    public class UsuarioDao : TemplateCRUD<Usuario>
+    public class UsuarioDao
     {
         private Conexion objConexion;
         private SqlCommand comando;
         private string ip;
-        private string host;
 
         public UsuarioDao()
         {
-            host = obtenerIP()[0];
-            ip = obtenerIP()[1];
+            obtenerIP();
             objConexion = Conexion.saberEstado();
         }
 
-        private string[] obtenerIP()
+        private void obtenerIP()
         {
             string Host = Dns.GetHostName();
             IPAddress[] Ip = Dns.GetHostAddresses(Host);
-            string[] result = { Host, Ip[1].ToString() };
-            return result;
+            ip = Ip[1].ToString();
+            return;
         }
 
-        public void create(Usuario objetoUsuario)
+        public void create(Usuario objetoUsuario, string host)
         {
             try
             {
@@ -57,7 +55,7 @@ namespace model.dao
             }
         }
 
-        public void update(Usuario objUsuario)
+        public void update(Usuario objUsuario, string host)
         {
             try
             {
@@ -302,7 +300,7 @@ namespace model.dao
             }
             return listaPropiedades;
         }
-        public void createPropiedad(int idU, int idP)
+        public void createPropiedad(int idU, int idP, string host)
         {
             try
             {
