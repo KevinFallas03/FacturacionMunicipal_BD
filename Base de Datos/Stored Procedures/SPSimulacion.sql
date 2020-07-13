@@ -183,12 +183,7 @@ BEGIN
 		, 0 AS EstaBorrado
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propiedad') AS t(pd)
 		
-		/*
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia/Propiedad') AS t(pd)
-		where @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE') = @FechaOperacion 
-		*/
 
-		--delete @Propietarios
 		-- procesar nodos propietario
 		INSERT INTO Propietario (IdTipoDocumento, Nombre, ValorDocumento, FechaIngreso, EstaBorrado)
 		select pt.value('@TipoDocIdentidad','INT')

@@ -4,7 +4,7 @@ GO
 CREATE OR ALTER PROC [dbo].[spProcesaPagos] @PagosHoy PagosHoyType READONLY
 AS   
 	BEGIN
-		--BEGIN TRY
+		BEGIN TRY
 		SET NOCOUNT ON 
 		SET XACT_ABORT ON
 
@@ -16,7 +16,7 @@ AS
 			SET @contador = 1
 			SELECT @idMenor = min([sec]), @idMayor=max([sec]) FROM @PagosHoy--SACA ID MAYOR Y MENOR PARA ITERAR LA TABLA
 			
-			--BEGIN TRAN
+			BEGIN TRANSACTION
 				--RECORRE LOS PAGOS DE FINCAS
 				WHILE @idMenor<=@idMayor
 				BEGIN
@@ -126,13 +126,13 @@ AS
 					SET @idMenor = @idMenor+1
 				END
 				
-				--COMMIT
-		/*END TRY
+				COMMIT
+		END TRY
 		BEGIN CATCH
 			If @@TRANCOUNT > 0 
 				ROLLBACK TRAN;
 			THROW 50003, 'Error: No se ha podido crear los pago.', 1;
-		END CATCH*/
+		END CATCH
 
 		
 	END

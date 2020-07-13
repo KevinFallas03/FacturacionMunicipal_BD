@@ -6,8 +6,7 @@ USE [FacturacionMunicipal]
 GO
 
 
-CREATE OR ALTER TRIGGER [dbo].[TRCambioPropiedad]
-ON [dbo].[Propiedad]
+CREATE OR ALTER TRIGGER [dbo].[TRCambioPropiedad] ON [dbo].[Propiedad]
 AFTER  INSERT, UPDATE, DELETE
 AS
 
@@ -35,10 +34,6 @@ BEGIN
 	else
 		SET @jsonDespues = NULL
 
-	
-	/*SET @name = host_name
-	FROM sys.dm_exec_sessions
-	WHERE Session_id = @@SPID*/
 
 	SET @ip =(select (convert (varchar(48), ConnectionProperty('client_net_address'))) as [Style 1, sql_variant to varchar]
 	from sys.dm_exec_connections

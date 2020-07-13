@@ -10,7 +10,7 @@ GO
 CREATE OR ALTER PROCEDURE dbo.spProcesaConsumo @MovConsumo MovConsumoType READONLY
 AS 
 BEGIN
-	--BEGIN TRY
+	BEGIN TRY
 		DECLARE @Low  int, @High int
 		SELECT @Low = min(sec) , @High = max(sec) 
 		FROM @MovConsumo 
@@ -49,10 +49,10 @@ BEGIN
 			SET @Low = @Low + 1
 		END
 		COMMIT
-	/*END TRY
+	END TRY
 	BEGIN CATCH
 		If @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION;
 		THROW 50001, 'Error en la transaccion de Consumos', 1
-	END CATCH;*/
+	END CATCH;
 END

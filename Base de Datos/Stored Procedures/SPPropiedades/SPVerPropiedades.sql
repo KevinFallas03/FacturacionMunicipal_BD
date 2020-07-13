@@ -10,7 +10,7 @@ begin
 	If @ID is null
 	Begin
 		return -1
-	ENd
+	End
 	Select ID, NumFinca, Valor, Direccion 
 	from [dbo].Propiedad where ID=@ID     
 End
