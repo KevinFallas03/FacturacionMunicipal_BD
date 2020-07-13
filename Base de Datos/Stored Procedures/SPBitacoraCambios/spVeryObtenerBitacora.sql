@@ -34,4 +34,5 @@ as
 Begin
 	select ID, insertedAt
 	from [dbo].BitacoraCambios
+	order by insertedAt ASC
 End
