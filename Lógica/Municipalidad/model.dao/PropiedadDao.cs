@@ -12,7 +12,7 @@ namespace model.dao
         private Conexion objConexion;
         private SqlCommand comando;
         private string ip;
-        private string host;
+        private static string host;
 
         public PropiedadDao()
         {
@@ -470,6 +470,6 @@ namespace model.dao
             return;
         }
 
-        public string Host { get => host; set => host = value; }
+        public string Name { get => host; set => host = value; }
     }
 }

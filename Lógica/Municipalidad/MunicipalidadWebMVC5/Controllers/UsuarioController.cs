@@ -23,7 +23,7 @@ namespace MunicipalidadWebMVC5.Controllers
         public ActionResult Inicio(string name)
         {
             List<Usuario> lista = objetoUsuario.findAll();
-            nombre = name;
+            objetoUsuario.Name = name;
             return View(lista);
         }
 
@@ -36,7 +36,7 @@ namespace MunicipalidadWebMVC5.Controllers
         [HttpPost]
         public ActionResult Create(Usuario objUsuario)
         {
-            objetoUsuario.create(objUsuario, nombre);
+            objetoUsuario.create(objUsuario);
             return RedirectToAction("Inicio");
         }
 
@@ -67,7 +67,7 @@ namespace MunicipalidadWebMVC5.Controllers
         public ActionResult Update(Usuario objusuario, int ID)
         {
             objusuario.IdUsuario = ID;
-            objetoUsuario.update(objusuario, nombre);
+            objetoUsuario.update(objusuario);
             return RedirectToAction("Inicio/"+nombre);
         }
 
@@ -92,7 +92,7 @@ namespace MunicipalidadWebMVC5.Controllers
 
         public ActionResult AgregarPropiedad(int ID)
         {
-            objetoUsuario.createPropiedad(idUs, ID, nombre);
+            objetoUsuario.createPropiedad(idUs, ID);
             return RedirectToAction("Propiedades/" + idUs);
         }
 

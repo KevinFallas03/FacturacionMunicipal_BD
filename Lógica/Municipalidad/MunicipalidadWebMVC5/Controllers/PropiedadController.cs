@@ -19,7 +19,7 @@ namespace MunicipalidadWebMVC5.Controllers
         public ActionResult Inicio(string nombre)
         {
             List<Propiedad> lista = objetoPropiedad.findAll();
-            objetoPropiedad.Host = nombre;
+            objetoPropiedad.Name = nombre;
             return View(lista);
         }
         [HttpGet]

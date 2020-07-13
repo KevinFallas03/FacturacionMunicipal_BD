@@ -15,6 +15,7 @@ namespace model.dao
         private Conexion objConexion;
         private SqlCommand comando;
         private string ip;
+        private static string host;
 
         public UsuarioDao()
         {
@@ -30,7 +31,7 @@ namespace model.dao
             return;
         }
 
-        public void create(Usuario objetoUsuario, string host)
+        public void create(Usuario objetoUsuario)
         {
             try
             {
@@ -55,7 +56,7 @@ namespace model.dao
             }
         }
 
-        public void update(Usuario objUsuario, string host)
+        public void update(Usuario objUsuario)
         {
             try
             {
@@ -88,6 +89,8 @@ namespace model.dao
                 comando = new SqlCommand("spBorradoLogUsuario", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@ID", objetoUsuario.IdUsuario);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
@@ -300,7 +303,7 @@ namespace model.dao
             }
             return listaPropiedades;
         }
-        public void createPropiedad(int idU, int idP, string host)
+        public void createPropiedad(int idU, int idP)
         {
             try
             {
@@ -363,5 +366,6 @@ namespace model.dao
             }
             return result;
         }
+        public string Name { get => host; set => host = value; }
     }
 }

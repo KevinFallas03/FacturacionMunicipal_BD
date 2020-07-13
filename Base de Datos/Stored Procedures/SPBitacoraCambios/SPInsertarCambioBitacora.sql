@@ -13,7 +13,7 @@ CREATE OR ALTER PROCEDURE [dbo].[spInsertarBitacoraCambios]
 	@inJsonDespues VARCHAR(500), --Datos despues del cambio
 	@inInsertedBy varchar(20),  --Insertado por
 	@inInsertedIn varchar(20),  --Ip desde donde se insertó
-	@inInsertedAt DATE --Fecha del cambio
+	@inInsertedAt DATETIME --Fecha del cambio
 AS   
 BEGIN
 	If (@inIdEntityType IS Null and @inEntityID is NUll)
@@ -21,11 +21,9 @@ BEGIN
         Return -1 --ocurrio un error
     END
 	BEGIN TRY
-		DECLARE @IdUsuario int --para obtener por quien se inserto
-		SET @IdUsuario = (SELECT [ID] FROM [dbo].[Usuario] WHERE [Nombre] = @inInsertedBy)
 		INSERT INTO [dbo].[BitacoraCambios] ([idEntityType], [EntityId], [jsonAntes],[jsonDespues],
-											 [insertedAt],[insertedBy],[insertedIn])
-		SELECT @inIdEntityType, @inEntityID, @inJsonAntes, @inJsonDespues, @inInsertedAt, @IdUsuario, @inInsertedIn
+											 [insertedBy],[insertedIn],[insertedAt])
+		SELECT @inIdEntityType, @inEntityID, @inJsonAntes, @inJsonDespues, @inInsertedBy, @inInsertedIn, @inInsertedAt
 	END TRY
 	BEGIN CATCH
 		THROW 50001,'Error: No se realizó el cambio en la bitacora',1;

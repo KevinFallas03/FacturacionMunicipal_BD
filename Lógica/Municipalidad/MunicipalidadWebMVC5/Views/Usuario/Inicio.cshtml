@@ -1,9 +1,13 @@
 ﻿@model List<model.entity.Usuario>
 @{
-    ViewBag.Title = "Inicio";
+    var nombre = "";
+    if (TempData.ContainsKey("nombre"))
+    {
+        nombre = TempData["nombre"] as string;
+    }
 }
 
-<h2>Usuario</h2>
+<h2>Usuarios</h2>
 <div class="container-fluid">
     <div>
         <a class="btn btn-primary" href="/Usuario/Create">Nuevo</a>

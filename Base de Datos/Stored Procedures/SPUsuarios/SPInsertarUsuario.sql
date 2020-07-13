@@ -11,6 +11,7 @@ Create or Alter procedure spInsertarUsuario
 )
 as
 Begin
+	BEGIN TRY
 	declare @jsonDespues varchar(500), @idModified int, @insertedAt DATETIME
 	Insert into [dbo].Usuario(Nombre, Password, TipoUsuario, FechaIngreso, EstaBorrado )
 	Values (@Nombre, @Password, @TipoUsuario, CONVERT(DATE,GETDATE()), 0)
@@ -26,5 +27,10 @@ Begin
 										 @inInsertedBy = @UsuarioACargo, 
 										 @inInsertedIn = @IPusuario, 
 										 @inInsertedAt = @insertedAt
-	
+	END TRY
+	BEGIN CATCH
+		If @@TRANCOUNT > 0
+			ROLLBACK TRANSACTION;
+		THROW 50000, 'Error no se pudo insertar usuario', 1
+	END CATCH
 End

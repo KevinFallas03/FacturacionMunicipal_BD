@@ -16,21 +16,20 @@ namespace model.dao
         private SqlCommand comando;
         private static int IDPJ=0;
         private string ip;
-        private string host;
+        private static string host;
 
         public PropietarioDao()
         {
-            host = obtenerIP()[0];
-            ip = obtenerIP()[1];
+            obtenerIP();
             objConexion = Conexion.saberEstado();
         }
 
-        private string[] obtenerIP()
+        private void obtenerIP()
         {
             string Host = Dns.GetHostName();
             IPAddress[] Ip = Dns.GetHostAddresses(Host);
-            string[] result = { Host, Ip[1].ToString() };
-            return result;
+            ip = Ip[1].ToString();
+            return;
         }
 
         public void create(Propietario objetoPropietario)
@@ -206,6 +205,8 @@ namespace model.dao
                 comando = new SqlCommand("spBorradoLogPropietario", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@ID", objetoPropietario.IdPropietario);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }
@@ -449,6 +450,6 @@ namespace model.dao
             return;
         }
 
-        public string Host { get => host; set => host = value; }
+        public string Name { get => host; set => host = value; }
     }
 }

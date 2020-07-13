@@ -18,10 +18,10 @@ namespace MunicipalidadWebMVC5.Controllers
             objetoPropietario = new PropietarioDao();
         }
         // GET: Propietario
-        public ActionResult Inicio(string nombre)
+        public ActionResult Inicio(string name)
         {
             List<Propietario> lista = objetoPropietario.findAll();
-            objetoPropietario.Host = nombre;
+            objetoPropietario.Name = name;
             return View(lista);
         }
 
