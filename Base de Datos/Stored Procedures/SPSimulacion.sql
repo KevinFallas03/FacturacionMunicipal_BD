@@ -126,13 +126,6 @@ BEGIN
 		RETURN @@ERROR * -1
 	END CATCH
 
-	--GUARDAR EL XML CON OPENXML
-	DECLARE @XMLData XML
-	DECLARE @hdoc INT
-	SELECT @XMLData = C
-	FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS ReturnData(C)
-	EXEC sp_xml_preparedocument @hdoc OUTPUT, @XMLData
-
 
 	--parte 3 
 	
@@ -326,10 +319,7 @@ BEGIN
 		set @Lo1 = @Lo1 + 1
 		
 	end
-	--select * from @PagosHoy
 end
-EXEC sp_xml_removedocument @hdoc 
-
 
 exec ReiniciarTablas
 
