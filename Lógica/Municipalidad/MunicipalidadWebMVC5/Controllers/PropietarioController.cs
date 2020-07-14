@@ -18,10 +18,10 @@ namespace MunicipalidadWebMVC5.Controllers
             objetoPropietario = new PropietarioDao();
         }
         // GET: Propietario
-        public ActionResult Inicio(string nombre)
+        public ActionResult Inicio(string name)
         {
             List<Propietario> lista = objetoPropietario.findAll();
-            objetoPropietario.Host = nombre;
+            objetoPropietario.Name = name;
             return View(lista);
         }
 
@@ -42,18 +42,7 @@ namespace MunicipalidadWebMVC5.Controllers
             else
             {
                 objetoPropietario.create(objPropietario);
-                mensajeErrorRegistro(objPropietario);
                 return RedirectToAction("Inicio");
-            }
-        }
-
-        public void mensajeErrorRegistro(Propietario objPropietario)
-        {
-            switch (objPropietario.EstadoError)
-            {
-                case 20:
-                    ViewBag.mensajeError = "Campo Nombre está vacío ";
-                    break;
             }
         }
 

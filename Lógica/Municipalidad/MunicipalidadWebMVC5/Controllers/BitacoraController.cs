@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using model.entity;
 using model.dao;
+using System.Text;
 
 namespace MunicipalidadWebMVC5.Controllers
 {
@@ -25,9 +23,15 @@ namespace MunicipalidadWebMVC5.Controllers
         [HttpGet]
         public ActionResult Find(int ID)
         {
-            Bitacora objpropietario = new Bitacora(ID);
-            objetoBitacora.find(objpropietario);
-            return View(objpropietario);
+            Bitacora objbitacora = new Bitacora(ID);
+            objetoBitacora.find(objbitacora);
+            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("[{", "");
+            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("}]", "");
+            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("\"", "");
+            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("[{", "");
+            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("}]", "");
+            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("\"", "");
+            return View(objbitacora);
         }
     }
 }

@@ -9,18 +9,17 @@ CREATE OR ALTER PROCEDURE spBorradoLogUsuario
 AS 
 BEGIN 
 	BEGIN TRY
-	declare @jsonAntes varchar(500), @idModified int, @insertedAt DATETIME
+	declare @jsonAntes varchar(500), @insertedAt DATETIME
 	SET @insertedAt = GETDATE()
-	SET @idModified = (SELECT [ID] FROM [dbo].[PropietarioJuridico] WHERE [ID] = @id)
 	-- Se crea el primer JSON
-	SET @jsonAntes = (SELECT [ID], [NombrePersonaResponsable], [IdTipoDocumento], [ValorDocumento]
-	FROM [dbo].[PropietarioJuridico] WHERE [ID] = @id
+	SET @jsonAntes = (SELECT [ID], [Nombre], [Password], [FechaIngreso]
+	FROM [dbo].[Usuario] WHERE [ID] = @id
 	FOR JSON PATH)
 	UPDATE dbo.Usuario
 	SET EstaBorrado=1
 	WHERE ID = @ID
-    EXEC [dbo].spInsertarBitacoraCambios @inIdEntityType = 6,
-										@inEntityID = @idModified, 
+    EXEC [dbo].spInsertarBitacoraCambios @inIdEntityType = 3,
+										@inEntityID = @ID, 
 										@inJsonAntes = @jsonAntes,
 										@inJsonDespues = NULL, 
 										@inInsertedBy = @UsuarioACargo, 
