@@ -158,6 +158,8 @@ namespace model.dao
                 comando = new SqlCommand("spBorradoLogPropietario_Jud", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
                 comando.Parameters.AddWithValue("@ID", ID);
+                comando.Parameters.AddWithValue("@UsuarioACargo", host);
+                comando.Parameters.AddWithValue("@IPusuario", ip);
                 objConexion.getConexion().Open();
                 comando.ExecuteNonQuery();
             }

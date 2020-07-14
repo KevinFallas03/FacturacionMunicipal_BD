@@ -16,7 +16,7 @@ begin
 	BEGIN
 		Return -1
 	END 
-	declare @jsonAntes varchar(500), @jsonDespues varchar(500), @idModified int, @insertedAt DATETIME
+	   declare @jsonAntes varchar(500), @jsonDespues varchar(500), @idModified int, @insertedAt DATETIME
 	   SET @insertedAt = GETDATE()
 	   SET @idModified = (SELECT [ID] FROM [dbo].[Propietario] WHERE [ID] = @id)
 	   -- Se crea el primer JSON

@@ -13,15 +13,15 @@ as
 Begin
 	BEGIN TRY 
 	declare @jsonDespues varchar(500), @idModified int, @insertedAt DATETIME
-	Insert into [dbo].Propietario (Nombre, IdTipoDocumento, ValorDocumento, EstaBorrado)
-	Values (@Nombre, @IdTipoDocumento, @ValorDocumento, 0)
+	Insert into [dbo].Propietario (Nombre, IdTipoDocumento, ValorDocumento, EstaBorrado, FechaIngreso)
+	Values (@Nombre, @IdTipoDocumento, @ValorDocumento, 0, CONVERT(DATE,GETDATE()))
 	select ID from Propietario where @Nombre=Nombre and @IdTipoDocumento=IdTipoDocumento and @ValorDocumento=ValorDocumento and 0=EstaBorrado
-	SET @jsonDespues =( SELECT ID, Nombre, IdTipoDocumento, ValorDocumento
+	SET @jsonDespues =( SELECT ID, Nombre, IdTipoDocumento, ValorDocumento, FechaIngreso
 	FROM [dbo].Propietario WHERE [nombre] = @Nombre and ValorDocumento = @ValorDocumento
 	FOR JSON PATH)
 	SET @idModified = (SELECT [ID] FROM [dbo].Propietario WHERE [Nombre] = @Nombre and ValorDocumento = @ValorDocumento)
 	SET @insertedAt = CONVERT(DATETIME, GETDATE())
-	EXEC [dbo].[spInsertarBitacoraCambios] @inIdEntityType = 3,
+	EXEC [dbo].[spInsertarBitacoraCambios] @inIdEntityType = 2,
 										 @inEntityID = @idModified, 
 										 @inJsonAntes = NULL,
 										 @inJsonDespues = @jsonDespues, 
@@ -32,6 +32,6 @@ Begin
 	BEGIN CATCH
 		If @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION;
-		THROW 50001, 'Error, no se pudo borrar', 1
+		THROW 50001, 'Error, no se pudo insertar', 1
 	END CATCH
 End

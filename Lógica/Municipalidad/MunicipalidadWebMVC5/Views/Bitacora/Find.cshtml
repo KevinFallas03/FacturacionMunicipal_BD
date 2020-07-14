@@ -64,10 +64,12 @@
             <table class="table">
                 @foreach (var obj in jsnantes)
                 { 
+                    if (obj != "") { 
                     <tr>
                         <th>@obj.Split(':')[0]:</th>
                         <th>@obj.Split(':')[1]</th>
                     </tr>
+                    }
                 }
             </table>
         </div>
@@ -79,10 +81,13 @@
             <table class="table">
                 @foreach (var obj in jsdspues)
                 {
-                    <tr >
-                        <th>@obj.Split(':')[0]:</th>
-                        <th>@obj.Split(':')[1]</th>
-                    </tr>
+                    if (obj != "")
+                    {
+                        <tr>
+                            <th>@obj.Split(':')[0]:</th>
+                            <th>@obj.Split(':')[1]</th>
+                        </tr>
+                    }
                 }
             </table>
         </div>

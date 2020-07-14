@@ -42,18 +42,7 @@ namespace MunicipalidadWebMVC5.Controllers
             else
             {
                 objetoPropietario.create(objPropietario);
-                mensajeErrorRegistro(objPropietario);
                 return RedirectToAction("Inicio");
-            }
-        }
-
-        public void mensajeErrorRegistro(Propietario objPropietario)
-        {
-            switch (objPropietario.EstadoError)
-            {
-                case 20:
-                    ViewBag.mensajeError = "Campo Nombre está vacío ";
-                    break;
             }
         }
 
