@@ -25,12 +25,12 @@ namespace MunicipalidadWebMVC5.Controllers
         {
             Bitacora objbitacora = new Bitacora(ID);
             objetoBitacora.find(objbitacora);
-            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("[{", "{*");
+            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("[{", "");
             objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("}]", "*}");
-            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace(",", ",*");
-            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("[{", "{*");
+            objbitacora.Jsonantes = objbitacora.Jsonantes.Replace("\"", "");
+            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("[{", "");
             objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("}]", "*}");
-            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace(",", ",*");
+            objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("\"", "");
             return View(objbitacora);
         }
     }

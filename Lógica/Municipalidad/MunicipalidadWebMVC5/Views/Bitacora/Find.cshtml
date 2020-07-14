@@ -1,8 +1,8 @@
 ﻿@model model.entity.Bitacora
 @{
     ViewBag.Title = "Find";
-    string [] jsnantes = Model.Jsonantes.ToString().Split('*');
-    string [] jsdspues = Model.Jsondespues.ToString().Split('*');
+    string [] jsnantes = Model.Jsonantes.ToString().Split(',');
+    string [] jsdspues = Model.Jsondespues.ToString().Split(',');
 }
 
 <h2>Datos de Entrada</h2>
@@ -61,24 +61,30 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Jsonantes, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-6">
-            @foreach (var obj in jsnantes)
-            {
-                
-                @Html.DisplayFor(model => obj, new { htmlAttributes = new { @class = "form-control" } })
-                <br />
-            }
+            <table class="table">
+                @foreach (var obj in jsnantes)
+                { 
+                    <tr>
+                        <th>@obj.Split(':')[0]:</th>
+                        <th>@obj.Split(':')[1]</th>
+                    </tr>
+                }
+            </table>
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.Jsondespues, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-6">
-            @foreach (var obj in jsdspues)
-            {
-
-                @Html.DisplayFor(model => obj, new { htmlAttributes = new { @class = "form-control" } })
-                <br />
-            }
+            <table class="table">
+                @foreach (var obj in jsdspues)
+                {
+                    <tr >
+                        <th>@obj.Split(':')[0]:</th>
+                        <th>@obj.Split(':')[1]</th>
+                    </tr>
+                }
+            </table>
         </div>
     </div>
 </div>
