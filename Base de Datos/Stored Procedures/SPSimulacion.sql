@@ -9,7 +9,7 @@
 	--	///		TABLAS VARIABLES	//
 --- SCRIPT DE SIMULACION PARA LA TAREA PROGRAMADA
 
--- precondición, los nodos para la fecha de operaci�n en el XML vienen en orden ascendente.
+-- precondición, los nodos para la fecha de operación en el XML vienen en orden ascendente.
 
 /****** Object:  StoredProcedure [dbo].[Simulacion]    Script Date: 11/27/2019 10:20:30 PM ******/
 USE [FacturacionMunicipal]
@@ -138,7 +138,7 @@ BEGIN
 	declare @minfecha datetime, @maxfecha datetime 
 	DECLARE @fechaOperacionNodo date
 
-	-- iterando de la fecha m�s antigua a la menos antigua
+	-- iterando de la fecha más antigua a la menos antigua
 	Select @minfecha=min(F.fecha), @maxfecha=max(F.fecha)  -- min y max son funciones agregadas
 	from @FechasAProcesar F
 
@@ -240,7 +240,6 @@ BEGIN
 		, 0 AS EstaBorrado
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Usuario') AS t(u)
 		
-
 		--CCobros x Propiedad
 		--procesar nodos CCobroVsPropiedad
 		delete @PropiedadesxCCobro 
@@ -302,17 +301,22 @@ BEGIN
 		
 		--procesa los movimientos en los consumos de las propiedades
 		DELETE @MovConsumo
-		INSERT INTO @MovConsumo(NumFinca, M3, TipoMov, Fecha)
+		INSERT INTO @MovConsumo(NumFinca, M3, TipoMov, Descripcion,Fecha)
 		SELECT mc.value('@NumFinca', 'INT')
 			, mc.value('@LecturaM3', 'INT')
 			, mc.value('@id', 'INT')
+			, mc.value('@descripcion', 'VARCHAR(50)')
 			, @FechaOperacion AS FechaOperacion
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/TransConsumo') AS t(mc)
 		EXEC spProcesaConsumo @MovConsumo
-
+		
+		--Realiza las cortas de agua
 		EXEC spCortaAgua @FechaActual = @FechaOperacion
+	
+		--Relaiza las reconexiones de agua
 		EXEC spReconexionAgua @FechaActual = @FechaOperacion
 
+		--Genera los recibos
 		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
 		
 
