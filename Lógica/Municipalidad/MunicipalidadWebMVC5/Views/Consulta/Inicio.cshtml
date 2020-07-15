@@ -2,47 +2,53 @@
     ViewBag.Title = "Inicio";
 }
 
-<a style='display:flex;position:unset;bottom:1000px;left:0px;'>
-    <img src='https://image.freepik.com/vector-gratis/ilustracion-lupa_53876-28516.jpg' height=200 alt="Menu Principal" />
-</a>
-<h2>Consultas</h2><br /><br />
-<div class="form-actions col-md-offset-2">
-    <form action="~/Propietario/PropiedadesPorValor/" method="post">
-        <b>Propiedades de un propietario</b><br>
-        <input type="search" value="ID o Nombre" name="valor", id="F1" />
-        <button class="btn btn-success" >Consultar</button>
-    </form>
-    <br>
-    <form action="~/Propiedad/PropietarioVsPropiedades/" method="post">
-        <b>Propietarios de una propiedad</b><br>
-        <input type="number" value="0" name="valor", id="F1" />
-        <button class="btn btn-success" >Consultar</button>
-    </form>
-    <br>
-    <form action="~/Usuario/PropiedadesVsUsuario/" method="post">
-    <b>Propiedades de un usuario</b><br>
-    <input type="search"  value="ID o Nombre" name="valor", id="F1" />
-    <button class="btn btn-success" >Consultar</button>
-    </form>
-    <br>
-    <form action="~/Propiedad/UsuarioVsPropiedad/" method="post">
-    <b>Usuarios de una propiedad</b><br>
-    <input type="number" value="0" name="valor", id="F1" />
-    <button class="btn btn-success" >Consultar</button>
-    </form>
-    <br>
+<h2>Consultas</h2>
+<div>
+    <img src='https://image.freepik.com/vector-gratis/ilustracion-icono-lupa_53876-5613.jpg' align="right" height=550 alt="Menu Principal" />
 </div>
+<div>
+    <div class="form-horizontal">
+        <form action="~/Propietario/PropiedadesPorValor/" method="post">
+            <b>Propiedades de un propietario</b><br>
+            <input type="search" value="ID o Nombre" name="valor" , id="F1" class="form-control" /> 
+            <button class="btn btn-success">Consultar</button>
+        </form>
+        <form action="~/Propiedad/PropietarioVsPropiedades/" method="post">
+            <b>Propietarios de una propiedad</b><br>
+            <input type="number" value="0" name="valor" , id="F1" min=0 class="form-control" />
+            <button class="btn btn-success">Consultar</button>
+        </form>
+        <br>
+        <form action="~/Usuario/PropiedadesVsUsuario/" method="post">
+            <b>Propiedades de un usuario</b><br>
+            <input type="search" value="ID o Nombre" name="valor" , id="F1" class="form-control" />
+            <button class="btn btn-success">Consultar</button>
+        </form>
+        <br>
+        <form action="~/Propiedad/UsuarioVsPropiedad/" method="post">
+            <b>Usuarios de una propiedad</b><br>
+            <input type="number" value="0" name="valor" , id="F1" min=0 class="form-control" display: none />
+            <button class="btn btn-success" display: none>Consultar</button>
+        </form>
+        <br>
+        <form action="~/Bitacora/Consulta/" method="post">
+            <b>Bitacora de cambios</b><br>
+            <input type="date" value="Fecha de Inicio" name="startdate" , id="F1" class="form-control" display="none" /> hasta
+            <input type="date" value="Fecha de Fin" name="enddate" , id="F2" class="form-control" />
+            Tipo
+            <input type="number" list="tickmarks" name="type" id="F3" min=1 max=7 class="form-control" />
+            <datalist id="tickmarks">
+                <option value="1" label="Propiedad"></option>
+                <option value="2" label="Propietario"></option>
+                <option value="3" label="Usuario"></option>
+                <option value="4" label="PropiedadVSPropietario"></option>
+                <option value="5" label="PropiedadVSUsuario"></option>
+                <option value="6" label="Propietario Jurídico"></option>
+                <option value="7" label="Concepto de Cobro"></option>
+            </datalist>
+            <button class="btn btn-success">Consultar</button>
+        </form>
+        <br>
+    </div>
+    </div>
 
-<!--
-<menu>
-    <li><a href="~/Propietario/PropiedadesPorValor"><big><b>Propiedades de un propietario</b></big></a></li>
-    
-    <br>
-    <li><a href="~/PropietarioVsPropiedades"><big><b>Propietarios de una propiedad</b><br></big></a></li>
-    <br>
-    <li><a href="~/PropiedadesVsUsuario"><big><b>Propiedades de un usuario</b><br></big></a></li>
-    <br>
-    <li><a href="~/UsuarioVsPropiedad"><big><b>Usuarios de una propiedad</b><br></big></a></li>
-    <br>
-</menu>
--->

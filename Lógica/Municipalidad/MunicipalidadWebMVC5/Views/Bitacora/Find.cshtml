@@ -63,13 +63,21 @@
         <div class="col-md-6">
             <table class="table">
                 @foreach (var obj in jsnantes)
-                { 
-                    if (obj != "") { 
-                    <tr>
-                        <th>@obj.Split(':')[0]:</th>
-                        <th>@obj.Split(':')[1]</th>
-                    </tr>
+                {
+                    if (@obj.Split(':').Length > 1)
+                    {
+                        <tr>
+                            <th>@obj.Split(':')[0]:</th>
+                            <th>@obj.Split(':')[1]</th>
+                        </tr>
                     }
+                    else
+                    {
+                        <tr>
+                            <th>@obj:</th>
+                        </tr>
+                    }
+
                 }
             </table>
         </div>
@@ -81,11 +89,17 @@
             <table class="table">
                 @foreach (var obj in jsdspues)
                 {
-                    if (obj != "")
+                    if (@obj.Split(':').Length > 1)
                     {
                         <tr>
                             <th>@obj.Split(':')[0]:</th>
                             <th>@obj.Split(':')[1]</th>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <th>@obj:</th>
                         </tr>
                     }
                 }

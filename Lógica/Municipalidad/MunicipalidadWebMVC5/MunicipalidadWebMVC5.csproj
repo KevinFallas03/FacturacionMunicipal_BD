@@ -179,6 +179,7 @@
     <Content Include="Views\Bitacora\Find.cshtml" />
     <Content Include="Views\Recibo\ReciboPendiente.cshtml" />
     <Content Include="Views\Recibo\ReciboPagado.cshtml" />
+    <Content Include="Views\Bitacora\Consulta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

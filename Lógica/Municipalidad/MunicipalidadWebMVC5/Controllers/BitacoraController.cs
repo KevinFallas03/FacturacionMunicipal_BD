@@ -33,5 +33,14 @@ namespace MunicipalidadWebMVC5.Controllers
             objbitacora.Jsondespues = objbitacora.Jsondespues.Replace("\"", "");
             return View(objbitacora);
         }
+
+        public ActionResult Consulta()
+        {
+            string fechainic = Request["startdate"];
+            string fechafini = Request["enddate"];
+            string tipo = Request["type"];
+            List<Bitacora> lista = objetoBitacora.findAllConsulta(@fechainic, @fechafini, @tipo);
+            return View(lista);
+        }
     }
 }

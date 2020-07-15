@@ -8,6 +8,7 @@
 <div class="container-fluid">
     <table class="table">
         <tr class="btn-danger">
+            <th>ID</th>
             <th>Fecha</th>
             <th>Hora</th>
             <th></th>
@@ -15,6 +16,7 @@
         @foreach (var objetoBitacora in Model)
         {
         <tr>
+            <td>@objetoBitacora.IdBitacora</td>
             <td>@objetoBitacora.Fecha</td>
             <td>@objetoBitacora.Hora</td>
             <td><a class="btn btn-success" href="~/Bitacora/Find/@objetoBitacora.IdBitacora">Ver</a></td>

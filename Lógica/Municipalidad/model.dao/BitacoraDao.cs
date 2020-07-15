@@ -86,5 +86,43 @@ namespace model.dao
             }
             return listaBitacora;
         }
+
+        public List<Bitacora> findAllConsulta(string dates, string datee, string type)
+        {
+            List<Bitacora> listaBitacora = new List<Bitacora>();
+
+            try
+            {
+                comando = new SqlCommand("spObtenerBitacoraConsulta", objConexion.getConexion())
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                comando.Parameters.AddWithValue("@datei", dates);
+                comando.Parameters.AddWithValue("@datee", datee);
+                comando.Parameters.AddWithValue("@type", type);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Bitacora objetoBitacora = new Bitacora
+                    {
+                        IdBitacora = Convert.ToInt32(read[0].ToString()),
+                        Fecha = Convert.ToString(read[1].ToString()).Split(' ')[0],
+                        Hora = Convert.ToString(read[1].ToString()).Split(' ')[1]
+                    };
+                    listaBitacora.Add(objetoBitacora);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaBitacora;
+        }
     }
 }
