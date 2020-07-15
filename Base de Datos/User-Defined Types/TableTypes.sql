@@ -31,5 +31,6 @@ CREATE TYPE MovConsumoType AS TABLE
 	NumFinca INT,
 	M3 INT,
 	TipoMov INT,
+	Descripcion VARCHAR(100),
 	Fecha DATE
 )
