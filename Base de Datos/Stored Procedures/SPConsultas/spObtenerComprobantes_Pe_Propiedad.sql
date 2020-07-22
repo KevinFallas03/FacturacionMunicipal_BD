@@ -18,8 +18,6 @@ CREATE or ALTER PROC [dbo].spObtenerComprobantesPedePropiedad @id int as
 		ORDER BY C.FechaPago DESC
 	END TRY
 	BEGIN CATCH
-	If @@TRANCOUNT > 0 
-		ROLLBACK TRAN;
 		THROW 60000,'Error: No se ha podido buscar Recibos',1;
 	END CATCH
 	END

@@ -16,7 +16,7 @@ AS
 				INSERT INTO @idPropiedades(IdPropiedad, IdCCobro)
 				SELECT R.IdPropiedad, R.IdCCobro
 				FROM Recibo AS R
-				WHERE R.Estado = 0 AND R.IdCCobro = 1 AND NOT EXISTS (SELECT ID FROM [dbo].[Recibo] WHERE IdCCobro = 10)
+				WHERE R.Estado = 0 AND R.IdCCobro = 1 AND NOT EXISTS (SELECT ID FROM [dbo].[Recibo] WHERE IdCCobro = 10)--Verificar recibos duplicados
 				GROUP BY IdPropiedad, IdCCobro
 				HAVING COUNT(*) > 1
 				 

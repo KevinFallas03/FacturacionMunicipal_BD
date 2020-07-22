@@ -17,8 +17,8 @@ CREATE or ALTER PROC [dbo].spVerReciboPedePropiedad @id int, @estado int as
 		ORDER BY R.FechaEmision DESC
 	END TRY
 	BEGIN CATCH
-	If @@TRANCOUNT > 0 
-		ROLLBACK TRAN;
 		THROW 60001,'Error: No se ha podido buscar Recibo',1;
 	END CATCH
 	END
+
+exec spVerReciboPedePropiedad @id=39, @estado=1

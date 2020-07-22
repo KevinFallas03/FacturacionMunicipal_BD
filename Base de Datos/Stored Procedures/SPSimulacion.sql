@@ -287,7 +287,7 @@ BEGIN
 		INSERT INTO @PropiedadCambio (NumFinca, NuevoValor)
 		select pc.value('@NumFinca', 'INT')
 			, pc.value('@NuevoValor', 'MONEY')
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PropiedadCambio') AS t(pc)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/CambioPropiedad') AS t(pc)
 		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
 
 		--PAGO DE LOS RECIBOS  
@@ -296,7 +296,7 @@ BEGIN
 		SELECT c.value('@NumFinca', 'INT')
 			, c.value('@TipoRecibo', 'INT')
 			, @FechaOperacion AS FechaOperacion
-		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PagoRecibo') AS t(c)
+		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Pago') AS t(c)
 		EXEC spProcesaPagos @PagosHoy
 		
 		--procesa los movimientos en los consumos de las propiedades
