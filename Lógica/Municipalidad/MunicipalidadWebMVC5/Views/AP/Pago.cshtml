@@ -1,0 +1,44 @@
+﻿@model List<model.entity.Recibo>
+@{
+    ViewBag.Title = "Pago";
+    decimal total = 0;
+    foreach (var obj in Model)
+    {
+        total += obj.Monto; 
+    }
+}
+
+<h2>Pago Mediante Arreglo de Pago</h2>
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-success">
+            <th>ID Recibo</th>
+            <th>Fecha</th>
+            <th>Concepto de Cobro</th>
+            <th>Monto</th>
+            <th>Intereses</th>
+        </tr>
+        @foreach (var objetoRecibo in Model)
+        {
+            <tr>
+                <td>@objetoRecibo.IdRecibo</td>
+                <td>@objetoRecibo.FechaEm</td>
+                <td>@objetoRecibo.NombreCC</td>
+                <td>@objetoRecibo.Monto</td>
+                <td>0</td>
+            </tr>
+        }
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th><b>Monto Total</b></th>
+            <th>@total</th>
+        </tr>
+    </table>
+    <b>Plazo en meses</b>
+    <input type="number" min=1 />
+    <b>Cuota mensual</b>
+    <input type="text" />
+    <a class="btn btn-info" href="~/Recibo/ReciboPendiente">Crear AP</a>
+</div>

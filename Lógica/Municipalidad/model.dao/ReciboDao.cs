@@ -40,6 +40,7 @@ namespace model.dao
                         IdRecibo = Convert.ToInt32(read[0].ToString()),
                         FechaEm = read[1].ToString(),
                         NombreCC = read[2].ToString(),
+                        Monto = Convert.ToDecimal(read[3].ToString())
                     };
                     listaRecibos.Add(objetoRecibo);
                 }

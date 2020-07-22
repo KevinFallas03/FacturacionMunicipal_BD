@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\APController.cs" />
     <Compile Include="Controllers\BitacoraController.cs" />
     <Compile Include="Controllers\ConsultaController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
@@ -180,6 +181,10 @@
     <Content Include="Views\Recibo\ReciboPendiente.cshtml" />
     <Content Include="Views\Recibo\ReciboPagado.cshtml" />
     <Content Include="Views\Bitacora\Consulta.cshtml" />
+    <Content Include="Views\AP\Inicio.cshtml" />
+    <Content Include="Views\AP\RecibosPendientes.cshtml" />
+    <Content Include="Views\AP\Propiedades.cshtml" />
+    <Content Include="Views\AP\Pago.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
