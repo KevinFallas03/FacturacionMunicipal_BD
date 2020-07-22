@@ -1,9 +1,9 @@
 ﻿@model List<model.entity.Recibo>
 @{
-    ViewBag.Title = "RecibosPagados";
+    ViewBag.Title = "RecibosPendientes";
 }
 
-<h2>Recibos Pagados</h2>
+<h2>Recibos Pendientes</h2>
 <div class="container-fluid">
     <table class="table">
         <tr class="btn-success">
@@ -11,16 +11,18 @@
             <th>ID Recibo</th>
             <th>Fecha</th>
             <th>Concepto de Cobro</th>
+            <th>Monto</th>
         </tr>
         @foreach (var objetoRecibo in Model)
         {
             <tr>
-                <td colspan="2" ><a class="btn btn-info" href="~/Recibo/ReciboPagado/@objetoRecibo.IdRecibo">Ver</a></td>
+                <td><a class="btn btn-info" href="~/Recibo/ReciboPendiente/@objetoRecibo.IdRecibo">Ver</a></td>
                 <td>@objetoRecibo.IdRecibo</td>
                 <td>@objetoRecibo.FechaEm</td>
                 <td>@objetoRecibo.NombreCC</td>
+                <td>@objetoRecibo.Monto</td>
             </tr>
         }
     </table>
+    <a class="btn btn-primary" href="~/AP/Pago/">Pago mediante AP</a>
 </div>
-

@@ -52,5 +52,5 @@ AS
 	BEGIN CATCH
 		If @@TRANCOUNT > 0 
 			ROLLBACK TRAN;
-		THROW 60000,'Error: No se ha podido insertar cambios',1;
+		THROW 60000,'Error: No se ha podido insertar cambios de propiedad en bitacora',1;
 	END CATCH

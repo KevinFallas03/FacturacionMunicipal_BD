@@ -54,7 +54,6 @@ namespace MunicipalidadWebMVC5.Controllers
             List<Propiedad> lista = objetoUsuario.findAllPropiedades(ID);
             Usuario user = new Usuario(ID);
             string username = user.NombreUsuario;
-            Console.WriteLine(username);
             return View(lista);
         }
     }

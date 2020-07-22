@@ -1,0 +1,27 @@
+﻿@model List<model.entity.Propiedad>
+@{
+    ViewBag.Title = "Propiedades";
+}
+
+<h2>Propiedades disponibles</h2>
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-primary">
+            <th>ID</th>
+            <th>Número</th>
+            <th>Valor</th>
+            <th>Dirección</th>
+            <th></th>
+        </tr>
+        @foreach (var objetoPropiedad in Model)
+        {
+        <tr>
+            <td>@objetoPropiedad.IdPropiedad</td>
+            <td>@objetoPropiedad.NumeroPropiedad</td>
+            <td>@objetoPropiedad.ValorPropiedad</td>
+            <td>@objetoPropiedad.DireccionPropiedad</td>
+            <td><a class="btn btn-danger" href="~/AP/RecibosPendientes/@objetoPropiedad.IdPropiedad">Recibos Pendientes</a></td>
+        </tr>
+        }
+    </table>
+</div>

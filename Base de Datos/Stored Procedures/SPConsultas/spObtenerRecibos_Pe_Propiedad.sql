@@ -9,7 +9,7 @@ GO
 CREATE or ALTER PROC [dbo].spObtenerRecibosPedePropiedad @id int, @estado int as 	
 	BEGIN
 	BEGIN TRY
-		SELECT R.ID, R.FechaEmision, CC.Nombre
+		SELECT R.ID, R.FechaEmision, CC.Nombre, R.Monto
 		FROM Recibo AS R
 		INNER JOIN CCobro AS CC ON R.IdCCobro = CC.ID
 		WHERE R.Estado=@estado AND @id=R.IdPropiedad
