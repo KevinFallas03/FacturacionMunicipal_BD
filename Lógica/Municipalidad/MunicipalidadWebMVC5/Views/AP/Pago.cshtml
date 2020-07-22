@@ -1,11 +1,9 @@
 ﻿@model List<model.entity.Recibo>
 @{
     ViewBag.Title = "Pago";
-    decimal total = 0;
-    foreach (var obj in Model)
-    {
-        total += obj.Monto; 
-    }
+    decimal total = Convert.ToDecimal(TempData["total"]);
+    double cuota = Convert.ToDouble(TempData["cuota"]);
+    int meses = Convert.ToInt32(TempData["meses"]);
 }
 
 <h2>Pago Mediante Arreglo de Pago</h2>
@@ -25,7 +23,7 @@
                 <td>@objetoRecibo.FechaEm</td>
                 <td>@objetoRecibo.NombreCC</td>
                 <td>@objetoRecibo.Monto</td>
-                <td>0</td>
+                <td>@objetoRecibo.MontoI</td>
             </tr>
         }
         <tr>
@@ -36,9 +34,13 @@
             <th>@total</th>
         </tr>
     </table>
-    <b>Plazo en meses</b>
-    <input type="number" min=1 />
-    <b>Cuota mensual</b>
-    <input type="text" />
+    <form action="~/AP/PagoR" method="post">
+        <b>Plazo en meses</b>
+        <input type="number" min=1 name="meses" autofocus value=@meses />
+        <b>Cuota mensual</b>
+        <input type="text" value=@cuota readonly />
+        <input type="submit" class="btn btn-warning" value="Calcular">
+    </form>
+    <br /><br />
     <a class="btn btn-info" href="~/Recibo/ReciboPendiente">Crear AP</a>
 </div>

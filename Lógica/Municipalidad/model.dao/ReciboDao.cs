@@ -13,7 +13,6 @@ namespace model.dao
     {
         private Conexion objConexion;
         private SqlCommand comando;
-        private static int IDPJ = 0;
 
         public ReciboDao()
         {
@@ -41,6 +40,43 @@ namespace model.dao
                         FechaEm = read[1].ToString(),
                         NombreCC = read[2].ToString(),
                         Monto = Convert.ToDecimal(read[3].ToString())
+                    };
+                    listaRecibos.Add(objetoRecibo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaRecibos;
+        }
+
+        public List<Recibo> findAllRecibosPeconint(int id)
+        {
+            Console.Out.Write(id);
+            List<Recibo> listaRecibos = new List<Recibo>();
+            List<int> listaid = new List<int>();
+            try
+            {
+                comando = new SqlCommand("spObtenerRecibosdePropiedadConInteres", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Recibo objetoRecibo = new Recibo
+                    {
+                        IdRecibo = Convert.ToInt32(read[0].ToString()),
+                        FechaEm = read[1].ToString(),
+                        NombreCC = read[2].ToString(),
+                        Monto = Convert.ToDecimal(read[3].ToString()),
+                        MontoI = Convert.ToDecimal(read[4].ToString())
                     };
                     listaRecibos.Add(objetoRecibo);
                 }

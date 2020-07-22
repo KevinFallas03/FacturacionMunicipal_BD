@@ -15,9 +15,11 @@ namespace model.entity
         private int idCCobro;
         private string nombreCC;
         private decimal monto;
+        private decimal montoi;
         private Boolean estado;
         private string fechaEm;
         private string fechaMx;
+
 
         //Constructores
         public Recibo() { } // mapeo
@@ -49,6 +51,7 @@ namespace model.entity
         public int IdCCobro { get => idCCobro; set => idCCobro = value; }
         public string NombreCC { get => nombreCC; set => nombreCC = value; }
         public decimal Monto { get => monto; set => monto = value; }
+        public decimal MontoI { get => montoi; set => montoi = value; }
         public Boolean Estado { get => estado; set => estado = value; }
         public string FechaEm { get => fechaEm; set => fechaEm = value; }
         public string FechaMx { get => fechaMx; set => fechaMx = value; }
