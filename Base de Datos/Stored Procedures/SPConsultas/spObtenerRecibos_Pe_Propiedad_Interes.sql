@@ -54,7 +54,7 @@ as
 			END
 			SELECT ID, FechaEmision, Nombre, Monto, Montointeres
 			FROM @result AS r
-			ORDER BY r.FechaEmision DESC
+			ORDER BY r.FechaEmision ASC
 			COMMIT
 		END TRY
 		BEGIN CATCH
