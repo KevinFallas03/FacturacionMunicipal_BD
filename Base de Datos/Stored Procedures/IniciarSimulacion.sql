@@ -12,6 +12,7 @@ CREATE OR ALTER PROCEDURE [dbo].[IniciarSimulacion]
 AS
 BEGIN
 	EXEC ReiniciarTablas
+	EXEC spCargarConfiguracion
 	EXEC spCargarDatos
 	EXEC spCargarDatosAdmin
 	EXEC spCargarDatosCC
