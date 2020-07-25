@@ -16,22 +16,25 @@ as
 			SET XACT_ABORT ON
 
 			DECLARE 
-			@min int, 
-			@max int, 
-			@monto money, 
-			@montointeres money, 
-			@tasainteres float, 
-			@fechaMax date, 
-			@fechaOperacion date
+				@min int, 
+				@max int, 
+				@monto money, 
+				@montointeres money, 
+				@tasainteres float, 
+				@fechaMax date, 
+				@fechaOperacion date
 
 			DECLARE @result table(
-			ID int, 
-			FechaEmision date, 
-			Nombre varchar(100), 
-			Monto money, 
-			Montointeres money)
+				ID int, 
+				FechaEmision date, 
+				Nombre varchar(100), 
+				Monto money, 
+				Montointeres money
+			)
 
-			SELECT @min = MIN(ID), @max = Max(ID) FROM Recibo AS R WHERE R.Estado=0 AND @id=R.IdPropiedad
+			SELECT @min = MIN(ID), @max = Max(ID) 
+			FROM Recibo AS R 
+			WHERE R.Estado=0 AND @id=R.IdPropiedad
 
 			BEGIN TRANSACTION
 			WHILE (@min<=@max)
