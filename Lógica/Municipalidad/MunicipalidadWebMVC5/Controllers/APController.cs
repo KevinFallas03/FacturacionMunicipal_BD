@@ -48,7 +48,6 @@ namespace MunicipalidadWebMVC5.Controllers
             {
                 total += Convert.ToDouble(obj.Monto + obj.MontoI);
             }
-            Math.Pow(0, 10);
             cuota = total * ((tasa * Math.Pow(1 + tasa, meses)) / (Math.Pow(1 + tasa, meses) - 1));
             TempData["total"] = total;
             TempData["cuota"] = cuota;

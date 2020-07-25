@@ -4,26 +4,28 @@
 }
 
 <h2>Recibos Pendientes</h2>
-<div class="container-fluid">
-    <table class="table">
-        <tr class="btn-success">
-            <th></th>
-            <th>ID Recibo</th>
-            <th>Fecha</th>
-            <th>Concepto de Cobro</th>
-            <th>Seleccionar</th>
-        </tr>
-        @foreach (var objetoRecibo in Model)
-        {
-        <tr>
-            <td><a class="btn btn-info" href="~/Recibo/ReciboPendiente/@objetoRecibo.IdRecibo">Ver</a></td>
-            <td>@objetoRecibo.IdRecibo</td>
-            <td>@objetoRecibo.FechaEm</td>
-            <td>@objetoRecibo.NombreCC</td>
-
-            <td><input type="checkbox" name="IdRecibo[@objetoRecibo.IdRecibo]" value="@objetoRecibo.IdRecibo"/> </td>
-        </tr>
-        }
-    </table>
-    <button type="button" class="fa-cc-visa" onclick="">Pagar</button>
-</div>
+@using (Html.BeginForm("Selected", "Recibo", FormMethod.Post))
+{
+    <div class="container-fluid">
+        <table class="table">
+            <tr class="btn-success">
+                <th></th>
+                <th>ID Recibo</th>
+                <th>Fecha</th>
+                <th>Concepto de Cobro</th>
+                <th>Seleccionar</th>
+            </tr>
+            @foreach (var objetoRecibo in Model)
+            {
+                <tr>
+                    <td><a class="btn btn-info" href="~/Recibo/ReciboPendiente/@objetoRecibo.IdRecibo">Ver</a></td>
+                    <td>@objetoRecibo.IdRecibo</td>
+                    <td>@objetoRecibo.FechaEm</td>
+                    <td>@objetoRecibo.NombreCC</td>
+                    <td><input type="checkbox" name="ids" value="@objetoRecibo.IdRecibo" /> </td>
+                </tr>
+            }
+        </table>
+        <button type="submit" class="btn btn-primary" onclick="">Pagar</button>
+    </div>
+}
