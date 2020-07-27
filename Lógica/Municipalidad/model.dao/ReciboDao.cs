@@ -128,41 +128,60 @@ namespace model.dao
             return hayRegistros;
         }
 
-    public List<Recibo> findAllComprobantes(int id)
-    {
-        Console.Out.Write(id);
-        List<Recibo> listaRecibos = new List<Recibo>();
-        List<int> listaid = new List<int>();
-        try
+        public List<Recibo> findAllComprobantes(int id)
         {
-            comando = new SqlCommand("spObtenerComprobantesPedePropiedad", objConexion.getConexion());
-            comando.CommandType = CommandType.StoredProcedure;
-            comando.Parameters.AddWithValue("@id", id);
-            objConexion.getConexion().Open();
-            SqlDataReader read = comando.ExecuteReader();
-            while (read.Read())
+            Console.Out.Write(id);
+            List<Recibo> listaRecibos = new List<Recibo>();
+            List<int> listaid = new List<int>();
+            try
             {
-                Recibo objetoRecibo = new Recibo
+                comando = new SqlCommand("spObtenerComprobantesPedePropiedad", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@id", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
                 {
-                    IdRecibo = Convert.ToInt32(read[0].ToString()),
-                    FechaEm = read[1].ToString(),
-                    Monto = Convert.ToDecimal(read[2].ToString()),
-                };
-                listaRecibos.Add(objetoRecibo);
+                    Recibo objetoRecibo = new Recibo
+                    {
+                        IdRecibo = Convert.ToInt32(read[0].ToString()),
+                        FechaEm = read[1].ToString(),
+                        Monto = Convert.ToDecimal(read[2].ToString()),
+                    };
+                    listaRecibos.Add(objetoRecibo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaRecibos;
+
+        }
+        public void pagaReciboUsuario(string pJsonRecibos)
+        {
+            try
+            {
+                comando = new SqlCommand("spProcesarPagosUsuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@jsonRecibos", pJsonRecibos);  
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
             }
         }
-        catch (Exception)
-        {
-            throw;
-        }
-        finally
-        {
-            objConexion.getConexion().Close();
-            objConexion.cerrarConexion();
-        }
-        return listaRecibos;
-
     }
-}
-
 }

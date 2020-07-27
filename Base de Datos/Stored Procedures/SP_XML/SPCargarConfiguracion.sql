@@ -25,7 +25,7 @@ BEGIN
 				INSERT INTO ValoresConfiguracion(ID, IdTipos, Nombre, Valor, InsertAt, UpdateAt)
 				VALUES(2, 1, 'Nombre Gerente Firma Contratos', 'Pedro Perez Rojas', '2017-10-01 12:05', '2017-10-01 12:05')
 				INSERT INTO ValoresConfiguracion(ID, IdTipos, Nombre, Valor, InsertAt, UpdateAt)
-				VALUES(3, 1, 'ruta para salvado de documentos', 'c:\documentos\contratos', '2017-10-01 12:05', '2017-10-01 12:05')
+				VALUES(3, 1, 'Ruta para salvado de documentos', 'C:\documentos\contratos', '2017-10-01 12:05', '2017-10-01 12:05')
 			COMMIT
 		END TRY
 		BEGIN CATCH

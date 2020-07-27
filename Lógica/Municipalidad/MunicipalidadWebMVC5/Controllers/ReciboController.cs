@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using model.entity;
 using model.dao;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace MunicipalidadWebMVC5.Controllers
 {
@@ -52,6 +54,7 @@ namespace MunicipalidadWebMVC5.Controllers
 
         public ActionResult Selected(string[] ids)
         {
+            ReciboDao idRecibo = new ReciboDao();
             if (ids == null || ids.Length == 0)
             {
                 //throw error
@@ -60,8 +63,28 @@ namespace MunicipalidadWebMVC5.Controllers
             else
             {
                 Console.WriteLine(ids[0]);
+                List<string> jsonIds = new List<string>();
+                jsonIds.Add("[");
+                for(int i = 0; i<ids.Length; i++)
+                {
+                    Console.WriteLine(id);
+                    
+                    jsonIds.Add("{\"id\":");
+                    //jsonIds.Add("\"");
+                    jsonIds.Add(ids[i]);
+                    jsonIds.Add("}");
+                    if(i < ids.Length - 1)
+                        jsonIds.Add(",");
+
+                }
+                jsonIds.Add("]");
+                string jsonIdsToReturn = string.Join(" ", jsonIds);
+                    
+                idRecibo.pagaReciboUsuario(jsonIdsToReturn);
+                
             }
- /*
+            
+            /*
             //bind the task collection into list
             List<int> TaskIds = ids.Select(x => Int32.Parse(x)).ToList();
             for (var i = 0; i<TaskIds.Count(); i++)
@@ -72,8 +95,9 @@ namespace MunicipalidadWebMVC5.Controllers
                 //call save changes action otherwise the table will not be updated
                 db.SaveChanges();
             }
-            //redirect to index view once record is deleted*/
-            return RedirectToAction("RecibosPendientes/"+id);
+            //redirect to index view once record is deleted
+            */
+            return RedirectToAction("Inicio");
         }
     }
 }
