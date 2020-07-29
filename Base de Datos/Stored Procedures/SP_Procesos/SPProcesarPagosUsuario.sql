@@ -18,13 +18,22 @@ AS
 			
 			
 			--Variables para actualizaciones e inserts
-			DECLARE @idMenor INT, @idMayor INT, @FechaMax DATE, @fechaOperacion DATE, @montoMoratorio MONEY, @inRecibo  INT,
-					@idComprobante INT, @tasaMoratoria FLOAT, @montoRecibo MONEY, @tipoCC int, @idPropiedad INT
+			DECLARE @idMenor INT, 
+					@idMayor INT, 
+					@FechaMax DATE, 
+					@fechaOperacion DATE, 
+					@montoMoratorio MONEY, 
+					@inRecibo  INT,
+					@idComprobante INT, 
+					@tasaMoratoria FLOAT, 
+					@montoRecibo MONEY, 
+					@tipoCC int, 
+					@idPropiedad INT;
 			
 			DECLARE @IdRecibosPagar TABLE
 			(
 				ID INT PRIMARY KEY
-			)
+			);
 
 			Declare @PagosHoy TABLE
 			(
@@ -32,22 +41,23 @@ AS
 				NumFinca INT,
 				TipoRecibo INT,
 				Fecha DATE
-			)
+			);
 
 			INSERT INTO @IdRecibosPagar(ID)
 			SELECT id
 			FROM OPENJSON (@jsonRecibos)
 			WITH(
 				id int '$.id'
-			)
-
-			
+			);
 
 			INSERT INTO @PagosHoy(sec, NumFinca, TipoRecibo, Fecha)
 			SELECT RP.ID, P.NumFinca, R.IdCCobro, CONVERT(DATE, GETDATE())
 			FROM Recibo R
 			INNER JOIN Propiedad P ON P.ID=R.IdPropiedad
-			INNER JOIN @IdRecibosPagar RP ON RP.ID = R.ID
+			INNER JOIN @IdRecibosPagar RP ON RP.ID = R.ID;
+
+
+
 			/* PRUEBAS ELIMINAR LUEGO LAS TABLAS
 			INSERT INTO dbo.PruebaIDRecibosPagar
 			SELECT * FROM @IdRecibosPagar

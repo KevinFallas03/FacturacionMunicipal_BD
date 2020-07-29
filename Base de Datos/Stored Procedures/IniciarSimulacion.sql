@@ -11,18 +11,14 @@ GO
 CREATE OR ALTER PROCEDURE [dbo].[IniciarSimulacion]
 AS
 BEGIN
-	IF OBJECT_ID('dbo.ValoresConfiguracion', 'U') IS NULL AND OBJECT_ID('dbo.Tipos', 'U') IS NULL
-	BEGIN	
-		EXEC spCargarConfiguracion
-	END
 	EXEC ReiniciarTablas
-	
+	EXEC spCargarConfiguracion
 	EXEC spCargarDatos
 	EXEC spCargarDatosAdmin
 	EXEC spCargarDatosCC
 	EXEC Simulacion
 END
 
-GO
+
 
 EXEC IniciarSimulacion
