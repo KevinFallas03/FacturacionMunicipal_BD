@@ -49,6 +49,11 @@ namespace MunicipalidadWebMVC5
                 defaults: new { controller = "Propietario", action = "PropiedadesPorValor", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+                name: "AP",
+                url: "ap",
+                defaults: new { controller = "AP", action = "Inicio", id = UrlParameter.Optional }
+            );
         }
     }
 }

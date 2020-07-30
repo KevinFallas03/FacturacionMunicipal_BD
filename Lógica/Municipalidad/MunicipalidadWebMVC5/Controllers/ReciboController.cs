@@ -75,7 +75,6 @@ namespace MunicipalidadWebMVC5.Controllers
                     jsonIds.Add("}");
                     if(i < ids.Length - 1)
                         jsonIds.Add(",");
-
                 }
                 jsonIds.Add("]");
                 string jsonIdsToReturn = string.Join(" ", jsonIds);
@@ -83,20 +82,6 @@ namespace MunicipalidadWebMVC5.Controllers
                 idRecibo.pagaReciboUsuario(jsonIdsToReturn);
                 
             }
-            
-            /*
-            //bind the task collection into list
-            List<int> TaskIds = ids.Select(x => Int32.Parse(x)).ToList();
-            for (var i = 0; i<TaskIds.Count(); i++)
-            {
-                var todo = db.ToDoes.Find(TaskIds[i]);
-                //remove the record from the database
-                db.ToDoes.Remove(todo);
-                //call save changes action otherwise the table will not be updated
-                db.SaveChanges();
-            }
-            //redirect to index view once record is deleted
-            */
             return RedirectToAction("Inicio");
         }
     }

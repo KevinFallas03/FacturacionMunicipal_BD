@@ -183,5 +183,59 @@ namespace model.dao
                 objConexion.cerrarConexion();
             }
         }
+
+        public double findTasa()
+        {
+            bool hayRegistros;
+            double result = 0;
+            try
+            {
+                comando = new SqlCommand("spObtenerporcentajeAP", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    result = Convert.ToDouble(read[0].ToString());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return result;
+        }
+
+        public void createAP(int idP, double montoO, double plazo, double cuota, string fecha, double tasaA)
+        {
+            try
+            {
+                comando = new SqlCommand("spCreateAP", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@IdP", idP);
+                comando.Parameters.AddWithValue("@MontoO", montoO);
+                comando.Parameters.AddWithValue("@Plazo", plazo);
+                comando.Parameters.AddWithValue("@Cuota", cuota);
+                comando.Parameters.AddWithValue("@Fecha", fecha);
+                comando.Parameters.AddWithValue("@TasaA", tasaA);
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using model.dao;
+using model.entity;
+using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using model.dao;
-using model.entity;
 
 namespace MunicipalidadWebMVC5.Controllers
 {
@@ -10,6 +10,11 @@ namespace MunicipalidadWebMVC5.Controllers
     {
         private UsuarioDao objetoUsuario;
         private ReciboDao objetoRecibo;
+        private static int idP;
+        private static double montoO;
+        private static double plazo;
+        private static double cuota;
+        private static double tasaA;
         private static List<Recibo> listaRec;
 
         public APController()
@@ -33,6 +38,7 @@ namespace MunicipalidadWebMVC5.Controllers
 
         public ActionResult RecibosPendientes(int ID)
         {
+            idP = ID;
             listaRec = objetoRecibo.findAllRecibosPeconint(ID);
             return View(listaRec);
         }
@@ -40,19 +46,29 @@ namespace MunicipalidadWebMVC5.Controllers
         [HttpGet]
         public ActionResult Pago(int mes)
         {
-            double total = 0;
-            double cuota = 0;
-            double tasa = 0.1;
-            double meses = Convert.ToDouble(mes);
+            montoO = 0;
+            cuota = 0;
+            tasaA = objetoRecibo.findTasa()/100;
+            plazo = Convert.ToDouble(mes);
             foreach (var obj in listaRec)
             {
-                total += Convert.ToDouble(obj.Monto + obj.MontoI);
+                montoO += Convert.ToDouble(obj.Monto + obj.MontoI);
             }
-            cuota = total * ((tasa * Math.Pow(1 + tasa, meses)) / (Math.Pow(1 + tasa, meses) - 1));
-            TempData["total"] = total;
+            cuota = montoO * ((tasaA * Math.Pow(1 + tasaA, plazo)) / (Math.Pow(1 + tasaA, plazo) - 1));
+            TempData["total"] = montoO;
             TempData["cuota"] = cuota;
-            TempData["meses"] = meses;
+            TempData["meses"] = plazo;
             return View(listaRec);
+        }
+
+        [HttpPost]
+        public ActionResult Pago()
+        {
+            DateTime hoy = DateTime.Today;
+            string fecha = hoy.ToString("yyyy-MM-dd");
+            Console.WriteLine(fecha);
+            objetoRecibo.createAP(idP, montoO, plazo, cuota, fecha, tasaA*100);
+            return RedirectToAction("Inicio", "AP");
         }
 
         public ActionResult PagoR()
@@ -60,5 +76,6 @@ namespace MunicipalidadWebMVC5.Controllers
             string meses = Request["meses"];
             return RedirectToAction("Pago", "AP", new { @mes=  meses });
         }
+
     }
 }

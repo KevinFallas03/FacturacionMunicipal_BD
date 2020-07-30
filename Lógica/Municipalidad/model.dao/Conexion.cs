@@ -15,8 +15,8 @@ namespace model.dao
 
         private Conexion()
         {
-            //conexion = new SqlConnection("Data Source=LAPTOP-NFUCADGT;Initial Catalog=FacturacionMunicipal;Integrated Security=True");
-            conexion = new SqlConnection("Data Source=DESKTOP-T525H9P;Initial Catalog=FacturacionMunicipal;Integrated Security=True");
+            conexion = new SqlConnection("Data Source=LAPTOP-NFUCADGT;Initial Catalog=FacturacionMunicipal;Integrated Security=True");
+            //conexion = new SqlConnection("Data Source=DESKTOP-T525H9P;Initial Catalog=FacturacionMunicipal;Integrated Security=True");
         }
 
         public static Conexion saberEstado()
