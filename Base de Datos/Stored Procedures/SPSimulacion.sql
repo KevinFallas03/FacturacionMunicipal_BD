@@ -98,6 +98,9 @@ BEGIN
 	--Tabla variable para almacenar los pagos dia por dia
 	Declare @PagosHoy PagosHoyType
 
+	--Tabla variable para almacenar los ap dia por dia
+	Declare @APHoy APHoyType
+
 	--Tabla para los movimientos de consumo de agua
 	Declare @MovConsumo MovConsumoType
 
@@ -116,7 +119,7 @@ BEGIN
 
 	BEGIN TRY
 		SELECT @DocumentoXML = DXML
-		FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
+		FROM OPENROWSET (Bulk 'C:\Users\Johel Mora\Desktop\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
 		insert @FechasAProcesar (fecha)
 		select f.value('@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia') AS t(f);
@@ -299,6 +302,29 @@ BEGIN
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Pago') AS t(c)
 		EXEC spProcesaPagos @PagosHoy
 		
+		--CREACION DE AP
+		DELETE @APHoy
+		INSERT INTO @APHoy(NumFinca,Plazo,Fecha)
+		SELECT c.value('@NumFinca', 'INT')
+			, c.value('@Plazo', 'INT')
+			, @FechaOperacion AS FechaOperacion
+		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/AP') AS t(c)
+		DECLARE @minid int, @maxid int
+		SELECT @minid = MIN(sec), @maxid = MAX(sec) FROM @APHoy
+		WHILE @minid<=@maxid
+		BEGIN
+			DECLARE @pidP int, @pmontoO money, @pplazo int, @pcuota money, @pfecha date, @ptasaA decimal
+			SELECT @pidP = P.ID, @pplazo = A.Plazo, @pfecha = A.Fecha --Obtener ID de Propiedad, Plazo y Fecha
+			FROM Propiedad AS P
+			INNER JOIN @APHoy AS A ON A.NumFinca = P.NumFinca
+			WHERE @minid = A.sec
+			SELECT @pmontoO = SUM(Monto) FROM Recibo WHERE IdPropiedad = @pidP AND Estado = 0
+			SELECT @ptasaA = CAST (Valor AS decimal) FROM ValoresConfiguracion WHERE ID = 1
+			SELECT @pcuota = @pmontoO * (POWER(1 + @ptasaA/100, @pplazo)) / (POWER(1 + @ptasaA/100, @pplazo) - 1)/10
+			EXEC spCreateAP @IdP = @pidP, @MontoO = @pmontoO, @Plazo = @pplazo, @Cuota = @pcuota, @Fecha = @pfecha, @TasaA = @ptasaA
+			SET @minid += 1
+		END
+
 		--procesa los movimientos en los consumos de las propiedades
 		DELETE @MovConsumo
 		INSERT INTO @MovConsumo(NumFinca, M3, TipoMov, Descripcion,Fecha)
@@ -313,19 +339,22 @@ BEGIN
 		--Realiza las cortas de agua
 		EXEC spCortaAgua @FechaActual = @FechaOperacion
 	
-		--Relaiza las reconexiones de agua
+		--Reliza las reconexiones de agua
 		EXEC spReconexionAgua @FechaActual = @FechaOperacion
 
 		--Genera los recibos
 		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
+
+		--Genera los recibos AP
+		EXEC spGeneraReciboAP @FechaActual = @FechaOperacion
 		
 
 		set @Lo1 = @Lo1 + 1
 		
 	end
 end
-
+/*
 exec ReiniciarTablas
 
-exec IniciarSimulacion
+exec IniciarSimulacion*/
 

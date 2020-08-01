@@ -15,13 +15,13 @@ BEGIN
 		SET XACT_ABORT ON
 			DECLARE @IdC int,
 					@idA int,
-					@interesm decimal,
+					@interesm decimal (10, 2),
 					@amortizacion money,
 					@fechaend date
-			SET @interesm = CAST(@MontoO AS decimal) * (@TasaA/100) /12
+			SET @interesm = @MontoO*(@TasaA/100/12)
 			SET @amortizacion = @Cuota - @interesm
 			SET @fechaend =  DATEADD(MONTH, @Plazo, @Fecha)
-
+			
 			BEGIN TRAN
 			
 			--Se crea el comprobante
