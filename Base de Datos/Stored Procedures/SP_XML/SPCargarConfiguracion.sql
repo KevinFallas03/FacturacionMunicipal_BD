@@ -21,7 +21,7 @@ BEGIN
 				VALUES(5, 'decimal')
 
 				INSERT INTO ValoresConfiguracion(ID, IdTipos, Nombre, Valor, InsertAt, UpdateAt)
-				VALUES(1, 5, 'TasaInteres AP', '12,5', '2017-10-01 12:05', '2017-10-01 12:05')
+				VALUES(1, 5, 'TasaInteres AP', '10', '2017-10-01 12:05', '2017-10-01 12:05')
 				INSERT INTO ValoresConfiguracion(ID, IdTipos, Nombre, Valor, InsertAt, UpdateAt)
 				VALUES(2, 1, 'Nombre Gerente Firma Contratos', 'Pedro Perez Rojas', '2017-10-01 12:05', '2017-10-01 12:05')
 				INSERT INTO ValoresConfiguracion(ID, IdTipos, Nombre, Valor, InsertAt, UpdateAt)

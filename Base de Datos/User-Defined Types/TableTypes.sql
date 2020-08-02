@@ -22,6 +22,15 @@ CREATE TYPE PagosHoyType AS TABLE
 	Fecha DATE
 )
 
+
+CREATE TYPE APHoyType AS TABLE
+(
+	sec INT IDENTITY(1,1),
+	NumFinca INT,
+	Plazo INT,
+	Fecha DATE
+)
+
 IF type_id('[dbo].[MovConsumoType]') IS NOT NULL
         DROP TYPE [dbo].[MovConsumoType]; 
 

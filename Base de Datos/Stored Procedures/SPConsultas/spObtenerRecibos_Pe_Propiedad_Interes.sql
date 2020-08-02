@@ -7,7 +7,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE or ALTER PROC [dbo].spObtenerRecibosdePropiedadConInteres 
-@id int 
+@id int
 as 	
 	BEGIN 
 		BEGIN TRY
@@ -22,7 +22,7 @@ as
 				@montointeres money, 
 				@tasainteres float, 
 				@fechaMax date, 
-				@fechaOperacion date
+				@fechaOperacion date		
 
 			DECLARE @result table(
 				ID int, 
@@ -46,15 +46,27 @@ as
 				SET @fechaOperacion = GETDATE()
 				SET @FechaMax = (SELECT FechaMaximaPago FROM Recibo R WHERE @min = R.ID)
 				SET @montointeres =  (@monto*@tasainteres/365)*ABS(DATEDIFF(day, @FechaMax, @fechaOperacion))
-		
+
+				IF @FechaMax < @fechaOperacion
+					BEGIN
+						--CREA UN RECIBO TIPO MORATORIO Y LO PAGA
+						INSERT INTO [dbo].[Recibo](IdPropiedad,IdCCobro,Monto,Estado,FechaEmision,FechaMaximaPago)
+						SELECT @id,  CC.ID, @montointeres, 1, @fechaOperacion, DATEADD(day, CC.QDiasVencimiento, @fechaOperacion)
+						FROM [dbo].[CCobro] AS CC
+						WHERE CC.ID = 11
+					END
+
 				INSERT INTO @result
 				SELECT R.ID, R.FechaEmision, CC.Nombre, R.Monto, @montointeres
 				FROM Recibo AS R
 				INNER JOIN CCobro AS CC ON R.IdCCobro = CC.ID
 				WHERE R.Estado=0 AND @id=R.IdPropiedad and  @min = R.ID
 
+				
+
 				SELECT @min = MIN(ID) FROM Recibo AS R WHERE R.Estado=0 AND @id=R.IdPropiedad and ID>@min
 			END
+			
 			SELECT ID, FechaEmision, Nombre, Monto, Montointeres
 			FROM @result AS r
 			ORDER BY r.FechaEmision ASC
