@@ -313,11 +313,20 @@ BEGIN
 		SELECT @minid = MIN(sec), @maxid = MAX(sec) FROM @APHoy
 		WHILE @minid<=@maxid
 		BEGIN
-			DECLARE @pidP int, @pmontoO money, @pplazo int, @pcuota money, @pfecha date, @ptasaA decimal
+			DECLARE @pidP int, @pmontoO money, @pplazo int, @pcuota money, @pfecha date, @ptasaA decimal, @montoMoratorio money, @tasaMoratoria FLOAT
 			SELECT @pidP = P.ID, @pplazo = A.Plazo, @pfecha = A.Fecha --Obtener ID de Propiedad, Plazo y Fecha
 			FROM Propiedad AS P
 			INNER JOIN @APHoy AS A ON A.NumFinca = P.NumFinca
 			WHERE @minid = A.sec
+
+			--Creación de Recibos Moratorios
+			INSERT INTO Recibo(IdCCobro,Monto,Estado,IdPropiedad,FechaEmision,FechaMaximaPago) 
+			SELECT 11, R.Monto*CC.TasaInteresMoratorio/365*ABS(DATEDIFF(DAY, R.FechaMaximaPago, @FechaOperacion)), 
+			0, @pidP, @FechaOperacion, DATEADD(DAY,CC.QDiasVencimiento,@fechaOperacion)
+			FROM CCobro AS CC
+			INNER JOIN Recibo AS R ON R.IdCCobro = CC.ID
+			WHERE Estado = 0 and IdPropiedad = 8 and R.FechaMaximaPago<@fechaOperacion
+
 			SELECT @pmontoO = SUM(Monto) FROM Recibo WHERE IdPropiedad = @pidP AND Estado = 0
 			SELECT @ptasaA = CAST (Valor AS decimal) FROM ValoresConfiguracion WHERE ID = 1
 			SELECT @pcuota = @pmontoO * (POWER(1 + @ptasaA/100, @pplazo)) / (POWER(1 + @ptasaA/100, @pplazo) - 1)/10
