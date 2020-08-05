@@ -200,6 +200,7 @@
     <UsuarioVersusPropiedad NumFinca="1176180" nombreUsuario="EMadrigal"/>
     <UsuarioVersusPropiedad NumFinca="4158692" nombreUsuario="EMadrigal"/>
     <UsuarioVersusPropiedad NumFinca="3107084" nombreUsuario="EMadrigal"/>
+    <UsuarioVersusPropiedad NumFinca="2346431" nombreUsuario="EMadrigal"/>
     <ConceptoCobroVersusPropiedad idcobro="1" NumFinca="1176180"/>
     <ConceptoCobroVersusPropiedad idcobro="2" NumFinca="1176180"/>
     <ConceptoCobroVersusPropiedad idcobro="4" NumFinca="1176180"/>
@@ -1946,7 +1947,7 @@
     <Pago TipoRecibo="5" NumFinca="3298240"/>
     <Pago TipoRecibo="5" NumFinca="6536368"/>
     <Pago TipoRecibo="5" NumFinca="2995814"/>
-    <AP NumFinca="2346431" Plazo="6"/>
+    
     <AP NumFinca="2132441" Plazo="12"/>
   </OperacionDia>
   <OperacionDia fecha="2020-04-06">
@@ -4888,7 +4889,7 @@
     <TransConsumo id="1" LecturaM3="1270" descripcion="Cobro Mensual" NumFinca="1337841"/>
     <TransConsumo id="1" LecturaM3="797" descripcion="Cobro Mensual" NumFinca="5603734"/>
     <TransConsumo id="1" LecturaM3="719" descripcion="Cobro Mensual" NumFinca="2675651"/>
-    <Pago TipoRecibo="12" NumFinca="2346431"/>
+    
     <Pago TipoRecibo="12" NumFinca="2132441"/>
   </OperacionDia>
   <OperacionDia fecha="2020-05-25">
