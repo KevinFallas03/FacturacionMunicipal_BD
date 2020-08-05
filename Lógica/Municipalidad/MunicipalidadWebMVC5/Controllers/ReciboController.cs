@@ -52,13 +52,14 @@ namespace MunicipalidadWebMVC5.Controllers
             return View(objusuario);
         }
 
-        public ActionResult Selected(string[] ids)
+        public ActionResult ConfirmarRecibosPagados(string[] ids)
         {
-            ReciboDao idRecibo = new ReciboDao();
+            List<Recibo> listaReciboPorConfirmar;
             if (ids == null || ids.Length == 0)
             {
                 //throw error
                 ModelState.AddModelError("", "No item selected to delete");
+                return View();
             }
             else
             {
@@ -79,10 +80,10 @@ namespace MunicipalidadWebMVC5.Controllers
                 jsonIds.Add("]");
                 string jsonIdsToReturn = string.Join(" ", jsonIds);
                     
-                idRecibo.pagaReciboUsuario(jsonIdsToReturn);
-                
+                listaReciboPorConfirmar = objetoRecibo.procesaRecibosPorPagar(jsonIdsToReturn);
+                return View(listaReciboPorConfirmar);
             }
-            return RedirectToAction("Inicio");
+            
         }
     }
 }

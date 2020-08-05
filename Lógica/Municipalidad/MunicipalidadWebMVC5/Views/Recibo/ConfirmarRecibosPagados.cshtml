@@ -1,0 +1,29 @@
+﻿@model List<model.entity.Recibo>
+@{
+    ViewBag.Title = "ConfirmarRecibosPagados";
+}
+
+<h2>ConfirmarRecibosPagados</h2>
+
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-success">
+            <th></th>
+            <th>ID Recibo</th>
+            <th>Concepto de Cobro</th>
+            <th>Monto</th>
+
+        </tr>
+        @foreach (var objetoRecibo in Model)
+        {
+            <tr>
+                <td><a class="btn btn-info" href="~/Recibo/ReciboPendiente/@objetoRecibo.IdRecibo">Ver</a></td>
+                <td>@objetoRecibo.IdRecibo</td>
+                <td>@objetoRecibo.NombreCC</td>
+                <td>@objetoRecibo.Monto</td>
+            </tr>
+        }
+    </table>
+    <button type="button" class="danger" onclick="">Cancelar</button>
+    <button type="button" class="success" onclick="">Confirmar Pago</button>
+</div>

@@ -163,15 +163,28 @@ namespace model.dao
             return listaRecibos;
 
         }
-        public void pagaReciboUsuario(string pJsonRecibos)
+        public List<Recibo> procesaRecibosPorPagar(string pJsonRecibos)
         {
+           
+            List<Recibo> listaRecibosPendientes = new List<Recibo>();
+            List<int> listaid = new List<int>();
             try
             {
                 comando = new SqlCommand("spProcesarPagosUsuario", objConexion.getConexion());
                 comando.CommandType = CommandType.StoredProcedure;
-                comando.Parameters.AddWithValue("@jsonRecibos", pJsonRecibos);  
+                comando.Parameters.AddWithValue("@jsonRecibos", pJsonRecibos);
                 objConexion.getConexion().Open();
-                comando.ExecuteNonQuery();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Recibo objetoRecibo = new Recibo
+                    {
+                        IdRecibo = Convert.ToInt32(read[0].ToString()),
+                        NombreCC = read[1].ToString(),
+                        Monto = Convert.ToDecimal(read[2].ToString())
+                    };
+                    listaRecibosPendientes.Add(objetoRecibo);
+                }
             }
             catch (Exception)
             {
@@ -182,6 +195,13 @@ namespace model.dao
                 objConexion.getConexion().Close();
                 objConexion.cerrarConexion();
             }
+            return listaRecibosPendientes;
+            
+        }
+
+        public void confirmaciónPago()
+        {
+
         }
 
         public double findTasa()
@@ -211,6 +231,7 @@ namespace model.dao
             }
             return result;
         }
+
 
         public void createAP(int idP, double montoO, double plazo, double cuota, string fecha, double tasaA)
         {

@@ -189,6 +189,7 @@
     <Content Include="Views\AP\RecibosPendientes.cshtml" />
     <Content Include="Views\AP\Propiedades.cshtml" />
     <Content Include="Views\AP\Pago.cshtml" />
+    <Content Include="Views\Recibo\ConfirmarRecibosPagados.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
