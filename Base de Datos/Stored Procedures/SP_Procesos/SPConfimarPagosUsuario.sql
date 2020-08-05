@@ -12,8 +12,7 @@ CREATE PROC [dbo].[spConfirmarPagosUsuario]
 AS 
 BEGIN 
 	BEGIN TRY 
-	SET NOCOUNT ON 
-	SET XACT_ABORT ON  
+	 
 		DECLARE @montoComprobante MONEY
 		--GUARDA EL MONTO TOTAL
 		SET @montoComprobante = (	SELECT SUM(Monto) 

@@ -75,7 +75,7 @@ AS
 										INNER JOIN dbo.IdRecibosPorPagar idRP ON R.id = idRP.sec
 										WHERE idRP.sec = @idMenor);
 
-					--Se crean intereses moratorios para aquellos que se pasaron de la fecha
+					--SE CREAN RECIBOS MORATORIOS PARA AQUELLOS QUE SE EXCEDIERON DE LA FECHA
 					IF @FechaMaxPago < @FechaOperacion
 					BEGIN
 						--SACA LA TASA MORATORIA DEL RECIBO
@@ -94,7 +94,7 @@ AS
 						SELECT	@idPropiedad, 
 								CC.ID,
 								@montoMoratorio, 
-								0, --Estado pendiente
+								3, --Estado pendiente
 								@FechaOperacion, 
 								DATEADD(day, CC.QDiasVencimiento, @FechaOperacion)
 						FROM [dbo].[CCobro] AS CC
@@ -129,8 +129,11 @@ AS
 		END CATCH
 END
 
+
+/*
 DELETE FROM [FacturacionMunicipal].[dbo].[IdRecibosPorPagar]
 
 EXEC spProcesarPagosUsuario @jsonRecibos = '[{"id":1},{"id":7}]'
 
 EXEC IniciarSimulacion
+*/
