@@ -330,5 +330,36 @@ namespace model.dao
             }
             return listaRecibos;
         }
+
+        public bool findComprobante(Recibo objetoRecibo)
+        {
+            bool hayRegistros;
+            try
+            {
+                comando = new SqlCommand("spVerComprobante", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@ID", objetoRecibo.IdRecibo);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                hayRegistros = read.Read();
+                if (hayRegistros)
+                {
+                    objetoRecibo.IdRecibo = Convert.ToInt32(read[0].ToString());
+                    objetoRecibo.FechaEm = read[1].ToString();
+                    objetoRecibo.Monto = Convert.ToDecimal(read[2].ToString());
+                    objetoRecibo.Medio = read[3].ToString();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return hayRegistros;
+        }
     }
 }

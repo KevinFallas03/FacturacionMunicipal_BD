@@ -19,6 +19,7 @@ namespace model.entity
         private Boolean estado;
         private string fechaEm;
         private string fechaMx;
+        private string medio;
 
 
         //Constructores
@@ -55,5 +56,6 @@ namespace model.entity
         public Boolean Estado { get => estado; set => estado = value; }
         public string FechaEm { get => fechaEm; set => fechaEm = value; }
         public string FechaMx { get => fechaMx; set => fechaMx = value; }
+        public string Medio { get => medio; set => medio = value; }
     }
 }
