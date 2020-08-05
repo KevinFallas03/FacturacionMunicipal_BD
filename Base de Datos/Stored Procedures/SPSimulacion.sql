@@ -386,6 +386,6 @@ END
 
 
 exec ReiniciarTablas
-
 exec IniciarSimulacion
+
 

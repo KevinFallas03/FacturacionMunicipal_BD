@@ -24,6 +24,13 @@
             </tr>
         }
     </table>
-    <button type="button" class="danger" onclick="">Cancelar</button>
-    <button type="button" class="success" onclick="">Confirmar Pago</button>
+    
+    <form action="~/Recibo/CancelarPago" method="post">
+        <input class="btn btn-danger" type="submit" value="Cancelar" />
+    </form>
+    <form action="~/Recibo/ConfirmarPago" method="post">
+        <input class="btn btn-info" type="submit" value="Confirmar Pago" />
+    </form>
+
+
 </div>

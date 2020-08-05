@@ -37,35 +37,35 @@ as
 			WHERE R.Estado=0 AND @id=R.IdPropiedad
 
 			BEGIN TRANSACTION
-			WHILE (@min<=@max)
-			BEGIN
-				SET @monto = (SELECT Monto FROM Recibo WHERE @min = ID)
-				SET @tasainteres = (SELECT CC.TasaInteresMoratorio FROM CCobro AS CC
-									INNER JOIN Recibo AS R ON R.IdCCobro = CC.ID 
-									WHERE @min = R.ID)
-				SET @fechaOperacion = GETDATE()
-				SET @FechaMax = (SELECT FechaMaximaPago FROM Recibo R WHERE @min = R.ID)
-				SET @montointeres =  (@monto*@tasainteres/365)*ABS(DATEDIFF(day, @FechaMax, @fechaOperacion))
+				WHILE (@min<=@max)
+				BEGIN
+					SET @monto = (SELECT Monto FROM Recibo WHERE @min = ID)
+					SET @tasainteres = (SELECT CC.TasaInteresMoratorio FROM CCobro AS CC
+										INNER JOIN Recibo AS R ON R.IdCCobro = CC.ID 
+										WHERE @min = R.ID)
+					SET @fechaOperacion = GETDATE()
+					SET @FechaMax = (SELECT FechaMaximaPago FROM Recibo R WHERE @min = R.ID)
+					SET @montointeres =  (@monto*@tasainteres/365)*ABS(DATEDIFF(day, @FechaMax, @fechaOperacion))
 
-				IF @FechaMax < @fechaOperacion
-					BEGIN
-						--CREA UN RECIBO TIPO MORATORIO Y LO PAGA
-						INSERT INTO [dbo].[Recibo](IdPropiedad,IdCCobro,Monto,Estado,FechaEmision,FechaMaximaPago)
-						SELECT @id,  CC.ID, @montointeres, 1, @fechaOperacion, DATEADD(day, CC.QDiasVencimiento, @fechaOperacion)
-						FROM [dbo].[CCobro] AS CC
-						WHERE CC.ID = 11
-					END
+					IF @FechaMax < @fechaOperacion
+						BEGIN
+							--CREA UN RECIBO TIPO MORATORIO Y LO PAGA
+							INSERT INTO [dbo].[Recibo](IdPropiedad,IdCCobro,Monto,Estado,FechaEmision,FechaMaximaPago)
+							SELECT @id,  CC.ID, @montointeres, 1, @fechaOperacion, DATEADD(day, CC.QDiasVencimiento, @fechaOperacion)
+							FROM [dbo].[CCobro] AS CC
+							WHERE CC.ID = 11
+						END
 
-				INSERT INTO @result
-				SELECT R.ID, R.FechaEmision, CC.Nombre, R.Monto, @montointeres
-				FROM Recibo AS R
-				INNER JOIN CCobro AS CC ON R.IdCCobro = CC.ID
-				WHERE R.Estado=0 AND @id=R.IdPropiedad and  @min = R.ID
+					INSERT INTO @result
+					SELECT R.ID, R.FechaEmision, CC.Nombre, R.Monto, @montointeres
+					FROM Recibo AS R
+					INNER JOIN CCobro AS CC ON R.IdCCobro = CC.ID
+					WHERE R.Estado=0 AND @id=R.IdPropiedad and  @min = R.ID
 
-				
-
-				SELECT @min = MIN(ID) FROM Recibo AS R WHERE R.Estado=0 AND @id=R.IdPropiedad and ID>@min
-			END
+					SELECT @min = MIN(ID) 
+					FROM Recibo AS R 
+					WHERE R.Estado=0 AND @id=R.IdPropiedad AND ID>@min
+				END
 			
 			SELECT ID, FechaEmision, Nombre, Monto, Montointeres
 			FROM @result AS r

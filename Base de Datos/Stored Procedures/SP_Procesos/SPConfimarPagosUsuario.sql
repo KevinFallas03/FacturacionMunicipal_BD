@@ -1,8 +1,8 @@
 USE [FacturacionMunicipal]
 GO
-IF OBJECT_ID('[dbo].[SP_completarPagoRecibos]') IS NOT NULL
+IF OBJECT_ID('[dbo].[spConfirmarPagosUsuario]') IS NOT NULL
 BEGIN 
-    DROP PROC [dbo].[SP_completarPagoRecibos]  
+    DROP PROC [dbo].[spConfirmarPagosUsuario]  
 END 
 SET ANSI_NULLS ON
 GO

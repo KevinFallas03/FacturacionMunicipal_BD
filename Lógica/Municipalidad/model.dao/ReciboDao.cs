@@ -199,9 +199,44 @@ namespace model.dao
             
         }
 
-        public void confirmaciónPago()
+        public void confirmarPago()
         {
+            try
+            {
+                comando = new SqlCommand("spConfirmarPagosUsuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+        }
 
+        public void cancelarPago() 
+        {
+            try
+            {
+                comando = new SqlCommand("spCancelarPagosUsuario", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                objConexion.getConexion().Open();
+                comando.ExecuteNonQuery();
+            }
+            catch
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
         }
 
         public double findTasa()

@@ -86,6 +86,21 @@ namespace MunicipalidadWebMVC5.Controllers
             
         }
 
+        
+        public ActionResult ConfirmarPago(int ID)
+        {
+            objetoRecibo.confirmarPago();
+            List<Recibo> lista = objetoRecibo.findAllRecibosPe(ID, 1);
+            return View(lista);
+        }
+    
+        public ActionResult CancelarPago(int ID)
+        {
+            objetoRecibo.cancelarPago();
+            List<Recibo> lista = objetoRecibo.findAllRecibosPe(ID, 0);
+            return View(lista);
+        }
+
         public ActionResult DetallesComprobante(int ID, string Fecha, string Medio, decimal Monto)
         {
             TempData["idc"] = ID;
