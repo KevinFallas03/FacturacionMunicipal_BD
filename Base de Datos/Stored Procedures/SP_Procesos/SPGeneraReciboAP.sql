@@ -5,9 +5,9 @@ CREATE OR ALTER PROC [dbo].[spGeneraReciboAP]
 @FechaActual date
 AS 
 BEGIN
-	/*BEGIN TRY
+	BEGIN TRY
 		SET NOCOUNT ON 
-		SET XACT_ABORT ON*/
+		SET XACT_ABORT ON
 			DECLARE @dia int,
 			@interesm MONEY,
 			@montoamort MONEY,
@@ -31,11 +31,11 @@ BEGIN
 
 			SELECT @idMenor = MIN(sec), @idMayor = MAX(sec) FROM @aps
 
-			--BEGIN TRAN
+			  BEGIN TRAN
 				WHILE (@idMenor<=@idMayor)
 				BEGIN 
 					--Se obtienen los datos de intereses y monto de amortización
-					SElECT @interesm =  A.Saldo*(@TasaInteresAnual/12) / 100, @montoamort = A.Cuota
+					SElECT @interesm =  A.Saldo*(@TasaInteresAnual/12) / 100, @montoamort = A.Cuota - @interesm
 					FROM ArregloPago AS A
 					INNER JOIN @aps AS IA ON A.ID = IA.idap
 					WHERE IA.sec = @idMenor
@@ -60,7 +60,7 @@ BEGIN
 					FROM [dbo].[ArregloPago] AP
 					INNER JOIN @aps AS IA ON AP.id = IA.idap
 					WHERE IA.sec = @idMenor
-					SET @idMov = IDENT_CURRENT('[dbo].[MovimientosAP]')
+					SET @idMov = IDENT_CURRENT('[dbo].[MovimientoAP]')
 
 					--Se crea el recibo del AP
 					INSERT INTO Recibo (IdCCobro,Monto,Estado,IdPropiedad,FechaEmision,FechaMaximaPago)
@@ -69,8 +69,8 @@ BEGIN
 					INNER JOIN CCobro AS C ON C.ID = 12
 					INNER JOIN ArregloPago AS A ON A.ID = IA.idap
 					WHERE IA.sec = @idMenor
-					SET @idRecibo = IDENT_CURRENT('[dbo].[Recibos]')
-
+					SET @idRecibo = IDENT_CURRENT('[dbo].[Recibo]')
+					
 					INSERT INTO Recibo_AP(ID,Descripcion,IdMovimientoAP)
 					SELECT @idRecibo
 						,'Interes mensual:'+CAST(@interesm AS VARCHAR(30))
@@ -80,12 +80,12 @@ BEGIN
 					SET @idMenor += 1
 				END
 
-			/*COMMIT
+			COMMIT
 		END TRY
 		BEGIN CATCH
 			If @@TRANCOUNT > 0 
 				ROLLBACK TRAN;
 			THROW 50004,'Error: No se ha podido generar el recibo de AP',1;
-		END CATCH*/
+		END CATCH
 		return 0
 END

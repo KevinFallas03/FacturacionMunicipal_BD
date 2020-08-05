@@ -15,8 +15,7 @@
     <AssemblyName>MunicipalidadWebMVC5</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <Use64BitIISExpress>
-    </Use64BitIISExpress>
+    <Use64BitIISExpress>true</Use64BitIISExpress>
     <IISExpressSSLPort>44384</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -190,6 +189,7 @@
     <Content Include="Views\AP\Propiedades.cshtml" />
     <Content Include="Views\AP\Pago.cshtml" />
     <Content Include="Views\Recibo\ConfirmarRecibosPagados.cshtml" />
+    <Content Include="Views\Recibo\DetailsComprobante.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

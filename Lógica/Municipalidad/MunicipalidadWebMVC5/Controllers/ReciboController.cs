@@ -85,5 +85,11 @@ namespace MunicipalidadWebMVC5.Controllers
             }
             
         }
+
+        public ActionResult DetallesComprobante(int ID)
+        {
+            List<Recibo> listaRC = objetoRecibo.findAllRecibosCO(ID);
+            return View(listaRC);
+        }
     }
 }
