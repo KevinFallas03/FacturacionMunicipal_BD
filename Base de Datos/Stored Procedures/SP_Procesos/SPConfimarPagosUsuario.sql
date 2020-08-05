@@ -19,23 +19,23 @@ BEGIN
 		SET @montoComprobante = (	SELECT SUM(Monto) 
 									FROM [dbo].[Recibo] R 
 									INNER JOIN dbo.[IdRecibosPorPagar] RP ON R.ID = RP.sec
-								)
+								);
 				
 		BEGIN TRAN
 			--CREA UN COMPROBANTE DE PAGO
 			INSERT INTO [dbo].[ComprobantePago](FechaPago, MontoTotal) --Verificar Medio de Pago
-			SELECT GETDATE(), @montoComprobante
+			SELECT GETDATE(), @montoComprobante;
 				
 			--INSERTA LOS RECIBOS EN RECIBOS PAGADOS
 			INSERT INTO [dbo].[ReciboPagado](IdRecibo,IdComprobante)
 			SELECT RP.sec, IDENT_CURRENT('[dbo].[ComprobantePago]')
-			FROM dbo.[IdRecibosPorPagar] RP
+			FROM dbo.[IdRecibosPorPagar] RP;
 
 			--ACTUALIZA EL ESTADO A PAGADOS
 			UPDATE [dbo].[Recibo]
 			SET Estado = 1 --Se pagó
 			FROM [dbo].[Recibo] R
-			INNER JOIN [dbo].[IdRecibosPorPagar] RP ON R.id = RP.sec
+			INNER JOIN [dbo].[IdRecibosPorPagar] RP ON R.id = RP.sec;
 				
 				
 			--ELIMINA LA TABLA YA QUE SE PAGARON LOS RECIBOS LOGICO --HACER BORRADO LOGICO
