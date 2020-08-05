@@ -1,0 +1,46 @@
+﻿@model List<model.entity.Recibo>
+@{
+    ViewBag.Title = "DetailsComprobante";
+    var idc = TempData["idc"];
+    var fec = TempData["fec"];
+    var mec = TempData["idc"];
+    var moc = TempData["idc"];
+}
+
+<h2>Comprobante</h2>
+<div class="container-fluid">
+    <table class="table">
+        <tr class="btn-info">
+            <th>ID Comprobante</th>
+            <th>Fecha de Pago</th>
+            <th>Medio de Pago</th>
+            <th>Monto Total</th>
+        </tr> <tr>
+            <td>@idc</td>
+            <td>@fec</td>
+            <td>@mec</td>
+            <td>@moc</td>
+        </tr>
+        }
+    </table>
+    <h2>Detalles:</h2>
+    <table class="table">
+        <tr class="btn-success">
+            <th>ID</th>
+            <th>Emisión</th>
+            <th>Vencimiento</th>
+            <th>Concepto</th>
+            <th>Monto</th>
+        </tr>
+        @foreach (var objetoRecibo in Model)
+        {
+        <tr>
+            <td>@objetoRecibo.IdRecibo</td>
+            <td>@objetoRecibo.FechaEm</td>
+            <td>@objetoRecibo.FechaMx</td>
+            <td>@objetoRecibo.NombreCC</td>
+            <td>@objetoRecibo.Monto</td>
+        </tr>
+        }
+    </table>
+</div>
