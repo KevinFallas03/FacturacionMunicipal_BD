@@ -35,7 +35,7 @@ BEGIN
 		Valor money,
 		Direccion varchar(150),
 		EstaBorrado bit
-	)
+	);
 
 	Declare @Propietarios table 
 	(
@@ -44,7 +44,7 @@ BEGIN
 	   Nombre varchar(100),
 	   ValorDocId varchar(100),
 	   EstaBorrado bit
-	)
+	);
 
 	Declare @PropJuridico table
 	(
@@ -54,7 +54,7 @@ BEGIN
 		IdTipoDocumento int,
 		ValorDocumento varchar(100),
 		EstaBorrado bit
-	)
+	);
 
 	Declare @PropiedadVsPropietario table
 	(
@@ -62,7 +62,7 @@ BEGIN
 		IdPropiedad varchar(100),
 		IdPropietario varchar(100),
 		EstaBorrado bit
-	)
+	);
 
 	Declare @PropiedadesxCCobro table
 	(
@@ -71,8 +71,8 @@ BEGIN
 		IdPropiedad int, 
 		FechaInic date,
 		FechaFin date
-	)
-
+	);
+	
 	Declare @Usuarios table
 	(
 		sec int identity(1,1) primary key,
@@ -81,7 +81,7 @@ BEGIN
 		TipoUsuario varchar(100),
 		FechaIngreso date,
 		EstaBorrado bit
-	)
+	);
 
 	Declare @UsuarioVersusPropiedad table
 	(
@@ -89,44 +89,44 @@ BEGIN
 		IdPropiedad varchar(100),
 		IdUsuario varchar(100),
 		EstaBorrado bit
-	)
+	);
 
 	--Tabla para almacenar los cambios en un dia
 
-	Declare @PropiedadCambio CambioValorPropiedadType
+	Declare @PropiedadCambio CambioValorPropiedadType;
 
 	--Tabla variable para almacenar los pagos dia por dia
-	Declare @PagosHoy PagosHoyType
+	Declare @PagosHoy PagosHoyType;
 
 	--Tabla variable para almacenar los ap dia por dia
-	Declare @APHoy APHoyType
+	Declare @APHoy APHoyType;
 
 	--Tabla para los movimientos de consumo de agua
-	Declare @MovConsumo MovConsumoType
+	Declare @MovConsumo MovConsumoType;
 
 	--Fecha para las simulaciones
-	Declare @FechaOperacion date
+	Declare @FechaOperacion date;
 
-	-- se extraen fechas operaci�n
+	-- se extraen fechas operación
 	Declare @FechasAProcesar table 
 	(
 	   sec int identity(1,1) primary key, 
 	   fecha date
-	)
+	);
 
 	-- Variables para leer xml
 	DECLARE @DocumentoXML xml 
 
 	BEGIN TRY
 		SELECT @DocumentoXML = DXML
-		FROM OPENROWSET (Bulk 'C:\Users\Johel Mora\Desktop\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
+		FROM OPENROWSET (Bulk 'D:\Base de datos\FacturacionMunicipal_BD\Base de Datos\XML\Operaciones.xml', Single_BLOB) AS DocumentoXML(DXML)
 		insert @FechasAProcesar (fecha)
 		select f.value('@fecha', 'DATE')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia') AS t(f);
 	END TRY
 	BEGIN CATCH
 		PRINT 'Hubo un error de cargar fechas'
-		RETURN @@ERROR * -1
+		RETURN @@ERROR * -1;
 	END CATCH
 
 
@@ -137,34 +137,39 @@ BEGIN
 	--Declare @IdCCobro_ConsumoAgua=1, @IdCCobro_PatenteCantina=7   -- Son ids con valores solo de ejemplo
 
 	-- Variables para controlar la iteraci�n
-	declare @Lo1 int, @Hi1 int, @Lo2 int, @Hi2 int
-	declare @minfecha datetime, @maxfecha datetime 
-	DECLARE @fechaOperacionNodo date
+	DECLARE @Lo1 int, 
+			@Hi1 int, 
+			@Lo2 int, 
+			@Hi2 int;
+
+	DECLARE @minfecha datetime, 
+			@maxfecha datetime;
+
+	DECLARE @fechaOperacionNodo date;
 
 	-- iterando de la fecha más antigua a la menos antigua
-	Select @minfecha=min(F.fecha), @maxfecha=max(F.fecha)  -- min y max son funciones agregadas
-	from @FechasAProcesar F
+	SELECT @minfecha=min(F.fecha), @maxfecha=max(F.fecha)  -- min y max son funciones agregadas
+	FROM @FechasAProcesar F;
 
-	select @Lo1=F.sec
-	from @FechasAProcesar F
-	where F.Fecha=@minfecha
+	SELECT @Lo1=F.sec
+	FROM @FechasAProcesar F
+	WHERE F.Fecha=@minfecha;
 
-	select @Hi1=F.sec
-	from @FechasAProcesar F
-	where F.Fecha=@maxfecha
+	SELECT @Hi1=F.sec
+	FROM @FechasAProcesar F
+	WHERE F.Fecha=@maxfecha;
 
 	--parte4
 	--iteramos por fecha
-	while @Lo1<=@Hi1
-	Begin
+	WHILE @Lo1<=@Hi1
+	BEGIN
 		Select @FechaOperacion=F.Fecha 
 		from @FechasAProcesar F 
-		where sec=@Lo1
+		where sec=@Lo1;
 		
 		--DECLARE @fechaOperacionNodo date
-		SET @fechaOperacionNodo = @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE')--revisar
+		SET @fechaOperacionNodo = @DocumentoXML.value('(/Operaciones_por_Dia/OperacionDia/@fecha)[1]', 'DATE');
 
-		
 		--delete @Propiedades -- ELIMINAR
 
 		--procesar nodos propiedades MASIVO
@@ -177,7 +182,7 @@ BEGIN
 		, 0 AS M3AcumuladosUltimoRecibo
 		, @FechaOperacion AS FechaIngreso
 		, 0 AS EstaBorrado
-		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propiedad') AS t(pd)
+		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propiedad') AS t(pd);
 		
 
 		-- procesar nodos propietario
@@ -187,7 +192,7 @@ BEGIN
 		, pt.value('@identificacion', 'VARCHAR(100)')
 		, @FechaOperacion AS FechaIngreso
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propietario') AS t(pt)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propietario') AS t(pt);
 		
 		--Propietarios Juridicos 
 		-- procesar nodos propietarios juridicos ITERATIVO -- considerar hacerlos masivos
@@ -198,7 +203,7 @@ BEGIN
 		, pd.value('@TipDocIdRepresentante', 'INT')
 		, pd.value('@DocidRepresentante', 'VARCHAR(100)')
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PersonaJuridica') AS t(pd)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PersonaJuridica') AS t(pd);
 
 		--iteramos en propietarios juridico
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -210,7 +215,7 @@ BEGIN
 		   from @PropJuridico Pj, dbo.Propietario Pt
 		   where sec=@Lo2 and Pj.DocIdPersonaJuridica = Pt.ValorDocumento
 		   Set @Lo2=@Lo2+1
-		end
+		end;
 
 		--Propietarios x Propiedades
 		-- procesar nodos PropietarioxPropiedad
@@ -219,7 +224,7 @@ BEGIN
 		select pp.value('@NumFinca', 'VARCHAR(100)')
 		, pp.value('@identificacion', 'VARCHAR(100)')
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PropiedadVersusPropietario') AS t(pp)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/PropiedadVersusPropietario') AS t(pp);
 		
 		--iteramos en PropiedadVsPropietario
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -231,7 +236,7 @@ BEGIN
 		   from @PropiedadVsPropietario Pp, dbo.Propietario Pt, dbo.Propiedad Pd
 		   where sec=@Lo2 and Pp.IdPropietario = Pt.ValorDocumento and Pp.IdPropiedad = Pd.NumFinca
 		   Set @Lo2=@Lo2+1
-		end
+		end;
 	 
 		--insertamos Usuarios insert MASIVO
 		--delete @Usuarios
@@ -241,7 +246,7 @@ BEGIN
 		, 'Normal' AS TipoUsuario
 		, @FechaOperacion AS FechaIngreso
 		, 0 AS EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Usuario') AS t(u)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Usuario') AS t(u);
 		
 		--CCobros x Propiedad
 		--procesar nodos CCobroVsPropiedad
@@ -250,7 +255,7 @@ BEGIN
 		select pc.value('@idcobro','INT') 
 		, pc.value('@NumFinca', 'INT') 
 		, @FechaOperacion AS FechaInic
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/ConceptoCobroVersusPropiedad') AS t(pc)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/ConceptoCobroVersusPropiedad') AS t(pc);
 
 		-- iteramos en PropiedadesxCCobro 
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -262,7 +267,7 @@ BEGIN
 		   from @PropiedadesxCCobro PC, dbo.Propiedad Pd
 		   where sec=@Lo2 and PC.IdPropiedad = Pd.NumFinca
 		   Set @Lo2=@Lo2+1
-		end
+		end;
 		
 		--Usuarios Versus Propiedad
 		--procesamos nodos UsuarioVersusPropiedad
@@ -271,7 +276,7 @@ BEGIN
 		select up.value('@NumFinca', 'VARCHAR(100)')
 		, up.value('@nombreUsuario', 'VARCHAR(100)')
 		, 0 as EstaBorrado
-		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/UsuarioVersusPropiedad') AS t(up)
+		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/UsuarioVersusPropiedad') AS t(up);
 		
 		-- iteramos en @UsuarioVersusPropiedad 
 		Select @Lo2=min(sec), @Hi2=max(sec)
@@ -283,7 +288,7 @@ BEGIN
 		   from @UsuarioVersusPropiedad Up, dbo.Usuario U, dbo.Propiedad Pd
 		   where sec=@Lo2 and Up.IdUsuario = U.Nombre and Up.IdPropiedad = Pd.NumFinca
 		   Set @Lo2=@Lo2+1
-		end
+		end;
 
 		--procesar los cambios en las propiedades por dia
 		DELETE @PropiedadCambio
@@ -291,7 +296,7 @@ BEGIN
 		select pc.value('@NumFinca', 'INT')
 			, pc.value('@NuevoValor', 'MONEY')
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/CambioPropiedad') AS t(pc)
-		EXEC spProcesaCambioValorPropiedad @PropiedadCambio
+		EXEC spProcesaCambioValorPropiedad @PropiedadCambio;
 
 		--PAGO DE LOS RECIBOS  
 		DELETE @PagosHoy
@@ -300,18 +305,26 @@ BEGIN
 			, c.value('@TipoRecibo', 'INT')
 			, @FechaOperacion AS FechaOperacion
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Pago') AS t(c)
-		EXEC spProcesaPagos @PagosHoy
+		EXEC spProcesaPagos @PagosHoy;
+
 		
-		--CREACION DE AP
+		-- CREACION DE AP
 		DELETE @APHoy
 		INSERT INTO @APHoy(NumFinca,Plazo,Fecha)
 		SELECT c.value('@NumFinca', 'INT')
 			, c.value('@Plazo', 'INT')
 			, @FechaOperacion AS FechaOperacion
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/AP') AS t(c)
-		DECLARE @minid int, @maxid int
-		SELECT @minid = MIN(sec), @maxid = MAX(sec) FROM @APHoy
-		WHILE @minid<=@maxid
+		
+		
+		-- SE PUEDE MEJORAR HACIENDO UN SP PARA ESTE
+		DECLARE @minid int, 
+				@maxid int;
+
+		SELECT	@minid = MIN(sec), @maxid = MAX(sec) 
+		FROM @APHoy;
+
+		WHILE @minid <= @maxid
 		BEGIN
 			DECLARE @pidP int, @pmontoO money, @pplazo int, @pcuota money, @pfecha date, @ptasaA decimal, @montoMoratorio money, @tasaMoratoria FLOAT
 			SELECT @pidP = P.ID, @pplazo = A.Plazo, @pfecha = A.Fecha --Obtener ID de Propiedad, Plazo y Fecha
@@ -325,45 +338,54 @@ BEGIN
 			0, @pidP, @FechaOperacion, DATEADD(DAY,CC.QDiasVencimiento,@fechaOperacion)
 			FROM CCobro AS CC
 			INNER JOIN Recibo AS R ON R.IdCCobro = CC.ID
-			WHERE Estado = 0 and IdPropiedad = 8 and R.FechaMaximaPago<@fechaOperacion
+			WHERE Estado = 0 and IdPropiedad = 8 and R.FechaMaximaPago<@fechaOperacion;
 
-			SELECT @pmontoO = SUM(Monto) FROM Recibo WHERE IdPropiedad = @pidP AND Estado = 0
-			SELECT @ptasaA = CAST (Valor AS decimal) FROM ValoresConfiguracion WHERE ID = 1
-			SELECT @pcuota = @pmontoO * (POWER(1 + @ptasaA/100, @pplazo)) / (POWER(1 + @ptasaA/100, @pplazo) - 1)/10
+			SELECT @pmontoO = SUM(Monto) 
+			FROM Recibo 
+			WHERE IdPropiedad = @pidP AND Estado = 0;
+
+			SELECT @ptasaA = CAST (Valor AS decimal) 
+			FROM ValoresConfiguracion 
+			WHERE ID = 1;
+
+			SELECT @pcuota = @pmontoO * (POWER(1 + @ptasaA/100, @pplazo)) / (POWER(1 + @ptasaA/100, @pplazo) - 1)/10;
+			
+			--REVISAR
 			EXEC spCreateAP @IdP = @pidP, @MontoO = @pmontoO, @Plazo = @pplazo, @Cuota = @pcuota, @Fecha = @pfecha, @TasaA = @ptasaA
-			SET @minid += 1
-		END
+			SET @minid += 1;
+		END;
+		
 
 		--procesa los movimientos en los consumos de las propiedades
 		DELETE @MovConsumo
 		INSERT INTO @MovConsumo(NumFinca, M3, TipoMov, Descripcion,Fecha)
-		SELECT mc.value('@NumFinca', 'INT')
-			, mc.value('@LecturaM3', 'INT')
-			, mc.value('@id', 'INT')
-			, mc.value('@descripcion', 'VARCHAR(50)')
-			, @FechaOperacion AS FechaOperacion
+		SELECT	mc.value('@NumFinca', 'INT')
+			,	mc.value('@LecturaM3', 'INT')
+			,	mc.value('@id', 'INT')
+			,	mc.value('@descripcion', 'VARCHAR(50)')
+			,	@FechaOperacion AS FechaOperacion
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/TransConsumo') AS t(mc)
-		EXEC spProcesaConsumo @MovConsumo
+		EXEC spProcesaConsumo @MovConsumo;
 		
 		--Realiza las cortas de agua
-		EXEC spCortaAgua @FechaActual = @FechaOperacion
+		EXEC spCortaAgua @FechaActual = @FechaOperacion;
 	
 		--Reliza las reconexiones de agua
-		EXEC spReconexionAgua @FechaActual = @FechaOperacion
+		EXEC spReconexionAgua @FechaActual = @FechaOperacion;
 
 		--Genera los recibos
-		EXEC spProcesaRecibos @FechaActual = @FechaOperacion
+		EXEC spProcesaRecibos @FechaActual = @FechaOperacion;
 
 		--Genera los recibos AP
-		EXEC spGeneraReciboAP @FechaActual = @FechaOperacion
-		
+		EXEC spGeneraReciboAP @FechaActual = @FechaOperacion;
 
-		set @Lo1 = @Lo1 + 1
+		SET @Lo1 = @Lo1 + 1;
 		
-	end
-end
-/*
+	END
+END
+
+
 exec ReiniciarTablas
 
-exec IniciarSimulacion*/
+exec IniciarSimulacion
 
