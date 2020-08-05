@@ -86,18 +86,16 @@ namespace MunicipalidadWebMVC5.Controllers
             
         }
         
-        public ActionResult ConfirmarPago(int ID)
+        public ActionResult ConfirmarPago()
         {
             objetoRecibo.confirmarPago();
-            List<Recibo> lista = objetoRecibo.findAllRecibosPe(ID, 1);
-            return View(lista);
+            return RedirectToAction("RecibosPendientes", "Recibo", new { ID=@id });
         }
     
-        public ActionResult CancelarPago(int ID)
+        public ActionResult CancelarPago()
         {
             objetoRecibo.cancelarPago();
-            List<Recibo> lista = objetoRecibo.findAllRecibosPe(ID, 0);
-            return View(lista);
+            return RedirectToAction("RecibosPendientes", "Recibo", new { ID = @id });
         }
 
         
