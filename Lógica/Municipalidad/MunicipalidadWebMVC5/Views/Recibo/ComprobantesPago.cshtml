@@ -7,17 +7,19 @@
 <div class="container-fluid">
     <table class="table">
         <tr class="btn-success">
+            <th></th>
             <th>ID Comprobante</th>
             <th>Fecha de Pago</th>
             <th>Monto Total</th>
         </tr>
         @foreach (var objetoRecibo in Model)
         {
-            <tr>
-                <td>@objetoRecibo.IdRecibo</td>
-                <td>@objetoRecibo.FechaEm</td>
-                <td>@objetoRecibo.Monto</td>
-            </tr>
+        <tr>
+            <td colspan="2"><a class="btn btn-info" href="">Ver</a></td>
+            <td>@objetoRecibo.IdRecibo</td>
+            <td>@objetoRecibo.FechaEm</td>
+            <td>@objetoRecibo.Monto</td>
+        </tr>
         }
     </table>
 </div>

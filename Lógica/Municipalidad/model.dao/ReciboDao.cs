@@ -258,5 +258,42 @@ namespace model.dao
                 objConexion.cerrarConexion();
             }
         }
+
+        public List<Recibo> findAllRecibosCO(int id)
+        {
+            Console.Out.Write(id);
+            List<Recibo> listaRecibos = new List<Recibo>();
+            List<int> listaid = new List<int>();
+            try
+            {
+                comando = new SqlCommand("spObtenerRecibos_Comprobante", objConexion.getConexion());
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.AddWithValue("@idc", id);
+                objConexion.getConexion().Open();
+                SqlDataReader read = comando.ExecuteReader();
+                while (read.Read())
+                {
+                    Recibo objetoRecibo = new Recibo
+                    {
+                        IdRecibo = Convert.ToInt32(read[0].ToString()),
+                        FechaEm = read[1].ToString(),
+                        FechaMx = read[2].ToString(),
+                        NombreCC = read[3].ToString(),
+                        Monto = Convert.ToDecimal(read[4].ToString())
+                    };
+                    listaRecibos.Add(objetoRecibo);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                objConexion.getConexion().Close();
+                objConexion.cerrarConexion();
+            }
+            return listaRecibos;
+        }
     }
 }
