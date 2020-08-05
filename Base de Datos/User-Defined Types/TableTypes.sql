@@ -22,7 +22,8 @@ CREATE TYPE PagosHoyType AS TABLE
 	Fecha DATE
 )
 
-
+IF type_id('[dbo].[APHoyType]') IS NOT NULL
+        DROP TYPE [dbo].[APHoyType]; 
 CREATE TYPE APHoyType AS TABLE
 (
 	sec INT IDENTITY(1,1),
