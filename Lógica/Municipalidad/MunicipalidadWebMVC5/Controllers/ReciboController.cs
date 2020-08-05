@@ -86,13 +86,14 @@ namespace MunicipalidadWebMVC5.Controllers
             
         }
 
-        public ActionResult DetallesComprobante(int ID, string Fecha, string Medio, decimal Monto)
+        public ActionResult DetailsComprobante(int ID)
         {
-            TempData["idc"] = ID;
-            TempData["fec"] = Fecha;
-            TempData["mec"] = Medio;
-            TempData["moc"] = Monto;
-            TempData["idc"] = ID;
+            Recibo comprobante = new Recibo(ID);
+            objetoRecibo.findComprobante(comprobante);
+            ViewData["idc"] = ID;
+            ViewData["fec"] = comprobante.FechaEm;
+            ViewData["mec"] = comprobante.Medio;
+            ViewData["moc"] = comprobante.Monto;
             List<Recibo> listaRC = objetoRecibo.findAllRecibosCO(ID);
             return View(listaRC);
         }

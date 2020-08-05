@@ -1,10 +1,10 @@
 ﻿@model List<model.entity.Recibo>
 @{
     ViewBag.Title = "DetailsComprobante";
-    var idc = TempData["idc"];
-    var fec = TempData["fec"];
-    var mec = TempData["mec"];
-    var moc = TempData["moc"];
+    int idc = Convert.ToInt32(ViewData["idc"]);
+    string fec = ViewData["fec"].ToString();
+    string mec = ViewData["mec"].ToString();
+    string moc = ViewData["moc"].ToString();
 }
 
 <h2>Comprobante</h2>
@@ -21,7 +21,6 @@
             <td>@mec</td>
             <td>@moc</td>
         </tr>
-        }
     </table>
     <h2>Detalles:</h2>
     <table class="table">

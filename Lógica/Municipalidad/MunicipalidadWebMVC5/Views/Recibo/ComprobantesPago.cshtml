@@ -15,7 +15,7 @@
         @foreach (var objetoRecibo in Model)
         {
         <tr>
-            <td colspan="2"><a class="btn btn-info" href="">Ver</a></td>
+            <td><a class="btn btn-info" href="~/Recibo/DetailsComprobante/@objetoRecibo.IdRecibo">Ver</a></td>
             <td>@objetoRecibo.IdRecibo</td>
             <td>@objetoRecibo.FechaEm</td>
             <td>@objetoRecibo.Monto</td>
