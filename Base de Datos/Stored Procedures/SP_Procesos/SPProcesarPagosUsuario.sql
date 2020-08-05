@@ -20,11 +20,9 @@ AS
 			--Variables para actualizaciones e inserts
 			DECLARE @idMenor INT, 
 					@idMayor INT, 
-					@FechaMax DATE, 
+					@FechaMaxPago DATE, 
 					@fechaOperacion DATE, 
 					@montoMoratorio MONEY, 
-					@inRecibo  INT,
-					@idComprobante INT, 
 					@tasaMoratoria FLOAT, 
 					@montoRecibo MONEY, 
 					@tipoCC int, 
@@ -43,153 +41,86 @@ AS
 				Fecha DATE
 			);
 
-			INSERT INTO @IdRecibosPagar(ID)
+			INSERT INTO dbo.IdRecibosPorPagar(sec)
 			SELECT id
 			FROM OPENJSON (@jsonRecibos)
 			WITH(
 				id int '$.id'
 			);
 
-			INSERT INTO @PagosHoy(sec, NumFinca, TipoRecibo, Fecha)
-			SELECT RP.ID, P.NumFinca, R.IdCCobro, CONVERT(DATE, GETDATE())
-			FROM Recibo R
-			INNER JOIN Propiedad P ON P.ID=R.IdPropiedad
-			INNER JOIN @IdRecibosPagar RP ON RP.ID = R.ID;
-
-
-
-			/* PRUEBAS ELIMINAR LUEGO LAS TABLAS
-			INSERT INTO dbo.PruebaIDRecibosPagar
-			SELECT * FROM @IdRecibosPagar
-
-			INSERT INTO dbo.TablaPruebaPago
-			SELECT * FROM @PagosHoy
-
-			*/
-
-			/*
-			--Tabla de id por concepto de cobro de cada propiedad 
-			DECLARE @ReciboPagar TABLE
-			(
-				id INT IDENTITY(1,1),
-				idRecibo INT
-			)
-
-			--@inRecibo itera sobre la tabla recibo
-			SET @inRecibo = 1
-			SELECT @idMenor = min([sec]), @idMayor=max([sec]) FROM @PagosHoy--SACA ID MAYOR Y MENOR PARA ITERAR LA TABLA
 			
-			BEGIN TRANSACTION
-				--RECORRE LOS PAGOS DE FINCAS
-				WHILE @idMenor<=@idMayor
+			--Obtenemos las id para iterar sobre los recibos por pagar desde la pagina del usuario
+			SELECT @idMenor = MIN(RP.sec), @idMayor = MAX(RP.sec)
+			FROM dbo.IdRecibosPorPagar as RP
+			
+			BEGIN TRAN
+				WHILE @idMenor<=@idMayor--RECORRE LOS RECIBOS
 				BEGIN
+
 					SET @montoMoratorio = 0 --MONTO MORATORIO SE CAMBIA SI ES QUE HAY RECIBO MORATORIO, SINO ES 0
-					SET @fechaOperacion = (SELECT Fecha FROM @PagosHoy WHERE sec = @idMenor)
-					SET @tipoCC = (SELECT TipoRecibo FROM @PagosHoy WHERE sec = @idMenor)--TIPO CC EN EL PAGO
-					SET @idPropiedad = (SELECT PR.ID FROM Propiedad AS PR --PROPIEDAD A LA QUE SE LE HACE EL PAGO
-										INNER JOIN @PagosHoy AS P ON P.NumFinca = PR.NumFinca 
-										WHERE P.sec = @idMenor)
+
+					SET @FechaOperacion =  GETDATE()
+
+					SET @idPropiedad = (SELECT R.ID FROM [Recibo] R 
+										INNER JOIN IdRecibosPorPagar idRP ON idRP.sec = R.ID
+										WHERE @idMenor = idRP.sec		
+									    )
 					
-					--VERIFICA SI EXISTE EL COMPROBANTE DE PAGO PARA ESA PROPIEDAD, ESE MISMO DIA
-					SET @idComprobante = (SELECT CP.ID FROM ComprobantePago AS CP 
-										  INNER JOIN ReciboPagado AS RP ON RP.IdComprobante = CP.ID
-										  INNER JOIN Recibo R ON R.ID = RP.IdRecibo
-										  WHERE R.IdPropiedad = @idPropiedad AND CP.FechaPago = @fechaOperacion)
-				
-					--SI NO EXISTE ENTONCES LO CREA
-					IF @idComprobante IS NULL
+					
+					SET @FechaMaxPago = (SELECT R.FechaMaximaPago FROM [dbo].[Recibo] R
+										 INNER JOIN dbo.IdRecibosPorPagar idRP ON idRP.sec = R.id
+										 WHERE idRP.sec = @idMenor AND R.Estado = 0);
+											
+					SET @montoRecibo = (SELECT R.Monto FROM [dbo].[Recibo] R
+										INNER JOIN dbo.IdRecibosPorPagar idRP ON R.id = idRP.sec
+										WHERE idRP.sec = @idMenor);
+
+					--Se crean intereses moratorios para aquellos que se pasaron de la fecha
+					IF @FechaMaxPago < @FechaOperacion
 					BEGIN
-						INSERT INTO ComprobantePago(FechaPago, MontoTotal)
-						SELECT @fechaOperacion, 0
-						SET @idComprobante = IDENT_CURRENT('ComprobantePago')
+						--SACA LA TASA MORATORIA DEL RECIBO
+						SET @tasaMoratoria = (	SELECT CC.TasaInteresMoratorio FROM [dbo].[CCobro] CC
+												INNER JOIN [dbo].[Recibo] AS R ON R.IdCCobro = CC.ID 
+												INNER JOIN  dbo.IdRecibosPorPagar AS RP ON Rp.sec = R.id
+												WHERE Rp.sec = @idMenor
+											  );
+
+						--AQUI CAMBIA EL MONTO MORATORIO YA QUE SI SE DEBE CREAR RECIBO MORATORIO
+						SET @montoMoratorio = (@montoRecibo * @tasaMoratoria/ 365) * ABS( DATEDIFF(d, @FechaMaxPago, @FechaOperacion) )
+						
+						
+						--CREA UN RECIBO TIPO MORATORIO Y LO ESTABLECE COMO PENDIENTE
+						INSERT INTO [dbo].[Recibo](IdPropiedad,IdCCobro,Monto,Estado,FechaEmision,FechaMaximaPago)
+						SELECT	@idPropiedad, 
+								CC.ID,
+								@montoMoratorio, 
+								0, --Estado pendiente
+								@FechaOperacion, 
+								DATEADD(day, CC.QDiasVencimiento, @FechaOperacion)
+						FROM [dbo].[CCobro] AS CC
+						WHERE CC.ID = 11 --Recibo de Agua
+						
+						--GUARDA ADEMAS LOS RECIBOS MORATORIOS A PAGAR
+						INSERT INTO IdRecibosPorPagar(sec)
+						SELECT IDENT_CURRENT('[dbo].[Recibo]')
+						
+						
 					END
 					
-					--SE INSERTAN LOS RECIBOS DE LA PROPIEDAD EN LA TABLA VARIABLE, Y SE VAN ACUMULANDO, PARA ESO SE USA EL CONTADOR
-					--SI ES CONCEPTO DE COBRO 10 (RECONEXION)
-					IF @tipoCC = 10
-						BEGIN
-							INSERT INTO @ReciboPagar(idRecibo)
-							SELECT R.ID
-							FROM @PagosHoy PH
-							INNER JOIN dbo.Propiedad AS PR ON PR.NumFinca = PH.NumFinca 
-							INNER JOIN dbo.Recibo AS R ON R.IdPropiedad = PR.ID
-							WHERE PH.sec = @idMenor AND R.Estado = 0
-							AND (R.IdCCobro = 1	  --GUARDA TODOS LOS RECIBOS DE AGUA PENDIENTES (1)
-								OR R.IdCCobro = 11 --GUARDA TODOS LOS RECIBOS MORATORIOS PENDIENTES (11)
-								OR R.IdCCobro = 10)--GUARDA TODOS LOS RECIBOS DE RECONEXION PENDIENTES (10)
-						END
-					ELSE--SI ES OTRO CONCEPTO DE COBRO
-						BEGIN
-							INSERT INTO @ReciboPagar(idRecibo)
-							SELECT R.ID
-							FROM @PagosHoy PH
-							INNER JOIN [dbo].[Propiedad] AS PR ON PR.NumFinca = PH.NumFinca 
-							INNER JOIN [dbo].[Recibo] AS R ON R.IdPropiedad = PR.ID
-							WHERE PH.sec = @idMenor AND R.[Estado] = 0
-							AND (R.IdCCobro = 11			--GUARDA TODOS LOS RECIBOS MORATORIOS PENDIENTES (11)
-								OR	R.IdCCobro = @tipoCC)--GUARDA TODOS LOS RECIBOS DE DE ESE CONCEPTO DE COBRO PENDIENTES (@TIPOCC)
-						END
-					
-
-					--MIENTRAS EXISTA UN CONCEPTO DE COBRO SIN PAGAR, RECORRA LOS RECIBOS
-					WHILE EXISTS(SELECT Rp.id FROM @ReciboPagar Rp INNER JOIN [dbo].[Recibo] AS R ON R.ID = Rp.idRecibo WHERE R.Estado = 0)
-					BEGIN
-						--ESTABLECE EL MONTO DEL RECIBO
-						SET @montoRecibo = (SELECT R.Monto FROM [dbo].[Recibo] AS R
-											INNER JOIN @ReciboPagar Rp ON R.id = Rp.idRecibo
-											WHERE Rp.id = @inRecibo)
-
-						--INSERTA UNA RELACION ENTRE RECIBO Y COMPROBANTE DE PAGO
-						INSERT INTO [dbo].[ReciboPagado](IdRecibo, IdComprobante)
-						SELECT Rp.idRecibo, @idComprobante
-						FROM @ReciboPagar Rp
-						WHERE Rp.id = @inRecibo 
-
-						--PAGA EL RECIBO ACTUALIZANDO SU ESTADO A PAGADO
-						UPDATE [dbo].[Recibo]
-						SET [estado] = 1
-						FROM @ReciboPagar Rp
-						WHERE Rp.idRecibo = [dbo].[Recibo].[ID] AND Rp.id = @inRecibo
-
-						--VERIFICA SI SE DEBE CREAR RECIBO MORATORIO
-						--SACA LA FECHA EN LA QUE VENCE EL RECIBO
-						SET @FechaMax = (SELECT FechaMaximaPago FROM [dbo].[Recibo] R
-										   INNER JOIN @ReciboPagar Rp ON Rp.idRecibo = R.id
-										   WHERE @inRecibo = Rp.id)
-						--SI LA FECHA EN LA QUE VENCE ES MENOR A LA FECHA EN LA QUE SE ESTA PAGANDO EL RECIBO
-						IF @FechaMax < @fechaOperacion
-						BEGIN
-							--SACA LA TASA MORATORIA DE ESE RECIBO
-							SET @tasaMoratoria = (SELECT CC.TasaInteresMoratorio FROM [dbo].[CCobro] CC
-													INNER JOIN [dbo].[Recibo] AS R ON R.IdCCobro = CC.ID 
-													INNER JOIN  @ReciboPagar AS Rp ON Rp.idRecibo = R.id
-													WHERE Rp.id = @inRecibo)
-							--AQUI CAMBIA EL MONTO MORATORIO YA QUE SI SE DEBE CREAR RECIBO MORATORIO
-							SET @montoMoratorio = (@montoRecibo*@tasaMoratoria/365)*ABS(DATEDIFF(day, @FechaMax, @fechaOperacion)) --cuenta del monto del interes moratorio
-							
-							--CREA UN RECIBO TIPO MORATORIO Y LO PAGA
-							INSERT INTO [dbo].[Recibo](IdPropiedad,IdCCobro,Monto,Estado,FechaEmision,FechaMaximaPago)
-							SELECT @idPropiedad, CC.ID,@montoMoratorio, 1, @fechaOperacion, DATEADD(day, CC.QDiasVencimiento, @fechaOperacion)
-							FROM [dbo].[CCobro] AS CC
-							WHERE CC.ID = 11
-							
-							--RELACION ENTRE EL RECIBO MORATORIO PAGADO Y EL COMPROBANTE DE PAGO
-							INSERT INTO [dbo].[ReciboPagado](IdComprobante, IdRecibo)
-							SELECT @idComprobante, IDENT_CURRENT('[dbo].[Recibo]')	
-						END
-						
-						--SE ACTUALIZA EL MONTO DEL COMPROBANTE DE PAGO
-						UPDATE [dbo].[ComprobantePago]
-						SET MontoTotal = MontoTotal+@montoRecibo+@montoMoratorio--SI NO HUBO RECIBO MORATORIO SUMA 0 MAS EL MONTO POR LOS DEMAS RECIBOS
-						WHERE ID = @idComprobante
-						
-						SET @inRecibo = @inRecibo+1
-					END
-					--PRINT @idMenor
-					SET @idMenor = @idMenor+1
+					SET @idMenor += 1
 				END
-				
-				COMMIT*/
+			
+			--HACER SP PARA ESTE PROCESO
+			
+			SELECT R.ID, CC.Nombre, R.Monto
+			FROM Recibo AS R
+			INNER JOIN IdRecibosPorPagar RP ON R.id = RP.sec
+			INNER JOIN CCobro AS CC ON R.IdCCobro = CC.ID
+			--REVISAR PORQUE HAY PROPIEDADES MALAS
+
+			
+			COMMIT
+
 		END TRY
 		BEGIN CATCH
 			If @@TRANCOUNT > 0 
@@ -198,16 +129,8 @@ AS
 		END CATCH
 END
 
-	EXEC IniciarSimulacion
+DELETE FROM [FacturacionMunicipal].[dbo].[IdRecibosPorPagar]
 
-CREATE TABLE dbo.TablaPruebaPago(
-	sec INT PRIMARY KEY,
-	NumFinca INT,
-	TipoRecibo INT,
-	Fecha DATE
-)
+EXEC spProcesarPagosUsuario @jsonRecibos = '[{"id":1},{"id":7}]'
 
-CREATE TABLE  dbo.PruebaIDRecibosPagar 
-(
-	ID INT PRIMARY KEY
-)
+EXEC IniciarSimulacion
