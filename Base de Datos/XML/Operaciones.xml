@@ -200,7 +200,6 @@
     <UsuarioVersusPropiedad NumFinca="1176180" nombreUsuario="EMadrigal"/>
     <UsuarioVersusPropiedad NumFinca="4158692" nombreUsuario="EMadrigal"/>
     <UsuarioVersusPropiedad NumFinca="3107084" nombreUsuario="EMadrigal"/>
-    <UsuarioVersusPropiedad NumFinca="2346431" nombreUsuario="EMadrigal"/>
     <ConceptoCobroVersusPropiedad idcobro="1" NumFinca="1176180"/>
     <ConceptoCobroVersusPropiedad idcobro="2" NumFinca="1176180"/>
     <ConceptoCobroVersusPropiedad idcobro="4" NumFinca="1176180"/>
@@ -1859,7 +1858,7 @@
     <TransConsumo id="1" LecturaM3="423" descripcion="Cobro Mensual" NumFinca="6732750"/>
     <TransConsumo id="1" LecturaM3="497" descripcion="Cobro Mensual" NumFinca="9324439"/>
     <TransConsumo id="1" LecturaM3="453" descripcion="Cobro Mensual" NumFinca="5649015"/>
-     <AP NumFinca="3107084" Plazo="8"/>
+    <AP NumFinca="3107084" Plazo="8"/>
   </OperacionDia>
   <OperacionDia fecha="2020-04-05">
     <Propiedad NumFinca="8434186" Valor="15014331" Direccion=" iglesia de Oreamuno, 891 m Noroeste."/>
@@ -1947,7 +1946,7 @@
     <Pago TipoRecibo="5" NumFinca="3298240"/>
     <Pago TipoRecibo="5" NumFinca="6536368"/>
     <Pago TipoRecibo="5" NumFinca="2995814"/>
-    
+    <AP NumFinca="2346431" Plazo="6"/>
     <AP NumFinca="2132441" Plazo="12"/>
   </OperacionDia>
   <OperacionDia fecha="2020-04-06">
@@ -4889,7 +4888,7 @@
     <TransConsumo id="1" LecturaM3="1270" descripcion="Cobro Mensual" NumFinca="1337841"/>
     <TransConsumo id="1" LecturaM3="797" descripcion="Cobro Mensual" NumFinca="5603734"/>
     <TransConsumo id="1" LecturaM3="719" descripcion="Cobro Mensual" NumFinca="2675651"/>
-    
+    <Pago TipoRecibo="12" NumFinca="2346431"/>
     <Pago TipoRecibo="12" NumFinca="2132441"/>
   </OperacionDia>
   <OperacionDia fecha="2020-05-25">
