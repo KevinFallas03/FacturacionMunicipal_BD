@@ -128,12 +128,3 @@ AS
 			THROW 50003, 'No se ha podido crear los pago.', 1;
 		END CATCH
 END
-
-
-/*
-DELETE FROM [FacturacionMunicipal].[dbo].[IdRecibosPorPagar]
-
-EXEC spProcesarPagosUsuario @jsonRecibos = '[{"id":1},{"id":7}]'
-
-EXEC IniciarSimulacion
-*/
