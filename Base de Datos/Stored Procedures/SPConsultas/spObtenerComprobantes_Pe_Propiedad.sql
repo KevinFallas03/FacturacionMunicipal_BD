@@ -33,6 +33,6 @@ CREATE or ALTER PROC [dbo].spVerComprobante @id int as
 		ORDER BY C.FechaPago DESC
 	END TRY
 	BEGIN CATCH
-		THROW 60000,'Error: No se ha podido buscar Recibos',1;
+		THROW 6001,'Error: No se ha podido buscar Recibos',1;
 	END CATCH
 	END

@@ -136,7 +136,7 @@ BEGIN
 
 	--Declare @IdCCobro_ConsumoAgua=1, @IdCCobro_PatenteCantina=7   -- Son ids con valores solo de ejemplo
 
-	-- Variables para controlar la iteraci�n
+	-- Variables para controlar la iteración
 	DECLARE @Lo1 int, 
 			@Hi1 int, 
 			@Lo2 int, 
@@ -195,7 +195,7 @@ BEGIN
 		from @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/Propietario') AS t(pt);
 		
 		--Propietarios Juridicos 
-		-- procesar nodos propietarios juridicos ITERATIVO -- considerar hacerlos masivos
+		--procesar nodos propietarios juridicos ITERATIVO -- considerar hacerlos masivos
 		delete @PropJuridico 
 		insert @PropJuridico(DocIdPersonaJuridica, NombrePersonaResponsable, IdTipoDocumento, ValorDocumento, EstaBorrado)
 		select pd.value('@docidPersonaJuridica', 'VARCHAR(100)')
@@ -317,7 +317,7 @@ BEGIN
 		FROM @DocumentoXML.nodes('/Operaciones_por_Dia/OperacionDia[@fecha eq sql:variable("@FechaOperacion")]/AP') AS t(c)
 		
 		
-		-- SE PUEDE MEJORAR HACIENDO UN SP PARA ESTE
+		-- Convertir en SP
 		DECLARE @minid int, 
 				@maxid int;
 
@@ -350,7 +350,7 @@ BEGIN
 
 			SELECT @pcuota = @pmontoO * (POWER(1 + @ptasaA/100, @pplazo)) / (POWER(1 + @ptasaA/100, @pplazo) - 1)/10;
 			
-			--REVISAR
+			
 			EXEC spCreateAP @IdP = @pidP, @MontoO = @pmontoO, @Plazo = @pplazo, @Cuota = @pcuota, @Fecha = @pfecha, @TasaA = @ptasaA
 			SET @minid += 1;
 		END;
@@ -383,9 +383,3 @@ BEGIN
 		
 	END
 END
-
-
-exec ReiniciarTablas
-exec IniciarSimulacion
-
-

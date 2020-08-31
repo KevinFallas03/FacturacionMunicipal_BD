@@ -60,7 +60,7 @@ as
 					SELECT R.ID, R.FechaEmision, CC.Nombre, R.Monto, @montointeres
 					FROM Recibo AS R
 					INNER JOIN CCobro AS CC ON R.IdCCobro = CC.ID
-					WHERE R.Estado=0 AND @id=R.IdPropiedad and  @min = R.ID
+					WHERE R.Estado=0 AND @id=R.IdPropiedad AND  @min = R.ID
 
 					SELECT @min = MIN(ID) 
 					FROM Recibo AS R 
@@ -78,3 +78,6 @@ as
 			THROW 60000,'Error: No se ha podido buscar Recibos',1;
 		END CATCH
 	END
+
+
+--exec spObtenerRecibosdePropiedadConInteres @id = 8
