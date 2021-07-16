@@ -788,3 +788,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+Lógica/Municipalidad.rar
+Lógica/Municipalidad/model.dao/Conexion.cs
+Lógica/Municipalidad/model.dao/Conexion.cs
